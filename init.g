@@ -1,0 +1,7 @@
+#
+# LocalActionDiagrams: Super awesome package for local action diagrams.
+#
+# Reading the declaration part of the package.
+#
+
+ReadPackage( "LocalActionDiagrams", "gap/LocalActionDiagrams.gd");
