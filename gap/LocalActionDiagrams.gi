@@ -1,3 +1,7 @@
+hi := "";
+d_test := "";
+
+
 # Set the domain of a permutation group. 
 InstallMethod(PermGroupDomain, [IsPermGroup], MovedPoints);
 
@@ -57,15 +61,18 @@ function(D, vl, el, rev)
 
 	### All checks have passed. Now make the object. ###
 
-	lad := DigraphImmutableCopy(D);
-	SetFilterObj(lad, IsLocalActionDiagram);
-	Setter(LocalActionDiagramVertexLabels)(lad, vl);
-	Setter(LocalActionDiagramEdgeLabels)(lad, el);
-	Setter(LocalActionDiagramEdgeReversal)(lad, rev);
+	#lad := DigraphImmutableCopy(D);
+	#SetFilterObj(lad, IsLocalActionDiagram);
+	#Setter(LocalActionDiagramVertexLabels)(lad, vl);
+	#Setter(LocalActionDiagramEdgeLabels)(lad, el);
+	#Setter(LocalActionDiagramEdgeReversal)(lad, rev);
 
-	SetName(lad, StringFormatted("<immutable Local Action Diagram with {1} vertices and {2} edges>", Length(vl), Length(el)));
+	#SetName(lad, StringFormatted("<immutable Local Action Diagram with {1} vertices and {2} edges>", Length(vl), Length(el)));
+
+	lad := LocalActionDiagramFromDataNC(D, vl, el, rev);
 
 	return lad;
+
 end );
 
 # Make a local action diagram "object" without checking. 
@@ -74,7 +81,7 @@ InstallMethod(LocalActionDiagramFromDataNC, "No Check test label 123", [IsDigrap
 function(D, vl, el, rev)
 	local lad;
 
-	lad := StructuralCopy(D);
+	lad := DigraphImmutableCopy(D);
 	SetFilterObj(lad, IsLocalActionDiagram);
 	Setter(LocalActionDiagramVertexLabels)(lad, vl);
 	Setter(LocalActionDiagramEdgeLabels)(lad, el);
@@ -124,11 +131,11 @@ function(lad1, lad2)
 
 			# Need to check multidigraph and non-multidigraph cases separately
 			# as the isomorphism format returned is different. 
-			if IsMultiDigraph(lad1) then
+			###if IsMultiDigraph(lad1) then
 				G2 := lad2_v[i^iso[1]]; # Vertex the isomorphism maps this one to. 
-			else
-				G2 := lad2_v[i^iso];
-			fi;
+			###else
+			###	G2 := lad2_v[i^iso];
+			###fi;
 
 			orbits1 := [];
 			orbits2 := [];
@@ -139,22 +146,25 @@ function(lad1, lad2)
 			# Find their orbits from the edge labels. 
 			orbits1 := lad1_el{edges_origin_v1};
 			
-			if IsMultiDigraph(lad1) then
-				# Get the edges with origin where the isomorphism maps vertex i to. 
-				edges_origin_v2 := Positions(List(lad2_e, x -> x[1]), i^iso[1]);
+			###if IsMultiDigraph(lad1) then
+			###	# Get the edges with origin where the isomorphism maps vertex i to. 
+			###	edges_origin_v2 := Positions(List(lad2_e, x -> x[1]), i^iso[1]);
 
-				# Find where the orbits map to be following the edge isomorphism. 
-				for j in edges_origin_v2 do
-					Add(orbits2, lad2_el[j^iso[2]]);
-				od;
-			else
-				for j in edges_origin_v1 do
-					# Find where the edge maps to under the isomorphism. 
-					non_multi_edge_pos := Position(lad2_e, [lad1_e[j][1]^iso, lad1_e[j][2]^iso]);
-					# Get that edge label. 
-					Add(orbits2, lad2_el[non_multi_edge_pos]);
-				od;
-			fi;
+			###	# Find where the orbits map to be following the edge isomorphism. 
+			###	for j in edges_origin_v2 do
+			###		Add(orbits2, lad2_el[j^iso[2]]);
+			###	od;
+			###else
+			###	for j in edges_origin_v1 do
+			###		# Find where the edge maps to under the isomorphism. 
+			###		non_multi_edge_pos := Position(lad2_e, [lad1_e[j][1]^iso, lad1_e[j][2]^iso]);
+			###		# Get that edge label. 
+			###		Add(orbits2, lad2_el[non_multi_edge_pos]);
+			###	od;
+			###fi;
+
+			edges_origin_v2 := List(edges_origin_v1, x -> x^iso[2]);
+			orbits2 := lad2_el{edges_origin_v2};
 			
 			# Find if there's a valid bijection between the two that make the conjugates. 
 			bijection := FindConjugateBijectionBetweenGroups@(G1, G2, orbits1, orbits2);
@@ -256,6 +266,7 @@ function(d, no_vertex_orbits)
 						
 						loop_exit := false;
 						lone_orbits := false;
+						d_test := DigraphByAdjacencyMatrix([[2, 1], [1, 2]]);
 						for r in order_two_permutations[arc_label_len] do
 							bad_rev := false;
 							# Check that it's a valid reversal mapping. 
@@ -286,17 +297,17 @@ function(d, no_vertex_orbits)
 							# If it doesn't have loops then there will be a digraph
 							# isomorphism that swaps the edges around so we don't
 							# need to check all the arc label arrangements. 
-							if not DigraphHasLoops(temp_lad) then
-								break;
-							fi;
+							#if not DigraphHasLoops(temp_lad) then
+							#	break;
+							#fi;
 
 							# If the labels are all of size one then the vertex
 							# labels are the trivial groups and we can construct
 							# a bijection that will swap any arrangement of the 
 							# arc labels.  
-							if Set(List(arc_labels, Size)) = [1] then
-								break;
-							fi;
+							#if Set(List(arc_labels, Size)) = [1] then
+							#	break;
+							#fi;
 						od;
 					od;
 				od;

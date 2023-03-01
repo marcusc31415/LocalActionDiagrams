@@ -50,13 +50,18 @@ end;
 # calculations by ensuring D2 is a digraph that you've already run on this
 # function. 
 FindEveryDigraphIsomorphism@ := function(D1, D2)
-	local aut_grp, aut, base_iso, iso_list, proj_1, proj_2;
+	local aut_grp, aut, base_iso, iso_list, proj_1, proj_2, iso, rev_1, rev_2, edge_iso, edges_1, edges_2, edges_after_iso, edge_movement, edge, good_reversal, edge_no, edges;
 
 	base_iso := IsomorphismDigraphs(D1, D2); # Find one isomorphism between them.
 
 	if base_iso = fail then
 		return fail;
 	fi;
+
+	rev_1 := LocalActionDiagramEdgeReversal(D1);
+	rev_2 := LocalActionDiagramEdgeReversal(D2);
+	edges_1 := DigraphEdges(D1);
+	edges_2 := DigraphEdges(D2);
 
 	# Isomorphism and automorphism will having mappings for vertices and edges. 
 	if IsMultiDigraph(D1) then
@@ -68,7 +73,19 @@ FindEveryDigraphIsomorphism@ := function(D1, D2)
 
 		# Find each isomorphism by composing the 'base isomorphism' with each automorphism.  
 		for aut in aut_grp do
-			Add(iso_list, [base_iso[1]*Image(proj_1, aut), base_iso[2]*Image(proj_2, aut)]);
+			iso := [base_iso[1]*Image(proj_1, aut), base_iso[2]*Image(proj_2, aut)];
+			# Check that the reversal mapping is correct under the isomorphism.
+			edges := ShallowCopy(edges_1);
+			edge_movement := [1..Length(edges)];
+			edges := List(edges, x -> List(x, y -> y^iso[1]));
+			StableSortParallel(edges, edge_movement);
+			edge_iso := MappingPermListList([1..Length(edges)], edge_movement);
+			edge_iso := MappingPermListList(edge_movement, [1..Length(edges)]);
+			edge_iso := edge_iso*iso[2];
+			if rev_1*edge_iso = edge_iso*rev_2 then
+				Add(iso_list, [iso[1], edge_iso]);
+				#Add(iso_list, ["HI", edge_movement, iso[2]]);
+			fi;
 		od;
 	# Not a multi-digraph so only mappings for vertices. 
 	else
@@ -76,7 +93,24 @@ FindEveryDigraphIsomorphism@ := function(D1, D2)
 		iso_list := [];
 		# Find each isomorphism by composing the 'base isomorphism' with each automorphism.  
 		for aut in aut_grp do
-			Add(iso_list, base_iso*aut);
+			iso := base_iso*aut;
+			edges_after_iso := List(edges_1, x -> List(x, y -> y^iso));
+			edge_movement := List(edges_after_iso, x -> Position(edges_2, x));
+			edge_iso := MappingPermListList([1..DigraphNrEdges(D1)], edge_movement);
+			edge_iso := MappingPermListList(edge_movement, [1..DigraphNrEdges(D1)]);
+			
+			#good_reversal := true;
+			#for edge_no in [1..DigraphNrEdges(D1)] do
+			#	if (edge_no^rev_1)^edge_iso <> (edge_no^edge_iso)^rev_2 then
+			#		good_reversal := false;
+			#		break;
+			#	fi;
+			#od;
+			
+			# If the reversal map is correct under the isomorphism. 
+			if rev_1*edge_iso = edge_iso*rev_2 then
+				Add(iso_list, [iso, edge_iso]);
+			fi;
 		od;
 
 	fi;
