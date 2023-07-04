@@ -16,6 +16,7 @@ DeclareOperation("LocalActionDiagramFromData", [IsDigraph, IsList, IsList, IsPer
 DeclareOperation("LocalActionDiagramFromDataNC", [IsDigraph, IsList, IsList, IsPerm]);
 DeclareOperation("LocalActionDiagramUniversalGroup", [IsPermGroup]);
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
+DeclareOperation("DiscreteLocalActionDiagram", [IsLocalActionDiagram]);
 
 
 ############################

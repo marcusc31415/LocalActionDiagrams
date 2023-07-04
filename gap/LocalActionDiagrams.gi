@@ -1,5 +1,65 @@
-hi := "";
-d_test := "";
+
+DrawLADAddToTree := function(LAD, depth, tree, lad_vertex, prev_arc_no, current_depth)
+	local tree_vertex_no, rev_arc_no, rev_arc_label, arcs_to_check, lad_next_vert, arc_label, arc_no, arc_labels;
+	Add(tree, []);
+	if current_depth = depth then
+		return;
+	fi;
+	tree_vertex_no := Size(tree); # The index of this vertex in the tree list. 
+	rev_arc_no := prev_arc_no^LocalActionDiagramEdgeReversal(LAD);
+	rev_arc_label := LocalActionDiagramEdgeLabels(LAD)[rev_arc_no][1]; # Pick the first label on the reverse arc. 
+	arcs_to_check := Positions(DigraphSource(LAD), lad_vertex);
+
+	for arc_no in arcs_to_check do
+		arc_labels := LocalActionDiagramEdgeLabels(LAD)[arc_no];
+		for arc_label in arc_labels do
+			if not (arc_no = rev_arc_no and arc_label = rev_arc_label) then
+				Add(tree[tree_vertex_no], Size(tree)+1);
+				lad_next_vert := DigraphEdges(LAD)[arc_no][2];
+				DrawLADAddToTree(LAD, depth, tree, lad_next_vert, arc_no, current_depth+1);
+			fi;
+		od;
+	od;
+end;
+
+# *__start_vertex* is an optional argument. 
+# If nothing is put there then it will default to 1.
+# If any other argument after are provided they will be silently ignored. 
+DrawLAD := function(LAD, depth, __start_vertex...)
+	local tree, arcs_to_check, arc_no, arc_labels, lad_next_vert, current_depth, arc_label, start_vertex;
+	
+	if Size(__start_vertex) = 0 then
+		start_vertex := 1;
+	else
+		start_vertex := __start_vertex[1];
+	fi;
+
+	if not 1 <= start_vertex and start_vertex <= DigraphNrVertices(LAD) then
+		Error("Start vertex must be a vertex in the local action diagram.");
+	fi;
+
+	if depth < 1 then
+		Error("Depth must be at least 1.");
+	fi;
+
+
+	tree := [[]]; # Create adjacency list and make diagraph at the end of function.
+	
+	arcs_to_check := Positions(DigraphSource(LAD), start_vertex); # All the edges going out of *start_vertex*. 
+
+	current_depth := 0;
+
+	for arc_no in arcs_to_check do
+		arc_labels := LocalActionDiagramEdgeLabels(LAD)[arc_no];
+		for arc_label in arc_labels do
+			Add(tree[1], Size(tree)+1); # Connect the first vertex to the new vertex to be added. 
+			lad_next_vert := DigraphEdges(LAD)[arc_no][2];
+			DrawLADAddToTree(LAD, depth, tree, lad_next_vert, arc_no, current_depth+1);
+		od;
+	od;
+
+	return Digraph(tree); 
+end;
 
 
 # Set the domain of a permutation group. 
@@ -187,6 +247,22 @@ function(lad1, lad2)
 	return fail;
 end);
 
+# Check if the local action diagram corresponds to a discrete automorphism group.
+# Will be updated when more conditions for discreteness are found.
+# Created: 27/06/2023
+InstallMethod(DiscreteLocalActionDiagram, [IsLocalActionDiagram],
+function(LAD)
+	local grp;
+	for grp in LocalActionDiagramVertexLabels(LAD) do
+		if not IsSemiRegular(grp) then
+			return "Can't determine if discrete yet.";
+		fi;
+	od;
+	return true;
+end );
+
+
+
 # Scopo "variable". It first runs the computation and then will return the computation.
 InstallMethod(LocalActionDiagramScopos, [IsLocalActionDiagram], FindAllScopos@);
 
@@ -266,7 +342,7 @@ function(d, no_vertex_orbits)
 						
 						loop_exit := false;
 						lone_orbits := false;
-						d_test := DigraphByAdjacencyMatrix([[2, 1], [1, 2]]);
+						#d_test := DigraphByAdjacencyMatrix([[2, 1], [1, 2]]);
 						for r in order_two_permutations[arc_label_len] do
 							bad_rev := false;
 							# Check that it's a valid reversal mapping. 
@@ -316,3 +392,16 @@ function(d, no_vertex_orbits)
 	fi;
 	return lads;
 end );
+
+
+
+x := LocalActionDiagramUniversalGroup(Group((1,2),(3,4)));
+
+D := DigraphByAdjacencyMatrix([[0, 1, 1, 1], [1, 0, 0, 0], [1, 0, 0, 1], [1, 0, 1, 0]]);
+g := Group(());
+g2 := Group(());
+g3 := Group(());
+SetPermGroupDomain(g, [1, 2]);
+SetPermGroupDomain(g2, [1, 2, 3]);
+SetPermGroupDomain(g3, [1]);
+y := LocalActionDiagramFromData(D, [g2, g3, g, g], [[1], [2], [3], [1], [1], [2], [1], [2]], (1,4)(2,5)(3,7)(6,8));
