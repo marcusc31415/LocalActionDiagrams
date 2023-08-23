@@ -208,7 +208,7 @@ CheckScopoSecondCondition@ := function(lad, edge_no)
 	edge_labels := LocalActionDiagramEdgeLabels(lad);
 	rev := LocalActionDiagramEdgeReversal(lad);
 
-	terminal_edges := Positions(List(edges, x -> x[2]), edge_no);
+	terminal_edges := Positions(List(edges, x -> x[2]), edges[edge_no][1]); # Edges that terminate at o(a). 
 
 	terminal_edges := Difference(terminal_edges, [edge_no^rev]);
 
