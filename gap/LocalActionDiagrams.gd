@@ -10,13 +10,16 @@ DeclareAttribute("LocalActionDiagramVertexLabels", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramEdgeLabels", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramEdgeReversal", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramScopos", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramGroupType", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramIsDiscrete", IsLocalActionDiagram);
 
 # Local Action Diagram Functions
 DeclareOperation("LocalActionDiagramFromData", [IsDigraph, IsList, IsList, IsPerm]);
 DeclareOperation("LocalActionDiagramFromDataNC", [IsDigraph, IsList, IsList, IsPerm]);
 DeclareOperation("LocalActionDiagramUniversalGroup", [IsPermGroup]);
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
-DeclareOperation("DiscreteLocalActionDiagram", [IsLocalActionDiagram]);
+DeclareOperation("CotreeFromScopo", [IsLocalActionDiagram, IsList]);
+DeclareOperation("CotreeFromScopoNC", [IsLocalActionDiagram, IsList]);
 
 
 ############################

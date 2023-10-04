@@ -255,3 +255,180 @@ Order2Elements@ :=function(domain)
 	od;
 	return Union(elms, [()]);
 end;
+
+CotreeFromScopo@ := function(lad, scopo)
+	local vertices, v_in_scopo, edge_in_scopo, cotree, cotree_edge_labels, edge_label_positions, rev;
+
+	vertices := DigraphVertices(lad);
+	rev := LocalActionDiagramEdgeReversal(lad);
+	v_in_scopo := [];
+	# Add the origin vertex of each edge in scopo to the list.
+	# Cotree is formed by every other vertex in the lad. 
+	for edge_in_scopo in scopo do
+		Add(v_in_scopo, DigraphEdges(lad)[edge_in_scopo][1]);
+	od;
+	cotree := InducedSubdigraph(lad, Difference(vertices, v_in_scopo));
+	edge_label_positions := Difference([1..DigraphNrEdges(lad)], scopo);
+	edge_label_positions := Difference(edge_label_positions, List(scopo, x -> x^rev));
+	cotree_edge_labels := LocalActionDiagramEdgeLabels(lad){edge_label_positions};
+
+	return [cotree, cotree_edge_labels];
+end;
+
+# Find the group type of *lad*.
+GroupType@ := function(lad)
+	local scopos, scopo, scopo_size, largest_scopos_position, cotrees, vertices, v_in_scopo, edge_in_scopo, idx, cotree_edge_labels, edge_label_positions, orientation_edges, start_vertex, current_vertex, prev_vertex, out_edges, rev, cotree, orientation_edge_numbers, edge, temp, orientation_edge_labels, other_orientation_edge_labels, max_orientation, max_other_orientation; 
+
+	scopos := LocalActionDiagramScopos(lad);
+	scopo_size := List(scopos, Length);
+	vertices := DigraphVertices(lad);
+	rev := LocalActionDiagramEdgeReversal(lad);
+	cotrees := [];
+	cotree_edge_labels := [];
+	
+	# Find the corresponding cotree of each scopo. 
+	for scopo in scopos do
+		cotree := CotreeFromScopo@(lad, scopo);
+		Add(cotrees, cotree[1]);
+		Add(cotree_edge_labels, cotree[2]);
+	od;
+
+	# Positions of the largest scopos.  
+	largest_scopos_position := Positions(scopo_size, Maximum(scopo_size));
+
+	# Check if fixed vertex and edge inversion.
+	for idx in largest_scopos_position do
+		# Single vertex and no loop.
+		if DigraphNrVertices(cotrees[idx]) = 1 and DigraphNrEdges(cotrees[idx]) = 0 then
+			return "Fixed Vertex";
+		# Single vertex and single loop (if single vertex then one edge = one loop). 
+		elif DigraphNrVertices(cotrees[idx]) = 1 and DigraphNrEdges(cotrees[idx]) = 1 then
+			# Check the single loop has colour set of size 1. 
+			if Length(cotree_edge_labels[idx][1]) = 1 then
+				return "Edge Inversion";
+			fi;
+		fi;
+	od;
+
+	# Check if lineal or focal. 
+	for idx in [1..Length(cotrees)] do
+		cotree := cotrees[idx];
+		# Cotree which is a cycle of order 1.
+		if DigraphNrVertices(cotree) = 1 and DigraphNrEdges(cotree) = 2 then
+			if Maximum(List(cotree_edge_labels[idx], Length)) = 1 then
+				return "Lineal";
+			elif Length(cotree_edge_labels[idx][1]) = 1 or Length(cotree_edge_labels[idx][2]) = 1 then
+				return "Focal";
+			fi;
+		# Need to manually find out if it's a cycle because Digraphs package is mean with it's definitions. 
+		elif DigraphNrEdges(cotree) = 2*DigraphNrVertices(cotree) then
+			# Find one orientation of the cycle. 
+			orientation_edges := [];
+			Add(orientation_edges, DigraphEdges(cotree)[1]);
+			start_vertex := orientation_edges[1][1];
+			prev_vertex := start_vertex;
+			current_vertex := orientation_edges[1][2];
+			# If it's a cycle then this process will end with current_vertex = start_vertex.
+			for temp in [2..DigraphNrVertices(cotree)] do
+				# Find the two edges with origin vertex *current_vertex*. 
+				out_edges := List(DigraphEdges(cotree), x -> x[1] = current_vertex);
+				out_edges := ListBlist(DigraphEdges(cotree), out_edges);
+				if out_edges[1][2] <> prev_vertex then
+					Add(orientation_edges, out_edges[1]);
+					prev_vertex := current_vertex;
+					current_vertex := out_edges[1][2];
+				else
+					Add(orientation_edges, out_edges[2]);
+					prev_vertex := current_vertex;
+					current_vertex := out_edges[2][2];
+				fi;
+			od;
+
+			# It's not a cycle cotree. 
+			if current_vertex <> start_vertex then
+				continue;
+			fi;
+
+			# Get index of each edge in cyclic orientation.
+			orientation_edge_numbers := [];
+			for edge in orientation_edges do
+				Add(orientation_edge_numbers, Position(DigraphEdges(cotree), edge));
+			od;
+			
+			# Now check if the cycles have the right colour sets for lineal or focal. 
+			orientation_edge_labels := cotree_edge_labels[idx]{orientation_edge_numbers};
+			other_orientation_edge_labels := cotree_edge_labels[idx]{Difference([1..DigraphNrEdges(cotree)], orientation_edge_numbers)};
+			max_orientation := Maximum(List(orientation_edge_labels, Length));
+			max_other_orientation := Maximum(List(other_orientation_edge_labels, Length));
+			if max_orientation = 1 and max_other_orientation = 1 then
+				return "Lineal";
+			elif max_orientation = 1 and max_other_orientation > 1 then
+				return "Focal";
+			elif max_orientation > 1 and max_other_orientation = 1 then
+				return "Focal";
+			fi;
+		fi;
+	od;
+
+	# A finite LAD can't be horocyclic so if it's not any of the above types it must be of General Type. 
+	return "General Type";
+end;
+
+# Check if *lad* corresponds to a discrete group. 
+IsDiscrete@ := function(lad)
+	local group_type, v_label, max_cotree, max_scopo, scopos, edge_no, v_in_scopo, idx, scopo;
+
+	group_type := LocalActionDiagramGroupType(lad);
+
+	# These types are always discrete for finite LADs. 
+	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" then
+		return true;
+	# Focal is never discrete. 
+	elif group_type = "Focal" then
+		return false;
+	elif group_type = "Lineal" then
+		# Discrete if and only if each vertex label is trivial. 
+		for v_label in LocalActionDiagramVertexLabels(lad) do
+			if v_label <> Group(()) then
+				return false;
+			fi;
+		od;
+		return true; 
+	elif group_type = "General Type" then
+		# Get the unique maximum scopo.
+		scopos := LocalActionDiagramScopos(lad);
+		max_scopo := Position(List(scopos, Length), Maximum(List(scopos, Length)));
+		max_scopo := scopos[max_scopo];
+
+		# Get every vertex in the scopo (origin vertices of edges in scopo).
+		# These are the vertices not in the cotree.
+		v_in_scopo := [];
+		for edge_no in max_scopo do
+			Add(v_in_scopo, DigraphEdges(edge_no)[1]);
+		od;
+
+		for idx in [1..DigraphNrVertices(lad)] do
+			v_label := LocalActionDiagramVertexLabels(lad)[idx];
+			# Vertex label not in cotree and not trivial.
+			if idx in v_in_scopo then
+				if v_label <> Group(()) then
+					return false;
+				fi;
+			# Vertex label in cotree and not semi-regular. 
+			elif not idx in v_in_scopo then
+				if not IsSemiRegular(v_label, PermGroupDomain(v_label)) then
+					return false;
+				fi;
+			else
+				Error("Something wrong with genearl type discrete check. Vertex not in scopo and not in cotree...");
+			fi;
+		od;
+		
+		# General type is discrete if above loop finished. 
+		return true;
+	else
+		Error("Something really bad happend with the group type check.");
+	fi;
+end;
+
+

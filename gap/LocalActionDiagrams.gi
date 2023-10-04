@@ -247,21 +247,11 @@ function(lad1, lad2)
 	return fail;
 end);
 
-# Check if the local action diagram corresponds to a discrete automorphism group.
-# Will be updated when more conditions for discreteness are found.
-# Created: 27/06/2023
-InstallMethod(DiscreteLocalActionDiagram, [IsLocalActionDiagram],
-function(LAD)
-	local grp;
-	for grp in LocalActionDiagramVertexLabels(LAD) do
-		if not IsSemiRegular(grp) then
-			return "Can't determine if discrete yet.";
-		fi;
-	od;
-	return true;
-end );
+# Group type "variable". It first runs the computation and then will return the computation.
+InstallMethod(LocalActionDiagramGroupType, [IsLocalActionDiagram], GroupType@);
 
-
+# Is Discrete "variable". It first runs the computation and then will return the computation.
+InstallMethod(LocalActionDiagramIsDiscrete, [IsLocalActionDiagram], IsDiscrete@);
 
 # Scopo "variable". It first runs the computation and then will return the computation.
 InstallMethod(LocalActionDiagramScopos, [IsLocalActionDiagram], FindAllScopos@);
@@ -393,6 +383,16 @@ function(d, no_vertex_orbits)
 	return lads;
 end );
 
+
+InstallMethod(CotreeFromScopo, "test label 123", [IsLocalActionDiagram, IsList],
+function(lad, scopo)
+	if not scopo in LocalActionDiagramScopos(lad) then
+		Error("Input list is not a scopo of the local action diagram.");
+	fi;
+	return CotreeFromScopo@(lad, scopo);
+end);
+
+InstallMethod(CotreeFromScopoNC, [IsLocalActionDiagram, IsList], CotreeFromScopo@);
 
 
 x := LocalActionDiagramUniversalGroup(Group((1,2),(3,4)));
