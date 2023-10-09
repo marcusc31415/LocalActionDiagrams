@@ -257,7 +257,7 @@ Order2Elements@ :=function(domain)
 end;
 
 CotreeFromScopo@ := function(lad, scopo)
-	local vertices, v_in_scopo, edge_in_scopo, cotree, cotree_edge_labels, edge_label_positions, rev;
+	local vertices, v_in_scopo, edge_in_scopo, cotree, cotree_edge_labels, edge_label_positions, rev, cotree_rev, idx, checked;
 
 	vertices := DigraphVertices(lad);
 	rev := LocalActionDiagramEdgeReversal(lad);
@@ -272,12 +272,23 @@ CotreeFromScopo@ := function(lad, scopo)
 	edge_label_positions := Difference(edge_label_positions, List(scopo, x -> x^rev));
 	cotree_edge_labels := LocalActionDiagramEdgeLabels(lad){edge_label_positions};
 
-	return [cotree, cotree_edge_labels];
+	cotree_rev := ();
+	checked := [];
+
+	for idx in [1..Length(edge_label_positions)] do
+		if (not idx in checked) and idx <> Position(edge_label_positions, edge_label_positions[idx]^rev) then
+			cotree_rev := cotree_rev*(idx,Position(edge_label_positions, edge_label_positions[idx]^rev));
+			Add(checked, idx);
+			Add(checked, idx^cotree_rev);
+		fi;
+	od;
+
+	return [cotree, cotree_edge_labels, cotree_rev];
 end;
 
 # Find the group type of *lad*.
 GroupType@ := function(lad)
-	local scopos, scopo, scopo_size, largest_scopos_position, cotrees, vertices, v_in_scopo, edge_in_scopo, idx, cotree_edge_labels, edge_label_positions, orientation_edges, start_vertex, current_vertex, prev_vertex, out_edges, rev, cotree, orientation_edge_numbers, edge, temp, orientation_edge_labels, other_orientation_edge_labels, max_orientation, max_other_orientation; 
+	local scopos, scopo, scopo_size, largest_scopos_position, cotrees, vertices, v_in_scopo, edge_in_scopo, idx, cotree_edge_labels, edge_label_positions, orientation_edges, start_vertex, current_vertex, prev_vertex, out_edges, rev, cotree, orientation_edge_numbers, edge, temp, orientation_edge_labels, other_orientation_edge_labels, max_orientation, max_other_orientation, check_list, v_origin, cotree_revs, cotree_rev; 
 
 	scopos := LocalActionDiagramScopos(lad);
 	scopo_size := List(scopos, Length);
@@ -285,12 +296,14 @@ GroupType@ := function(lad)
 	rev := LocalActionDiagramEdgeReversal(lad);
 	cotrees := [];
 	cotree_edge_labels := [];
+	cotree_revs := [];
 	
 	# Find the corresponding cotree of each scopo. 
 	for scopo in scopos do
 		cotree := CotreeFromScopo@(lad, scopo);
 		Add(cotrees, cotree[1]);
 		Add(cotree_edge_labels, cotree[2]);
+		Add(cotree_revs, cotree[3]);
 	od;
 
 	# Positions of the largest scopos.  
@@ -313,38 +326,79 @@ GroupType@ := function(lad)
 	# Check if lineal or focal. 
 	for idx in [1..Length(cotrees)] do
 		cotree := cotrees[idx];
+
+		# The empty cotree is not a real cotree. 
+		if DigraphNrVertices(cotree) = 0 then
+			continue;
+		fi;
 		# Cotree which is a cycle of order 1.
 		if DigraphNrVertices(cotree) = 1 and DigraphNrEdges(cotree) = 2 then
-			if Maximum(List(cotree_edge_labels[idx], Length)) = 1 then
+			if Maximum(List(cotree_edge_labels[idx], Length)) = 1 and 1^cotree_revs[idx] = 2 then
 				return "Lineal";
-			elif Length(cotree_edge_labels[idx][1]) = 1 or Length(cotree_edge_labels[idx][2]) = 1 then
+			elif (Length(cotree_edge_labels[idx][1]) = 1 or Length(cotree_edge_labels[idx][2]) = 1) and 1^cotree_revs[idx] = 2 then
 				return "Focal";
 			fi;
 		# Need to manually find out if it's a cycle because Digraphs package is mean with it's definitions. 
 		elif DigraphNrEdges(cotree) = 2*DigraphNrVertices(cotree) then
-			# Find one orientation of the cycle. 
+			# Check if each vertex has 2 arcs originating at it. 
+			check_list := List(DigraphEdges(cotree), x -> 0);
+			for v_origin in List(DigraphEdges(cotree), x -> x[1]) do
+				if check_list[v_origin] <= 2 then
+					check_list[v_origin] := check_list[v_origin] + 1;
+				else
+					continue;
+				fi;
+			od;
+
+
+			# If each vertex has two arcs originating at it then we can have either some loops (but not ones
+			# corresponding to a cycle), a line, or a cycle. 
+			# This checks if there's a cycle by building an orientation. 
 			orientation_edges := [];
 			Add(orientation_edges, DigraphEdges(cotree)[1]);
 			start_vertex := orientation_edges[1][1];
 			prev_vertex := start_vertex;
 			current_vertex := orientation_edges[1][2];
-			# If it's a cycle then this process will end with current_vertex = start_vertex.
-			for temp in [2..DigraphNrVertices(cotree)] do
-				# Find the two edges with origin vertex *current_vertex*. 
-				out_edges := List(DigraphEdges(cotree), x -> x[1] = current_vertex);
-				out_edges := ListBlist(DigraphEdges(cotree), out_edges);
-				if out_edges[1][2] <> prev_vertex then
-					Add(orientation_edges, out_edges[1]);
-					prev_vertex := current_vertex;
-					current_vertex := out_edges[1][2];
-				else
-					Add(orientation_edges, out_edges[2]);
-					prev_vertex := current_vertex;
-					current_vertex := out_edges[2][2];
-				fi;
-			od;
 
-			# It's not a cycle cotree. 
+			# There's a loop so it's not a cycle (checked cycle of length 1 separately.)
+			if start_vertex = current_vertex then
+				continue;
+			fi;
+	
+			# There are two vertices. 
+			if DigraphNrVertices(cotree) = 2 then
+				# There are four edges of the form [[1,2],[1,2],[2,1],[2,1]].
+				if Length(Set(DigraphEdges(cotree))) <> 2 then
+					continue;
+				else
+					# This is one orientation. 
+					orientation_edges := [1, 1^cotree_revs[idx]];
+					current_vertex := start_vertex;
+				fi;
+			else
+				# If this loop terminates then it's either a line or a cycle. 
+				for temp in [2..DigraphNrVertices(cotree)] do
+					# Find the two edges with origin vertex *current_vertex*. 
+					out_edges := List(DigraphEdges(cotree), x -> x[1] = current_vertex);
+					out_edges := ListBlist(DigraphEdges(cotree), out_edges);
+
+					# Check if there's an edge originating here that isn't the reverse and isn't
+					# a loop. 
+					if out_edges[1][2] <> prev_vertex and out_edges[1][2] <> current_vertex then
+						Add(orientation_edges, out_edges[1]);
+						prev_vertex := current_vertex;
+						current_vertex := out_edges[1][2];
+					elif out_edges[2][2] <> prev_vertex and out_edges[2][2] <> current_vertex then
+						Add(orientation_edges, out_edges[2]);
+						prev_vertex := current_vertex;
+						current_vertex := out_edges[2][2];
+					else
+						continue;
+					fi;
+				od;
+			fi;
+
+			# If this is the case then it's a line. 
 			if current_vertex <> start_vertex then
 				continue;
 			fi;
@@ -420,7 +474,7 @@ IsDiscrete@ := function(lad)
 					return false;
 				fi;
 			else
-				Error("Something wrong with genearl type discrete check. Vertex not in scopo and not in cotree...");
+				Error("Something wrong with general type discrete check. Vertex not in scopo and not in cotree...");
 			fi;
 		od;
 		
