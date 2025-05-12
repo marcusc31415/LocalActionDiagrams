@@ -201,16 +201,12 @@ end;
 
 # Checks the second condition from the scopo definition (if a is in the scopo
 # then all arcs that terminate at o(a) are also in it apart from Reverse(a)). 
-CheckScopoSecondCondition@ := function(lad, edge_no)
-	local edges, edge_labels, rev, terminal_edges;
+CheckScopoSecondCondition@ := function(lad, terminal_edges)
+	local edges, edge_labels, rev;
 
 	edges := DigraphEdges(lad);
 	edge_labels := LocalActionDiagramEdgeLabels(lad);
 	rev := LocalActionDiagramEdgeReversal(lad);
-
-	terminal_edges := Positions(List(edges, x -> x[2]), edges[edge_no][1]); # Edges that terminate at o(a). 
-
-	terminal_edges := Difference(terminal_edges, [edge_no^rev]);
 
 	if not ForAll(List(edge_labels{terminal_edges}, Size), x -> x = 1) then
 		return false;
@@ -220,15 +216,35 @@ CheckScopoSecondCondition@ := function(lad, edge_no)
 
 end;
 
+# Gets all the incoming edges for a given edge. Also checks the
+# label size condition of the scopo definition. 
+ScopoEdgeIncomingEdges@ := function(lad, edge_no)
+	local edges, edge_labels, rev, terminal_edges;
+
+	edges := DigraphEdges(lad);
+	edge_labels := LocalActionDiagramEdgeLabels(lad);
+	rev := LocalActionDiagramEdgeReversal(lad);
+
+	terminal_edges := Positions(List(edges, x -> x[2]), edges[edge_no][1]); # Edges that terminate at o(a). 
+
+	terminal_edges := Difference(terminal_edges, [edge_no^rev]); # Exclude the reverse. 
+
+	return terminal_edges;
+
+end;
+
+
 # Find all scopos of *lad*. Will always return at least the empty scopo. 
-FindAllScopos@ := function(lad)
+OldFindAllScopos@ := function(lad)
 	local candidate_edges, candidate, candidate_scopos, scopo_list;
 
 	scopo_list := [];
 
+	# Start by finding all edges that have a label of size 1. 
+	# These are the edges that could be part of a scopo. 
 	candidate_edges := Positions(List(LocalActionDiagramEdgeLabels(lad), Size), 1);
-	
-	candidate_edges := ListBlist(candidate_edges, List(candidate_edges, x -> CheckScopoSecondCondition@(lad, x)));
+	candidate_edges := ListBlist(candidate_edges, List(candidate_edges, x -> CheckScopoSecondCondition@(lad, ScopoEdgeIncomingEdges@(lad, x))));
+	# Change in above should hopefully work...
 
 	for candidate in IteratorOfCombinations(candidate_edges) do
 		if CheckIfScopo@(lad, candidate) then
@@ -238,6 +254,68 @@ FindAllScopos@ := function(lad)
 
 	return scopo_list;
 end;
+
+# Find all scopos of *lad*. Will always return at least the empty scopo. 
+FindAllScopos@ := function(lad)
+	local candidate_edges, candidate, candidate_scopos, scopo_list, edge, new_edges, combined_new_edges, candidates_to_remove, rev;
+
+	rev := LocalActionDiagramEdgeReversal(lad);
+	scopo_list := [];
+
+	# Start by finding all edges that have a label of size 1. 
+	# These are the edges that could be part of a scopo. 
+	# Maybe put second one in loop?
+	candidate_edges := Positions(List(LocalActionDiagramEdgeLabels(lad), Size), 1);
+	candidate_edges := ListBlist(candidate_edges, List(candidate_edges, x -> CheckScopoSecondCondition@(lad, ScopoEdgeIncomingEdges@(lad, x))));
+	# Change in above should hopefully work...
+	candidate_scopos := List(candidate_edges, x -> [[x]]); # Scopos will be lists of edges. 
+
+	scopo_list := [ [] ]; # The empty scopo is always there. 
+	candidates_to_remove := [];
+
+	while true do
+		# Leave loop if there are no scopos. 
+		candidate_scopos := Difference(candidate_scopos, candidates_to_remove);
+		if candidate_scopos = [] then
+			break;
+		fi;
+		for candidate in candidate_scopos do
+			combined_new_edges := [];
+			for edge in Last(candidate) do
+				# Get all the new edges needed for a scopo.
+				new_edges := ScopoEdgeIncomingEdges@(lad, edge);
+				if CheckScopoSecondCondition@(lad, new_edges) then
+					combined_new_edges := Concatenation(combined_new_edges, new_edges);
+				else
+					Add(candidates_to_remove, candidate);
+					continue;
+				fi;
+			od;
+			# If this is empty then it's a scopo because there are no new edges to add.
+			if combined_new_edges = [] then
+				Add(scopo_list, Concatenation(candidate));
+				Add(candidates_to_remove, candidate);
+				continue;
+			fi;
+			# If all edges are already in the scopo then we are looping so it's a scopo.
+			if ForAll(combined_new_edges, x -> ForAny(candidate, y -> x in y)) then
+				Add(scopo_list, Concatenation(candidate));
+				Add(candidates_to_remove, candidate);
+				continue;
+			fi;
+			# This is the reverse of an edge in then candidate so it isn't a scopo. 
+			if ForAny(combined_new_edges, x -> ForAny(candidate, y -> x^rev in y)) then
+				Add(candidates_to_remove, candidate);
+				continue;
+			fi;
+			Add(candidate, combined_new_edges); # Hope this works.
+		od;
+	od;
+
+
+	return Set(List(scopo_list, x -> Set(x)));
+end;
+
 
 # Find all order two elements of Sym(domain). 
 Order2Elements@ :=function(domain)
