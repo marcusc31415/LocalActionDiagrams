@@ -284,14 +284,20 @@ FindAllScopos@ := function(lad)
 			for edge in Last(candidate) do
 				# Get all the new edges needed for a scopo.
 				new_edges := ScopoEdgeIncomingEdges@(lad, edge);
-				if CheckScopoSecondCondition@(lad, new_edges) then
+				if edge = edge^LocalActionDiagramEdgeReversal(lad) then
+					Add(candidates_to_remove, candidate);
+					break;
+				elif CheckScopoSecondCondition@(lad, new_edges) then
 					combined_new_edges := Concatenation(combined_new_edges, new_edges);
 				else
 					Add(candidates_to_remove, candidate);
-					continue;
+					break;
 				fi;
 			od;
 			# If this is empty then it's a scopo because there are no new edges to add.
+			if candidate in candidates_to_remove then
+				continue;
+			fi;
 			if combined_new_edges = [] then
 				Add(scopo_list, Concatenation(candidate));
 				Add(candidates_to_remove, candidate);
