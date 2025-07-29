@@ -1,4 +1,3 @@
-
 DrawLADAddToTree := function(LAD, depth, tree, lad_vertex, prev_arc_no, current_depth)
 	local tree_vertex_no, rev_arc_no, rev_arc_label, arcs_to_check, lad_next_vert, arc_label, arc_no, arc_labels;
 	Add(tree, []);
@@ -15,7 +14,7 @@ DrawLADAddToTree := function(LAD, depth, tree, lad_vertex, prev_arc_no, current_
 		for arc_label in arc_labels do
 			if not (arc_no = rev_arc_no and arc_label = rev_arc_label) then
 				Add(tree[tree_vertex_no], Size(tree)+1);
-				lad_next_vert := DigraphEdges(LAD)[arc_no][2];
+				lad_next_vert := LocalActionDiagramEdges(LAD)[arc_no][2];
 				DrawLADAddToTree(LAD, depth, tree, lad_next_vert, arc_no, current_depth+1);
 			fi;
 		od;
@@ -53,7 +52,7 @@ DrawLAD := function(LAD, depth, __start_vertex...)
 		arc_labels := LocalActionDiagramEdgeLabels(LAD)[arc_no];
 		for arc_label in arc_labels do
 			Add(tree[1], Size(tree)+1); # Connect the first vertex to the new vertex to be added. 
-			lad_next_vert := DigraphEdges(LAD)[arc_no][2];
+			lad_next_vert := LocalActionDiagramEdges(LAD)[arc_no][2];
 			DrawLADAddToTree(LAD, depth, tree, lad_next_vert, arc_no, current_depth+1);
 		od;
 	od;
@@ -91,7 +90,9 @@ function(D, vl, el, rev)
 	fi;
 
 	# Check reversal properly?
-	edges := DigraphEdges(D);
+	# Make a copy of the edges and sort them lexicographically. 
+	edges := ShallowCopy(DigraphEdges(D));
+	Sort(edges);
 	for i in [1..Length(el)] do
 		edge_origin := edges[i][1];
 		edge_end := edges[i][2];
@@ -108,7 +109,7 @@ function(D, vl, el, rev)
 
 	### Check the edge labelling is valid. ###
 
-	v_origin := List(DigraphEdges(D), x -> x[1]);
+	v_origin := List(edges, x -> x[1]);
 	v_orbits := List(vl, G -> Orbits(G, PermGroupDomain(G)));
 
 	# Check if the "out" edge labels are all the orbits of the vertex label. 
@@ -141,9 +142,15 @@ InstallMethod(LocalActionDiagramFromDataNC, "No Check test label 123", [IsDigrap
 function(D, vl, el, rev)
 	local lad;
 
-	lad := DigraphImmutableCopy(D);
+	#lad := DigraphImmutableCopy(D);
+	lad := D;
+	# Make a copy of the edges and sort them lexicographically. 
+	edges := ShallowCopy(DigraphEdges(D));
+	Sort(edges);
+
 	SetFilterObj(lad, IsLocalActionDiagram);
 	Setter(LocalActionDiagramVertexLabels)(lad, vl);
+	Setter(LocalActionDiagramEdges)(lad, edges);
 	Setter(LocalActionDiagramEdgeLabels)(lad, el);
 	Setter(LocalActionDiagramEdgeReversal)(lad, rev);
 
@@ -177,8 +184,8 @@ function(lad1, lad2)
 
 	lad1_v := LocalActionDiagramVertexLabels(lad1);
 	lad2_v := LocalActionDiagramVertexLabels(lad2);
-	lad1_e := DigraphEdges(lad1);
-	lad2_e := DigraphEdges(lad2);
+	lad1_e := LocalActionDiagramEdges(lad1);
+	lad2_e := LocalActionDiagramEdges(lad2);
 	lad1_el := LocalActionDiagramEdgeLabels(lad1);
 	lad2_el := LocalActionDiagramEdgeLabels(lad2);
 
@@ -315,7 +322,7 @@ function(d, no_vertex_orbits)
 			# be at most the minimum number of arcs originating at the two vertices. 
 			for arcs_between in [1..Minimum(no_orbits)] do
 				D := DigraphByAdjacencyMatrix([[no_orbits[1]-arcs_between, arcs_between], [arcs_between, no_orbits[2]-arcs_between]]);
-				edges := DigraphEdges(D);
+				edges := LocalActionDiagramEdges(D);
 
 				# For all arrangements of the arc labels on the edges. 
 				for arc_label_order_one in Arrangements(arcs[1], Length(arcs[1])) do

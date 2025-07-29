@@ -7,6 +7,7 @@ DeclareCategory("IsLocalActionDiagram", IsDigraph);
 
 # Local Action Diagram Attributes
 DeclareAttribute("LocalActionDiagramVertexLabels", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramEdges", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramEdgeLabels", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramEdgeReversal", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramScopos", IsLocalActionDiagram);

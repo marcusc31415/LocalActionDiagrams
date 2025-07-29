@@ -45,12 +45,33 @@ GroupConjugateByBijection@ := function(G, bijection)
 	return conjugate_group;
 end;
 
+# Returns the permutation of edges between LocalActionDiagramEdges and the sorted
+# list LocalActionDiagramEdges. Needed for the isomorphism function.
+DigraphLocalActionDiagramEdgeMapping@ := function(lad)
+	local digraph_edges, lad_edges, perm_list, edge, p;
+	
+	digraph_edges := LocalActionDiagramEdges(lad);
+	lad_edges := LocalActionDiagramEdges(lad);
+
+	perm_list := [];
+	
+	for edge in digraph_edges do
+		p := Position(lad_edges, edge);
+		while p in perm_list do
+			p := Position(lad_edges, edge, p);
+		od;
+		Add(perm_list, p);
+	od;
+
+	return PermList(perm_list);
+end;
+
 # Find every digraph isomorphism between D1 and D2. 
 # Note that it uses the automorphism group of D2 so you can speed up repeated
 # calculations by ensuring D2 is a digraph that you've already run on this
 # function. 
 FindEveryDigraphIsomorphism@ := function(D1, D2)
-	local aut_grp, aut, base_iso, iso_list, proj_1, proj_2, iso, rev_1, rev_2, edge_iso, edges_1, edges_2, edges_after_iso, edge_movement, edge, good_reversal, edge_no, edges;
+	local aut_grp, aut, base_iso, iso_list, proj_1, proj_2, iso, rev_1, rev_2, edge_iso, edges_1, edges_2, edges_after_iso, edge_movement, edge, good_reversal, edge_no, edges, lad1_edge_map, lad2_edge_map;
 
 	base_iso := IsomorphismDigraphs(D1, D2); # Find one isomorphism between them.
 
@@ -58,16 +79,23 @@ FindEveryDigraphIsomorphism@ := function(D1, D2)
 		return fail;
 	fi;
 
+	lad1_edge_map := DigraphLocalActionDiagramEdgeMapping@(lad1);
+	lad2_edge_map := DigraphLocalActionDiagramEdgeMapping@(lad2);
+
+	# Start at the LAD1 edge list, go to the digraph edge list,
+	# do the isomorphism, then go to the LAD2 edge list. 
+	base_iso := (lad1_edge_map^-1)*base_iso*lad2_edge_map;
+
 	rev_1 := LocalActionDiagramEdgeReversal(D1);
 	rev_2 := LocalActionDiagramEdgeReversal(D2);
-	edges_1 := DigraphEdges(D1);
-	edges_2 := DigraphEdges(D2);
+	edges_1 := LocalActionDiagramEdges(D1);
+	edges_2 := LocalActionDiagramEdges(D2);
 
 	# Isomorphism and automorphism will having mappings for vertices and edges. 
 	if IsMultiDigraph(D1) then
 		aut_grp := AutomorphismGroup(D2); # Use the automorphisms of D2 to find the rest.
 		proj_1 := Projection(aut_grp, 1); # Vertices under automorphism.
-		proj_2 := Projection(aut_grp, 2); # Edges under automorphism. 
+		proj_2 := (lad2_edge_map^-1)*Projection(aut_grp, 2)*lad2_edge_map; # Edges under automorphism. 
 
 		iso_list := [];
 
@@ -93,7 +121,7 @@ FindEveryDigraphIsomorphism@ := function(D1, D2)
 		iso_list := [];
 		# Find each isomorphism by composing the 'base isomorphism' with each automorphism.  
 		for aut in aut_grp do
-			iso := base_iso*aut;
+			iso := base_iso*(lad2_edge_map^-1)*aut*lad2_edge_map;
 			edges_after_iso := List(edges_1, x -> List(x, y -> y^iso));
 			edge_movement := List(edges_after_iso, x -> Position(edges_2, x));
 			edge_iso := MappingPermListList([1..DigraphNrEdges(D1)], edge_movement);
@@ -172,7 +200,7 @@ CheckIfScopo@ := function(lad, scopo)
 
 	edge_labels := LocalActionDiagramEdgeLabels(lad);
 	rev := LocalActionDiagramEdgeReversal(lad);
-	edges := DigraphEdges(lad);
+	edges := LocalActionDiagramEdges(lad);
 
 	for i in scopo do
 
@@ -204,7 +232,7 @@ end;
 CheckScopoSecondCondition@ := function(lad, terminal_edges)
 	local edges, edge_labels, rev;
 
-	edges := DigraphEdges(lad);
+	edges := LocalActionDiagramEdges(lad);
 	edge_labels := LocalActionDiagramEdgeLabels(lad);
 	rev := LocalActionDiagramEdgeReversal(lad);
 
@@ -221,7 +249,7 @@ end;
 ScopoEdgeIncomingEdges@ := function(lad, edge_no)
 	local edges, edge_labels, rev, terminal_edges;
 
-	edges := DigraphEdges(lad);
+	edges := LocalActionDiagramEdges(lad);
 	edge_labels := LocalActionDiagramEdgeLabels(lad);
 	rev := LocalActionDiagramEdgeReversal(lad);
 
@@ -349,7 +377,7 @@ CotreeFromScopo@ := function(lad, scopo)
 	# Add the origin vertex of each edge in scopo to the list.
 	# Cotree is formed by every other vertex in the lad. 
 	for edge_in_scopo in scopo do
-		Add(v_in_scopo, DigraphEdges(lad)[edge_in_scopo][1]);
+		Add(v_in_scopo, LocalActionDiagramEdges(lad)[edge_in_scopo][1]);
 	od;
 	cotree := InducedSubdigraph(lad, Difference(vertices, v_in_scopo));
 	edge_label_positions := Difference([1..DigraphNrEdges(lad)], scopo);
@@ -425,8 +453,8 @@ GroupType@ := function(lad)
 		# Need to manually find out if it's a cycle because Digraphs package is mean with it's definitions. 
 		elif DigraphNrEdges(cotree) = 2*DigraphNrVertices(cotree) then
 			# Check if each vertex has 2 arcs originating at it. 
-			check_list := List(DigraphEdges(cotree), x -> 0);
-			for v_origin in List(DigraphEdges(cotree), x -> x[1]) do
+			check_list := List(LocalActionDiagramEdges(cotree), x -> 0);
+			for v_origin in List(LocalActionDiagramEdges(cotree), x -> x[1]) do
 				if check_list[v_origin] <= 2 then
 					check_list[v_origin] := check_list[v_origin] + 1;
 				else
@@ -439,7 +467,7 @@ GroupType@ := function(lad)
 			# corresponding to a cycle), a line, or a cycle. 
 			# This checks if there's a cycle by building an orientation. 
 			orientation_edges := [];
-			Add(orientation_edges, DigraphEdges(cotree)[1]);
+			Add(orientation_edges, LocalActionDiagramEdges(cotree)[1]);
 			start_vertex := orientation_edges[1][1];
 			prev_vertex := start_vertex;
 			current_vertex := orientation_edges[1][2];
@@ -452,7 +480,7 @@ GroupType@ := function(lad)
 			# There are two vertices. 
 			if DigraphNrVertices(cotree) = 2 then
 				# There are four edges of the form [[1,2],[1,2],[2,1],[2,1]].
-				if Length(Set(DigraphEdges(cotree))) <> 2 then
+				if Length(Set(LocalActionDiagramEdges(cotree))) <> 2 then
 					continue;
 				else
 					# This is one orientation. 
@@ -463,8 +491,8 @@ GroupType@ := function(lad)
 				# If this loop terminates then it's either a line or a cycle. 
 				for temp in [2..DigraphNrVertices(cotree)] do
 					# Find the two edges with origin vertex *current_vertex*. 
-					out_edges := List(DigraphEdges(cotree), x -> x[1] = current_vertex);
-					out_edges := ListBlist(DigraphEdges(cotree), out_edges);
+					out_edges := List(LocalActionDiagramEdges(cotree), x -> x[1] = current_vertex);
+					out_edges := ListBlist(LocalActionDiagramEdges(cotree), out_edges);
 
 					# Check if there's an edge originating here that isn't the reverse and isn't
 					# a loop. 
@@ -490,7 +518,7 @@ GroupType@ := function(lad)
 			# Get index of each edge in cyclic orientation.
 			orientation_edge_numbers := [];
 			for edge in orientation_edges do
-				Add(orientation_edge_numbers, Position(DigraphEdges(cotree), edge));
+				Add(orientation_edge_numbers, Position(LocalActionDiagramEdges(cotree), edge));
 			od;
 			
 			# Now check if the cycles have the right colour sets for lineal or focal. 
@@ -542,7 +570,7 @@ IsDiscrete@ := function(lad)
 		# These are the vertices not in the cotree.
 		v_in_scopo := [];
 		for edge_no in max_scopo do
-			Add(v_in_scopo, DigraphEdges(edge_no)[1]);
+			Add(v_in_scopo, LocalActionDiagramEdges(edge_no)[1]);
 		od;
 
 		for idx in [1..DigraphNrVertices(lad)] do
