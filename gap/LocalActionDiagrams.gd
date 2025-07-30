@@ -21,6 +21,7 @@ DeclareOperation("LocalActionDiagramUniversalGroup", [IsPermGroup]);
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
 DeclareOperation("CotreeFromScopo", [IsLocalActionDiagram, IsList]);
 DeclareOperation("CotreeFromScopoNC", [IsLocalActionDiagram, IsList]);
+DeclareOperation("RandomLocalActionDiagram", [IsPosInt, IsPosInt]);
 
 
 ############################

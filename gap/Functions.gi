@@ -79,8 +79,8 @@ FindEveryDigraphIsomorphism@ := function(D1, D2)
 		return fail;
 	fi;
 
-	lad1_edge_map := DigraphLocalActionDiagramEdgeMapping@(lad1);
-	lad2_edge_map := DigraphLocalActionDiagramEdgeMapping@(lad2);
+	lad1_edge_map := DigraphLocalActionDiagramEdgeMapping@(D1);
+	lad2_edge_map := DigraphLocalActionDiagramEdgeMapping@(D2);
 
 	# Start at the LAD1 edge list, go to the digraph edge list,
 	# do the isomorphism, then go to the LAD2 edge list. 
