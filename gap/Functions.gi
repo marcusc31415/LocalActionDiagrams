@@ -369,7 +369,7 @@ Order2Elements@ :=function(domain)
 end;
 
 CotreeFromScopo@ := function(lad, scopo)
-	local vertices, v_in_scopo, edge_in_scopo, cotree, cotree_edge_labels, edge_label_positions, rev, cotree_rev, idx, checked;
+	local vertices, v_in_scopo, edge_in_scopo, cotree, cotree_edge_labels, edge_label_positions, rev, cotree_rev, idx, checked, v_in_cotree, cotree_edges, edge, digraph, vl, flat_v, idy, prev_v, v, group_generators, idz, gen, idj;
 
 	vertices := DigraphVertices(lad);
 	rev := LocalActionDiagramEdgeReversal(lad);
@@ -379,28 +379,101 @@ CotreeFromScopo@ := function(lad, scopo)
 	for edge_in_scopo in scopo do
 		Add(v_in_scopo, LocalActionDiagramEdges(lad)[edge_in_scopo][1]);
 	od;
-	cotree := InducedSubdigraph(lad, Difference(vertices, v_in_scopo));
-	edge_label_positions := Difference([1..DigraphNrEdges(lad)], scopo);
-	edge_label_positions := Difference(edge_label_positions, List(scopo, x -> x^rev));
-	cotree_edge_labels := LocalActionDiagramEdgeLabels(lad){edge_label_positions};
+
+	# Better induced subdigraph function needed. One that takes the edge labels with it? 
+	# DIY function in here. Move out if needed for other functions. 
+
+	v_in_cotree := Difference(vertices, v_in_scopo);
+
+	# Find all the edges in the cotree. 
+	# Use their position of the list to get the edge label positions. 
+	# This gives the cotree edge labels. 
+
+	cotree_edges := [];
+	cotree_edge_labels := [];
+	edge_label_positions := [];
+
+	for idx in [1..DigraphNrEdges(lad)] do
+		edge := LocalActionDiagramEdges(lad)[idx];
+		if edge[1] in v_in_cotree and edge[2] in v_in_cotree then
+			Add(cotree_edges, edge);
+			Add(cotree_edge_labels, LocalActionDiagramEdgeLabels(lad)[idx]);
+			Add(edge_label_positions, idx);
+		fi;
+	od;
+	
+	cotree := InducedSubdigraph(lad, v_in_cotree);
+
+
+	#cotree := InducedSubdigraph(lad, Difference(vertices, v_in_scopo));
+	#edge_label_positions := Difference([1..DigraphNrEdges(lad)], scopo);
+	#edge_label_positions := Difference(edge_label_positions, List(scopo, x -> x^rev));
+	#cotree_edge_labels := LocalActionDiagramEdgeLabels(lad){edge_label_positions};
 
 	cotree_rev := ();
 	checked := [];
 
+	# Build the reverse map restricted to the cotree. 
 	for idx in [1..Length(edge_label_positions)] do
+		# Check that this edge isn't self reverse. 
 		if (not idx in checked) and idx <> Position(edge_label_positions, edge_label_positions[idx]^rev) then
+			# Make the reverse map take the edge labelled by *idx* to the edge it maps to in the original local action diagram. 
 			cotree_rev := cotree_rev*(idx,Position(edge_label_positions, edge_label_positions[idx]^rev));
 			Add(checked, idx);
 			Add(checked, idx^cotree_rev);
 		fi;
 	od;
 
-	return [cotree, cotree_edge_labels, cotree_rev];
+	# Reduce the numbers of the edges labels to much then number of vertices in the cotree.
+	# Also need to adjust the groups :(:(:(:(:(:(
+
+
+	#flat_v := Set(Flat(cotree_edges));
+	#if not flat_v[1] = 1 then
+	#	for idx in [1..Length(cotree_edges)] do
+	#		edge := cotree_edges[idx];
+	#		cotree_edges[idx] := edge - flat_v[1] + 1;
+	#	od;
+	#fi;
+
+	#flat_v := Set(Flat(cotree_edges));
+	#prev_v := 1;
+
+	#for idx in [1..Length(flat_v)] do
+	#	v := flat_v[idx];
+	#	if v = 1 then
+	#		continue;
+	#	elif v = 1+prev_v then
+	#		prev_v := v; # No gap in the vertex numbers. 
+	#	else
+	#		for idy in [1..Length(cotree_edges)] do
+	#			edge := cotree_edges[idy];
+	#			# Make a mutable copy. 
+	#			edge := ShallowCopy(edge);
+	#			# Reduce the vertices greater than *prev_v*
+	#			if edge[1] > prev_v then
+	#				edge[1] := edge[1] - (v-prev_v) + 1;
+	#			fi;
+	#			if edge[2] > prev_v then
+	#				edge[2] := edge[2] - (v-prev_v) + 1;
+	#			fi;
+	#			cotree_edges[idy] := MakeImmutable(edge);
+	#		od;
+	#		prev_v := v;
+	#	fi;
+	#od;
+
+	# cotree_edges is sorted? Probably? IDK?
+
+	# Don't return local action diagram. Doesn't make sense when removing stuff the groups act on.
+	# Return the digraph, edge_labels, and reversal map. 
+
+	return [cotree, cotree_edge_labels, cotree_rev, cotree_edges];
 end;
 
 # Find the group type of *lad*.
 GroupType@ := function(lad)
-	local scopos, scopo, scopo_size, largest_scopos_position, cotrees, vertices, v_in_scopo, edge_in_scopo, idx, cotree_edge_labels, edge_label_positions, orientation_edges, start_vertex, current_vertex, prev_vertex, out_edges, rev, cotree, orientation_edge_numbers, edge, temp, orientation_edge_labels, other_orientation_edge_labels, max_orientation, max_other_orientation, check_list, v_origin, cotree_revs, cotree_rev; 
+	local scopos, scopo, scopo_size, largest_scopos_position, cotrees, vertices, v_in_scopo, edge_in_scopo, idx, cotree_edge_labels, edge_label_positions, orientation_edges, start_vertex, current_vertex, prev_vertex, out_edges, rev, cotree, orientation_edge_numbers, edge, temp, orientation_edge_labels, other_orientation_edge_labels, max_orientation, max_other_orientation, check_list, v_origin, cotree_revs, cotree_rev, cotree_edges, cotree_edge_list, next_check; 
 
 	scopos := LocalActionDiagramScopos(lad);
 	scopo_size := List(scopos, Length);
@@ -409,6 +482,7 @@ GroupType@ := function(lad)
 	cotrees := [];
 	cotree_edge_labels := [];
 	cotree_revs := [];
+	cotree_edges := [];
 	
 	# Find the corresponding cotree of each scopo. 
 	for scopo in scopos do
@@ -416,6 +490,7 @@ GroupType@ := function(lad)
 		Add(cotrees, cotree[1]);
 		Add(cotree_edge_labels, cotree[2]);
 		Add(cotree_revs, cotree[3]);
+		Add(cotree_edges, cotree[4]);
 	od;
 
 	# Positions of the largest scopos.  
@@ -438,6 +513,7 @@ GroupType@ := function(lad)
 	# Check if lineal or focal. 
 	for idx in [1..Length(cotrees)] do
 		cotree := cotrees[idx];
+		cotree_edge_list := cotree_edges[idx];
 
 		# The empty cotree is not a real cotree. 
 		if DigraphNrVertices(cotree) = 0 then
@@ -453,21 +529,27 @@ GroupType@ := function(lad)
 		# Need to manually find out if it's a cycle because Digraphs package is mean with it's definitions. 
 		elif DigraphNrEdges(cotree) = 2*DigraphNrVertices(cotree) then
 			# Check if each vertex has 2 arcs originating at it. 
-			check_list := List(LocalActionDiagramEdges(cotree), x -> 0);
-			for v_origin in List(LocalActionDiagramEdges(cotree), x -> x[1]) do
-				if check_list[v_origin] <= 2 then
+			check_list := List(cotree_edge_list, x -> 0);
+			next_check := false;
+			for v_origin in List(cotree_edge_list, x -> x[1]) do
+				if check_list[v_origin] < 2 then
 					check_list[v_origin] := check_list[v_origin] + 1;
 				else
+					next_check := true;
 					continue;
 				fi;
 			od;
+
+			if next_check then
+				continue;
+			fi;
 
 
 			# If each vertex has two arcs originating at it then we can have either some loops (but not ones
 			# corresponding to a cycle), a line, or a cycle. 
 			# This checks if there's a cycle by building an orientation. 
 			orientation_edges := [];
-			Add(orientation_edges, LocalActionDiagramEdges(cotree)[1]);
+			Add(orientation_edges, cotree_edge_list[1]);
 			start_vertex := orientation_edges[1][1];
 			prev_vertex := start_vertex;
 			current_vertex := orientation_edges[1][2];
@@ -480,7 +562,7 @@ GroupType@ := function(lad)
 			# There are two vertices. 
 			if DigraphNrVertices(cotree) = 2 then
 				# There are four edges of the form [[1,2],[1,2],[2,1],[2,1]].
-				if Length(Set(LocalActionDiagramEdges(cotree))) <> 2 then
+				if Length(Set(cotree_edge_list)) <> 2 then
 					continue;
 				else
 					# This is one orientation. 
@@ -491,11 +573,13 @@ GroupType@ := function(lad)
 				# If this loop terminates then it's either a line or a cycle. 
 				for temp in [2..DigraphNrVertices(cotree)] do
 					# Find the two edges with origin vertex *current_vertex*. 
-					out_edges := List(LocalActionDiagramEdges(cotree), x -> x[1] = current_vertex);
-					out_edges := ListBlist(LocalActionDiagramEdges(cotree), out_edges);
+					out_edges := List(cotree_edge_list, x -> x[1] = current_vertex);
+					out_edges := ListBlist(cotree_edge_list, out_edges);
 
 					# Check if there's an edge originating here that isn't the reverse and isn't
 					# a loop. 
+					Print(cotree_edge_list);
+					Print(out_edges);
 					if out_edges[1][2] <> prev_vertex and out_edges[1][2] <> current_vertex then
 						Add(orientation_edges, out_edges[1]);
 						prev_vertex := current_vertex;
@@ -518,7 +602,7 @@ GroupType@ := function(lad)
 			# Get index of each edge in cyclic orientation.
 			orientation_edge_numbers := [];
 			for edge in orientation_edges do
-				Add(orientation_edge_numbers, Position(LocalActionDiagramEdges(cotree), edge));
+				Add(orientation_edge_numbers, Position(cotree_edge_list, edge));
 			od;
 			
 			# Now check if the cycles have the right colour sets for lineal or focal. 
@@ -570,7 +654,7 @@ IsDiscrete@ := function(lad)
 		# These are the vertices not in the cotree.
 		v_in_scopo := [];
 		for edge_no in max_scopo do
-			Add(v_in_scopo, LocalActionDiagramEdges(edge_no)[1]);
+			Add(v_in_scopo, LocalActionDiagramEdges(lad)[edge_no][1]);
 		od;
 
 		for idx in [1..DigraphNrVertices(lad)] do
