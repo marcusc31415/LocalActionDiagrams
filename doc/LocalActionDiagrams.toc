@@ -1,0 +1,5 @@
+\contentsline {chapter}{\numberline {1}\textcolor {Chapter }{Introduction}}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}\textcolor {Chapter }{Constructing Local Action Diagrams}}{3}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}\textcolor {Chapter }{Constructing From Data}}{3}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}\textcolor {Chapter }{LocalActionDiagramUniversalGroup (for IsPermGroup)}}{3}{subsection.1.1.2}%
+\contentsline {chapter}{Index}{4}{section*.2}%

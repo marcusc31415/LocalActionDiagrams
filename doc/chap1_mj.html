@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<title>GAP (LocalActionDiagrams) - Chapter 1: Introduction</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="GAPDoc2HTML" />
+<link rel="stylesheet" type="text/css" href="manual.css" />
+<script src="manual.js" type="text/javascript"></script>
+<script type="text/javascript">overwriteStyle();</script>
+</head>
+<body class="chap1"  onload="jscontent()">
+
+
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chapInd_mj.html">Ind</a>  </div>
+
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap0_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd_mj.html">[Next Chapter]</a>&nbsp;  </div>
+
+<p id="mathjaxlink" class="pcenter"><a href="chap1.html">[MathJax off]</a></p>
+<p><a id="X7DFB63A97E67C0A1" name="X7DFB63A97E67C0A1"></a></p>
+<div class="ChapSects"><a href="chap1_mj.html#X7DFB63A97E67C0A1">1 <span class="Heading">Introduction</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap1_mj.html#X7DE016F979188535">1.1 <span class="Heading">Constructing Local Action Diagrams</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap1_mj.html#X83D230F77F47F86F">1.1-1 <span class="Heading">Constructing From Data</span></a>
+</span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap1_mj.html#X7ACD48EE7C32A9CC">1.1-2 LocalActionDiagramUniversalGroup</a></span>
+</div></div>
+</div>
+
+<h3>1 <span class="Heading">Introduction</span></h3>
+
+<p><a id="X7DE016F979188535" name="X7DE016F979188535"></a></p>
+
+<h4>1.1 <span class="Heading">Constructing Local Action Diagrams</span></h4>
+
+<p><a id="X83D230F77F47F86F" name="X83D230F77F47F86F"></a></p>
+
+<h5>1.1-1 <span class="Heading">Constructing From Data</span></h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramFromData</code>( <var class="Arg">D</var>, <var class="Arg">v_labels</var>, <var class="Arg">e_labels</var>, <var class="Arg">rev</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramFromDataNC</code>( <var class="Arg">D</var>, <var class="Arg">v_labels</var>, <var class="Arg">e_labels</var>, <var class="Arg">rev</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A local action diagram.</p>
+
+<p>Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <var class="Arg">D</var> is a digraph and <var class="Arg">rev</var> must be a compatible involution on the edges of <var class="Arg">D</var>. The argument <var class="Arg">v_labels</var> is a list of vertex labels such that <code class="code"><var class="Arg">v_labels</var>[i]</code> is the group labelling vertex <code class="code">i</code> of <var class="Arg">D</var>.</p>
+
+<p>The argument <var class="Arg">e_labels</var> is a list of edge labels. The edges of <var class="Arg">D</var> are stored in lexicographical order and <code class="code"><var class="Arg">edge_labels</var>[i]</code> is the set labelling edge <code class="code">i</code> of <var class="Arg">D</var> (when sorted in lexicographical order).</p>
+
+<p>The NC variant of the operation does not check that the arguments given are a valid local action diagram.</p>
+
+<p><a id="X7ACD48EE7C32A9CC" name="X7ACD48EE7C32A9CC"></a></p>
+
+<h5>1.1-2 LocalActionDiagramUniversalGroup</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramUniversalGroup</code>( <var class="Arg">arg</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Constructs a local action diagram corresponding to the Burger-Moses group U(F).</p>
+
+
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap0_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd_mj.html">[Next Chapter]</a>&nbsp;  </div>
+
+
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chapInd_mj.html">Ind</a>  </div>
+
+<hr />
+<p class="foot">generated by <a href="http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>
+</body>
+</html>

@@ -1,0 +1,37 @@
+  
+  
+                            [1X Local Action Diagrams [101X
+  
+  
+               [1X Super awesome package for local action diagrams. [101X
+  
+  
+                                      0.1
+  
+  
+                                29 January 2023
+  
+  
+                                 Marcus Chijoff
+  
+  
+  
+  Marcus Chijoff
+      Email:    [7Xmailto:marcus.chijoff@uon.edu.au[107X
+      Homepage: [7Xhttps://newcastle.edu.au[107X
+      Address:  [33X[0;14YNo[133X
+  
+  
+  
+  -------------------------------------------------------
+  
+  
+  [1XContents (LocalActionDiagrams)[101X
+  
+  1 [33X[0;0YIntroduction[133X
+    1.1 [33X[0;0YConstructing Local Action Diagrams[133X
+      1.1-1 [33X[0;0YConstructing From Data[133X
+      1.1-2 LocalActionDiagramUniversalGroup
+  
+  
+  [32X

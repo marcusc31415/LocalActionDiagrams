@@ -6,8 +6,10 @@
 # manual of the "Example" package as well as the comments in its
 # PackageInfo.g file.
 #
+
 SetPackageInfo( rec(
 
+#! @Title Local Action Diagrams
 PackageName := "LocalActionDiagrams",
 Subtitle := "Super awesome package for local action diagrams.",
 Version := "0.1",
@@ -24,7 +26,7 @@ Persons := [
     IsMaintainer := true,
     PostalAddress := "No",
     Place := "Newcastle",
-    Institution := "UoN",
+    Institution := "The University of Newcastle, Australia",
   ),
 ],
 
@@ -53,7 +55,7 @@ AbstractHTML   :=  "",
 PackageDoc := rec(
   BookName  := "LocalActionDiagrams",
   ArchiveURLSubset := ["doc"],
-  HTMLStart := "doc/chap0_mj.html",
+  HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
   LongTitle := "Super awesome package for local action diagrams.",
