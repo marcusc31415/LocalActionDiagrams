@@ -2,9 +2,10 @@
   
   [1XIndex[101X
   
-  [2XLocalActionDiagramFromData[102X, for IsDigraph, IsList, IsList, IsPerm 1.1-1 
-  [2XLocalActionDiagramFromDataNC[102X, for IsDigraph, IsList, IsList, IsPerm 1.1-1 
-  [2XLocalActionDiagramUniversalGroup[102X, for IsPermGroup 1.1-2 
+  [2XIsLocalActionDiagram[102X, for IsDigraph 2.1-1 
+  [2XLocalActionDiagramFromData[102X, for IsDigraph, IsList, IsList, IsPerm 2.1-2 
+  [2XLocalActionDiagramFromDataNC[102X, for IsDigraph, IsList, IsList, IsPerm 2.1-2 
+  [2XLocalActionDiagramUniversalGroup[102X, for IsPermGroup 2.1-3 
   
   
   -------------------------------------------------------

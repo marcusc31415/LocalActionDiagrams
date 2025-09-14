@@ -2,9 +2,11 @@
 \makelabel{localactiondiagrams:Title page}{}{X7D2C85EC87DD46E5}
 \makelabel{localactiondiagrams:Table of Contents}{}{X8537FEB07AF2BEC8}
 \makelabel{localactiondiagrams:Introduction}{1}{X7DFB63A97E67C0A1}
-\makelabel{localactiondiagrams:Constructing Local Action Diagrams}{1.1}{X7DE016F979188535}
-\makelabel{localactiondiagrams:Constructing From Data}{1.1.1}{X83D230F77F47F86F}
+\makelabel{localactiondiagrams:Creating Local Action Diagrams}{2}{X84CBE9FE85CF5E9D}
+\makelabel{localactiondiagrams:Creating Local Action Diagrams}{2.1}{X84CBE9FE85CF5E9D}
+\makelabel{localactiondiagrams:Constructing From Data}{2.1.2}{X83D230F77F47F86F}
 \makelabel{localactiondiagrams:Index}{Ind}{X83A0356F839C696F}
-\makelabel{localactiondiagrams:LocalActionDiagramFromData for IsDigraph, IsList, IsList, IsPerm}{1.1.1}{X83D230F77F47F86F}
-\makelabel{localactiondiagrams:LocalActionDiagramFromDataNC for IsDigraph, IsList, IsList, IsPerm}{1.1.1}{X83D230F77F47F86F}
-\makelabel{localactiondiagrams:LocalActionDiagramUniversalGroup for IsPermGroup}{1.1.2}{X7ACD48EE7C32A9CC}
+\makelabel{localactiondiagrams:IsLocalActionDiagram for IsDigraph}{2.1.1}{X78FCE92F7B97951A}
+\makelabel{localactiondiagrams:LocalActionDiagramFromData for IsDigraph, IsList, IsList, IsPerm}{2.1.2}{X83D230F77F47F86F}
+\makelabel{localactiondiagrams:LocalActionDiagramFromDataNC for IsDigraph, IsList, IsList, IsPerm}{2.1.2}{X83D230F77F47F86F}
+\makelabel{localactiondiagrams:LocalActionDiagramUniversalGroup for IsPermGroup}{2.1.3}{X7ACD48EE7C32A9CC}

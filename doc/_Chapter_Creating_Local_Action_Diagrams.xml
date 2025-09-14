@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Creating_Local_Action_Diagrams">
+<Heading>Creating Local Action Diagrams</Heading>
+
+<Section Label="Chapter_Creating_Local_Action_Diagrams_Section_Creating_Local_Action_Diagrams">
+<Heading>Creating Local Action Diagrams</Heading>
+
+<ManSection>
+  <Filt Arg="lad" Name="IsLocalActionDiagram" Label="for IsDigraph"/>
+ <Returns><K>true</K> if <A>lad</A> is of the category <K>IsLocalActionDiagram</K> and <C>false</C> otherwise.
+</Returns>
+ <Description>
+ Every local action diagram belongs to the <C>IsLocalActionDiagram</C> category. Every local action diagram is immutable. 
+ </Description>
+</ManSection>
+
+
+<ManSection Label="Creating_Local_Action_Diagrams">
+<Heading>Constructing From Data</Heading>
+  <Oper Arg="D, v_labels, e_labels, rev" Name="LocalActionDiagramFromData" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+  <Oper Arg="D, v_labels, e_labels, rev" Name="LocalActionDiagramFromDataNC" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+ <Returns>A local action diagram.
+</Returns>
+ <Description>
+ 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <A>D</A> is a digraph and <A>rev</A> must be a compatible involution on the edges of <A>D</A>. The argument <A>v_labels</A> is a list of vertex labels such that <C><A>v_labels</A>[i]</C> is the group labelling vertex <C>i</C> of <A>D</A>. 
+<P/>
+ The argument <A>e_labels</A> is a list of edge labels. The edges of <A>D</A> are stored in lexicographical order and <C><A>edge_labels</A>[i]</C> is the set labelling edge <C>i</C> of <A>D</A> (when sorted in lexicographical order). 
+<P/>
+	The NC variant of the operation does not check that the arguments given are a valid local action diagram.
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Oper Arg="arg" Name="LocalActionDiagramUniversalGroup" Label="for IsPermGroup"/>
+ <Description>
+	Constructs a local action diagram corresponding to the Burger-Moses group U(F). 
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+</Chapter>
+

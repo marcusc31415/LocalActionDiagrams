@@ -29,9 +29,11 @@
   [1XContents (LocalActionDiagrams)[101X
   
   1 [33X[0;0YIntroduction[133X
-    1.1 [33X[0;0YConstructing Local Action Diagrams[133X
-      1.1-1 [33X[0;0YConstructing From Data[133X
-      1.1-2 LocalActionDiagramUniversalGroup
+  2 [33X[0;0YCreating Local Action Diagrams[133X
+    2.1 [33X[0;0YCreating Local Action Diagrams[133X
+      2.1-1 IsLocalActionDiagram
+      2.1-2 [33X[0;0YConstructing From Data[133X
+      2.1-3 LocalActionDiagramUniversalGroup
   
   
   [32X

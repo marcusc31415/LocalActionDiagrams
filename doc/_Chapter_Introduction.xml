@@ -4,35 +4,38 @@
 <Chapter Label="Chapter_Introduction">
 <Heading>Introduction</Heading>
 
-<Section Label="Chapter_Introduction_Section_Constructing_Local_Action_Diagrams">
-<Heading>Constructing Local Action Diagrams</Heading>
-
-<ManSection Label="Construction">
-<Heading>Constructing From Data</Heading>
-  <Oper Arg="D, v_labels, e_labels, rev" Name="LocalActionDiagramFromData" Label="for IsDigraph, IsList, IsList, IsPerm"/>
-  <Oper Arg="D, v_labels, e_labels, rev" Name="LocalActionDiagramFromDataNC" Label="for IsDigraph, IsList, IsList, IsPerm"/>
- <Returns>A local action diagram.
-</Returns>
- <Description>
- 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <A>D</A> is a digraph and <A>rev</A> must be a compatible involution on the edges of <A>D</A>. The argument <A>v_labels</A> is a list of vertex labels such that <C><A>v_labels</A>[i]</C> is the group labelling vertex <C>i</C> of <A>D</A>. 
 <P/>
- The argument <A>e_labels</A> is a list of edge labels. The edges of <A>D</A> are stored in lexicographical order and <C><A>edge_labels</A>[i]</C> is the set labelling edge <C>i</C> of <A>D</A> (when sorted in lexicographical order). 
+ A local action diagram <M>\Delta = (\Gamma, (G(v)), (X_a))</M> consists of: 
+<List>
+<Item>
+a directed graph <M>\Gamma</M>, 
+</Item>
+<Item>
+a closed permutation group <M>G(v)</M> for each <M>v \in V(\Gamma)</M>, and 
+</Item>
+<Item>
+a set <M>X_{a}</M> for each <M>a \in A(\Gamma)</M> such that each <M>X_{a}</M> is disjoint and <M>X_{a}</M> is an orbit of the action of <M>G(o(a))</M> on <M>X_{v} := \bigsqcup_{a \in o^{-1}(v)}X_{a}</M>. 
+</Item>
+</List>
 <P/>
-	The NC variant of the operation does not check that the arguments given are a valid local action diagram.
- </Description>
-</ManSection>
-
-
-<ManSection>
-  <Oper Arg="arg" Name="LocalActionDiagramUniversalGroup" Label="for IsPermGroup"/>
- <Description>
-	Constructs a local action diagram corresponding to the Burger-Moses group U(F). 
- </Description>
-</ManSection>
-
-
-</Section>
-
-
+ The definition of digraph used is different to that of the <Package>Digraphs</Package> package. For our purposes, a digraph <M>\Gamma</M> consists of:
+<List>
+<Item>
+a vertex set <M>V</M>,
+</Item>
+<Item>
+an arc set <M>A</M>,
+</Item>
+<Item>
+a map <M>o : A \to V</M> assigning each arc to an <E>origin</E> vertex, and
+</Item>
+<Item>
+a bijection <M>r : A \to A</M> (denoted by <M>a \mapsto \overline{a}</M>) such that <M>r^{2} =  \mathrm{id}</M>. 
+</Item>
+</List>
+ The bijection <M>r</M> defines a reverse arc for each arc of the graph. This is more specific than the definition in the <A>digraphs</A> package which does not require a reverse mapping. 
+<P/>
+ The local action diagrams package provides a category for local action diagrams. It is built in the <A>IsDigraph</A> category from the <Package>Digraphs</Package> package. 
+<P/>
 </Chapter>
 

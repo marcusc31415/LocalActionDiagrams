@@ -1,3 +1,4 @@
-\indexentry{LocalActionDiagramFromData@\texttt  {LocalActionDiagramFromData}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{3}
-\indexentry{LocalActionDiagramFromDataNC@\texttt  {LocalActionDiagramFromDataNC}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{3}
-\indexentry{LocalActionDiagramUniversalGroup@\texttt  {LocalActionDiagramUniversalGroup}!for IsPermGroup|hyperpage}{3}
+\indexentry{IsLocalActionDiagram@\texttt  {IsLocalActionDiagram}!for IsDigraph|hyperpage}{4}
+\indexentry{LocalActionDiagramFromData@\texttt  {LocalActionDiagramFromData}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{4}
+\indexentry{LocalActionDiagramFromDataNC@\texttt  {LocalActionDiagramFromDataNC}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{4}
+\indexentry{LocalActionDiagramUniversalGroup@\texttt  {LocalActionDiagramUniversalGroup}!for IsPermGroup|hyperpage}{4}

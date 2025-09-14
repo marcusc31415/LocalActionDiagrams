@@ -1,10 +1,15 @@
 \begin{theindex}
 
+  \item \texttt  {IsLocalActionDiagram}
+    \subitem for IsDigraph, \hyperpage{4}
+
+  \indexspace
+
   \item \texttt  {LocalActionDiagramFromData}
-    \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{3}
+    \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{4}
   \item \texttt  {LocalActionDiagramFromDataNC}
-    \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{3}
+    \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{4}
   \item \texttt  {LocalActionDiagramUniversalGroup}
-    \subitem for IsPermGroup, \hyperpage{3}
+    \subitem for IsPermGroup, \hyperpage{4}
 
 \end{theindex}
