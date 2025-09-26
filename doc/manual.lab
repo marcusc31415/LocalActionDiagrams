@@ -5,8 +5,18 @@
 \makelabel{localactiondiagrams:Creating Local Action Diagrams}{2}{X84CBE9FE85CF5E9D}
 \makelabel{localactiondiagrams:Creating Local Action Diagrams}{2.1}{X84CBE9FE85CF5E9D}
 \makelabel{localactiondiagrams:Constructing From Data}{2.1.2}{X83D230F77F47F86F}
+\makelabel{localactiondiagrams:Local Action Diagram Attributes and Operations}{3}{X7AB5EE64797BB014}
+\makelabel{localactiondiagrams:Local Action Diagram Attributes}{3.1}{X843901697917FCE2}
+\makelabel{localactiondiagrams:Local Action Diagram Operations}{3.2}{X85A1FDBA7F237079}
 \makelabel{localactiondiagrams:Index}{Ind}{X83A0356F839C696F}
 \makelabel{localactiondiagrams:IsLocalActionDiagram for IsDigraph}{2.1.1}{X78FCE92F7B97951A}
 \makelabel{localactiondiagrams:LocalActionDiagramFromData for IsDigraph, IsList, IsList, IsPerm}{2.1.2}{X83D230F77F47F86F}
 \makelabel{localactiondiagrams:LocalActionDiagramFromDataNC for IsDigraph, IsList, IsList, IsPerm}{2.1.2}{X83D230F77F47F86F}
 \makelabel{localactiondiagrams:LocalActionDiagramUniversalGroup for IsPermGroup}{2.1.3}{X7ACD48EE7C32A9CC}
+\makelabel{localactiondiagrams:LocalActionDiagramVertexLabels for IsLocalActionDiagram}{3.1.1}{X82F7822E7CE957E9}
+\makelabel{localactiondiagrams:LocalActionDiagramEdges for IsLocalActionDiagram}{3.1.2}{X7EFA9F8A7AF03169}
+\makelabel{localactiondiagrams:LocalActionDiagramEdgeLabels for IsLocalActionDiagram}{3.1.3}{X7DBFDBD67BEFFEDC}
+\makelabel{localactiondiagrams:LocalActionDiagramEdgeReversal for IsLocalActionDiagram}{3.1.4}{X7AB4506A7B80460D}
+\makelabel{localactiondiagrams:LocalActionDiagramScopos for IsLocalActionDiagram}{3.2.1}{X823C18F980B022A7}
+\makelabel{localactiondiagrams:LocalActionDiagramGroupType for IsLocalActionDiagram}{3.2.2}{X7E4954157FBEEC4A}
+\makelabel{localactiondiagrams:LocalActionDiagramIsDiscrete for IsLocalActionDiagram}{3.2.3}{X7CC179F27B503D31}

@@ -148,6 +148,7 @@ function(D, vl, el, rev)
 	Sort(edges);
 
 	SetFilterObj(lad, IsLocalActionDiagram);
+	Setter(LocalActionDiagramVertices)(lad, DigraphVertices(lad));
 	Setter(LocalActionDiagramVertexLabels)(lad, vl);
 	Setter(LocalActionDiagramEdges)(lad, edges);
 	Setter(LocalActionDiagramEdgeLabels)(lad, el);
@@ -495,6 +496,86 @@ function(no_vert, edge_label_max)
 
 	return LocalActionDiagramFromData(graph, vert_labels, edge_labels, rev);
 end);
+
+InstallMethod(WriteLocalActionDiagram, "Label This", [IsLocalActionDiagram, IsString],
+function(lad, file_name)
+	local output_string, output_stream, vl, el, fl_name;
+
+	output_string := "";
+
+	# First write the digraph using the digraph package IO. 
+	output_string := Concatenation(output_string, PrintString(DigraphImmutableCopy(lad))); 
+	output_string := Concatenation(output_string, "\n");
+	
+	# Store the vertex labels.
+	for vl in LocalActionDiagramVertexLabels(lad) do
+		output_string := Concatenation(output_string, String(vl));
+		output_string := Concatenation(output_string, "|");
+	od;
+	Remove(output_string); # Remove the trailing separator. 
+	output_string := Concatenation(output_string, "\n");
+
+	# Store the edge labels.
+	for el in LocalActionDiagramEdgeLabels(lad) do
+		output_string := Concatenation(output_string, String(el));
+		output_string := Concatenation(output_string, "|");
+	od;
+	Remove(output_string); # Remove the trailing separator. 
+	output_string := Concatenation(output_string, "\n");
+
+	# Store the edge reversal.
+	output_string := Concatenation(output_string, String(LocalActionDiagramEdgeReversal(lad)));
+	output_string := Concatenation(output_string, "\n");
+
+	fl_name := Filename(DirectoryCurrent(), StringFormatted("{1}.lad", file_name));
+	output_stream := OutputTextFile(fl_name, true);
+	AppendTo(output_stream, output_string);
+	CloseStream(output_stream);
+
+	return true;
+end);
+
+InstallMethod(ReadLocalActionDiagram, "Label This", [IsString],
+function(file_name)
+	local lad_list, input_string, fl_name, input_stream, input_lines, digraph, v_labels, e_labels, rev, line, idx, v_label, e_label;
+
+	# Read the file *file_name* and write its contents to *input_string*.
+	fl_name := Filename(DirectoryCurrent(), file_name);
+	input_stream := InputTextFile(fl_name);
+	input_string := ReadAll(input_stream);
+	CloseStream(input_stream);
+
+	input_lines := SplitString(input_string, "\n");
+
+	lad_list := [];
+	idx := 1; 
+
+	for line in input_lines do
+		if idx = 1 then
+			digraph := EvalString(line);
+			idx := idx+1;
+		elif idx = 2 then
+			v_labels := [];
+			for v_label in SplitString(line, "|") do
+				Add(v_labels, EvalString(v_label));
+			od;
+			idx := idx+1;
+		elif idx = 3 then
+			e_labels := [];
+			for e_label in SplitString(line, "|") do
+				Add(e_labels, EvalString(e_label));
+			od;
+			idx := idx+1;
+		else
+			rev := EvalString(line);
+			idx := 1;
+			Add(lad_list, LocalActionDiagramFromData(digraph, v_labels, e_labels, rev));
+		fi;
+	od;
+
+	return lad_list;
+end);
+
 
 x := LocalActionDiagramUniversalGroup(Group((1,2),(3,4)));
 

@@ -3,3 +3,4 @@
 <!-- This is an automatically generated file. -->
 <#Include SYSTEM "_Chapter_Introduction.xml">
 <#Include SYSTEM "_Chapter_Creating_Local_Action_Diagrams.xml">
+<#Include SYSTEM "_Chapter_Local_Action_Diagram_Attributes_and_Operations.xml">

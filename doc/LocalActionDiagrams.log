@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.5) (preloaded format=pdflatex 2023.9.8)  9 SEP 2025 09:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 23.5) (preloaded format=pdflatex 2023.9.8)  16 SEP 2025 09:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -501,23 +501,28 @@ pdfTeX warning (ext4): destination with the same identifier (name{L.X84CBE9FE85
 CF5E9D}) has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
                                                   \__shipout_drop_firstpage_...
-l.232 \cleardoublepage
-                      ] (LocalActionDiagrams.ind [5
+l.229 \chapter
+              {\textcolor{Chapter }{Local Action Diagram Attributes and Oper...
+]
+Chapter 3.
+[5
+
+] [6] (LocalActionDiagrams.ind [7
 
 
 
 ]) (LocalActionDiagrams.aux)
 Package rerunfilecheck Info: File `LocalActionDiagrams.out' has not changed.
-(rerunfilecheck)             Checksum: 6CA999CA92B26F518F29A57212AEE022;587.
+(rerunfilecheck)             Checksum: F0E4B8CA61457E980CF05A29DF294EB5;1311.
  ) 
 Here is how much of TeX's memory you used:
- 10577 strings out of 475601
- 169959 string characters out of 5767147
+ 10616 strings out of 475601
+ 171012 string characters out of 5767147
  1921766 words of memory out of 5000000
- 31538 multiletter control sequences out of 15000+600000
- 618339 words of font info for 115 fonts, out of 8000000 for 9000
+ 31553 multiletter control sequences out of 15000+600000
+ 622800 words of font info for 118 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 90i,5n,90p,533b,509s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 90i,6n,90p,533b,541s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm
 /cmex10.pfb><C:/Users/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
 msfonts/cm/cmmi10.pfb><C:/Users/Marcus/AppData/Local/Programs/MiKTeX/fonts/type
@@ -530,10 +535,11 @@ arcus/AppData/Local/Programs/MiKTeX/fonts/type1/urw/helvetic/uhvr8a.pfb><C:/Use
 rs/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/urw/symbol/usyr.pfb><C:/Use
 rs/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmb8a.pfb><C:/Us
 ers/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/U
-sers/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
-Output written on LocalActionDiagrams.pdf (5 pages, 168367 bytes).
+sers/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmr8a.pfb><C:/
+Users/Marcus/AppData/Local/Programs/MiKTeX/fonts/type1/urw/times/utmri8a.pfb>
+Output written on LocalActionDiagrams.pdf (7 pages, 197189 bytes).
 PDF statistics:
- 130 PDF objects out of 1000 (max. 8388607)
- 20 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 189 PDF objects out of 1000 (max. 8388607)
+ 42 named destinations out of 1000 (max. 500000)
+ 57 words of extra memory for PDF output out of 10000 (max. 10000000)
 

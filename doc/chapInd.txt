@@ -3,9 +3,16 @@
   [1XIndex[101X
   
   [2XIsLocalActionDiagram[102X, for IsDigraph 2.1-1 
+  [2XLocalActionDiagramEdgeLabels[102X, for IsLocalActionDiagram 3.1-3 
+  [2XLocalActionDiagramEdgeReversal[102X, for IsLocalActionDiagram 3.1-4 
+  [2XLocalActionDiagramEdges[102X, for IsLocalActionDiagram 3.1-2 
   [2XLocalActionDiagramFromData[102X, for IsDigraph, IsList, IsList, IsPerm 2.1-2 
   [2XLocalActionDiagramFromDataNC[102X, for IsDigraph, IsList, IsList, IsPerm 2.1-2 
+  [2XLocalActionDiagramGroupType[102X, for IsLocalActionDiagram 3.2-2 
+  [2XLocalActionDiagramIsDiscrete[102X, for IsLocalActionDiagram 3.2-3 
+  [2XLocalActionDiagramScopos[102X, for IsLocalActionDiagram 3.2-1 
   [2XLocalActionDiagramUniversalGroup[102X, for IsPermGroup 2.1-3 
+  [2XLocalActionDiagramVertexLabels[102X, for IsLocalActionDiagram 3.1-1 
   
   
   -------------------------------------------------------

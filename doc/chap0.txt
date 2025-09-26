@@ -34,6 +34,16 @@
       2.1-1 IsLocalActionDiagram
       2.1-2 [33X[0;0YConstructing From Data[133X
       2.1-3 LocalActionDiagramUniversalGroup
+  3 [33X[0;0YLocal Action Diagram Attributes and Operations[133X
+    3.1 [33X[0;0YLocal Action Diagram Attributes[133X
+      3.1-1 LocalActionDiagramVertexLabels
+      3.1-2 LocalActionDiagramEdges
+      3.1-3 LocalActionDiagramEdgeLabels
+      3.1-4 LocalActionDiagramEdgeReversal
+    3.2 [33X[0;0YLocal Action Diagram Operations[133X
+      3.2-1 LocalActionDiagramScopos
+      3.2-2 LocalActionDiagramGroupType
+      3.2-3 LocalActionDiagramIsDiscrete
   
   
   [32X

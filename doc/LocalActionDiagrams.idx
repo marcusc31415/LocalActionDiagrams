@@ -2,3 +2,10 @@
 \indexentry{LocalActionDiagramFromData@\texttt  {LocalActionDiagramFromData}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{4}
 \indexentry{LocalActionDiagramFromDataNC@\texttt  {LocalActionDiagramFromDataNC}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{4}
 \indexentry{LocalActionDiagramUniversalGroup@\texttt  {LocalActionDiagramUniversalGroup}!for IsPermGroup|hyperpage}{4}
+\indexentry{LocalActionDiagramVertexLabels@\texttt  {LocalActionDiagramVertexLabels}!for IsLocalActionDiagram|hyperpage}{5}
+\indexentry{LocalActionDiagramEdges@\texttt  {LocalActionDiagramEdges}!for IsLocalActionDiagram|hyperpage}{5}
+\indexentry{LocalActionDiagramEdgeLabels@\texttt  {LocalActionDiagramEdgeLabels}!for IsLocalActionDiagram|hyperpage}{5}
+\indexentry{LocalActionDiagramEdgeReversal@\texttt  {LocalActionDiagramEdgeReversal}!for IsLocalActionDiagram|hyperpage}{5}
+\indexentry{LocalActionDiagramScopos@\texttt  {LocalActionDiagramScopos}!for IsLocalActionDiagram|hyperpage}{6}
+\indexentry{LocalActionDiagramGroupType@\texttt  {LocalActionDiagramGroupType}!for IsLocalActionDiagram|hyperpage}{6}
+\indexentry{LocalActionDiagramIsDiscrete@\texttt  {LocalActionDiagramIsDiscrete}!for IsLocalActionDiagram|hyperpage}{6}

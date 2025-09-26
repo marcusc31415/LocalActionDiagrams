@@ -22,35 +22,89 @@
 #! @Chapter Creating Local Action Diagrams
 #! @Section Creating Local Action Diagrams 
 
-## Category For Local Action Diagrams ##
 #! @Returns <K>true</K> if <A>lad</A> is of the category <K>IsLocalActionDiagram</K> and <K>false</K> otherwise. 
 #! @Arguments lad
 #! @Description
 #! Every local action diagram belongs to the <C>IsLocalActionDiagram</C> category. Every local action diagram is immutable. 
 DeclareCategory("IsLocalActionDiagram", IsDigraph);
 
-# Local Action Diagram Attributes
+
+DeclareAttribute("LocalActionDiagramVertices", IsLocalActionDiagram);
+
+#! @Chapter Local Action Diagram Attributes and Operations
+#! 
+#! @Section Local Action Diagram Attributes
+
+#! @Returns A list of groups.
+#! @Arguments lad
+#! @Description
+#! Returns the groups labelling the vertices of <A>lad</A>. Entry <C>i</C> of the list corresponds to the group labelling vertex <C>i</C> of the digraph. 
 DeclareAttribute("LocalActionDiagramVertexLabels", IsLocalActionDiagram);
+
+
+#! @Returns A list of lists.
+#! @Arguments lad
+#! @Description  
+#! Returns a list of edges of <A>lad</A>. Each edge is stored as a list 
+#! <C>[i, j]</C> where <C>i</C> is the origin vertex and <C>j</C> is the
+#! terminus vertex. The list is stored in lexicographical order. 
 DeclareAttribute("LocalActionDiagramEdges", IsLocalActionDiagram);
+
+#! @Returns A list of lists.
+#! @Arguments lad
+#! @Description  
+#! Returns the edge labels of <A>lad</A>. Entry <C>i</C> of the list corresponds
+#! to the label of edge <C>i</C> of the digraph. 
 DeclareAttribute("LocalActionDiagramEdgeLabels", IsLocalActionDiagram);
+
+#! @Returns A permutation.
+#! @Arguments lad
+#! @Description  
+#! Returns the reversal mapping of the local action digram <A>lad</A>. 
 DeclareAttribute("LocalActionDiagramEdgeReversal", IsLocalActionDiagram);
+
+#! @Section Local Action Diagram Operations 
+
+#! @Returns A list of lists.
+#! @Arguments lad
+#! @Description  
+#! Returns a list of all scopos of <A>lad</A>. Each entry of the list is a list
+#! of edges in the scopo. This list will always contain the empty scopo <C>[]</C>.
 DeclareAttribute("LocalActionDiagramScopos", IsLocalActionDiagram);
+
+#! @Returns A string.
+#! @Arguments lad
+#! @Description  
+#! Returns the group type the local action digram corresponds to. This is either
+#! "Fixed Vertex", "Edge Inversion", "Lineal", "Focal", or "General". Note that
+#! all "Horocyclic" local action diagrams have infinitely many vertices and so
+#! can never be the type returned by this function. 
 DeclareAttribute("LocalActionDiagramGroupType", IsLocalActionDiagram);
+
+#! @Returns <K>true</K> or <K>false</K>.
+#! @Arguments lad
+#! @Description  
+#! Returns <K>true</K> if <A>lad</A> corresponds to a discrete group and
+#! <K>false</K> otherwise. 
 DeclareAttribute("LocalActionDiagramIsDiscrete", IsLocalActionDiagram);
+
+#! @Chapter Creating Local Action Diagrams
+#! @Section Creating Local Action Diagrams 
+
 
 #! @BeginGroup Creating Local Action Diagrams
 #! @GroupTitle Constructing From Data
 
-#! @Arguments D, v_labels, e_labels, rev
+#! @Arguments D, vertex_labels, edge_labels, rev
 #! @Returns A local action diagram.
 #! @Description
-#! @Description
-#! 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <A>D</A> is a digraph and <A>rev</A> must be a compatible involution on the edges of <A>D</A>. The argument <A>v_labels</A> is a list of vertex labels such that <C><A>v_labels</A>[i]</C> is the group labelling vertex <C>i</C> of <A>D</A>. 
+#! 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <A>D</A> is a digraph and <A>rev</A> must be a compatible involution on the edges of <A>D</A>. The argument <A>vertex_labels</A> is a list of vertex labels such that <C><A>vertex_labels</A>[i]</C> is the group labelling vertex <C>i</C> of <A>D</A>. 
 #!
-#! The argument <A>e_labels</A> is a list of edge labels. The edges of <A>D</A> are stored in lexicographical order and <C><A>edge_labels</A>[i]</C> is the set labelling edge <C>i</C> of <A>D</A> (when sorted in lexicographical order). 
+#! The argument <A>edge_labels</A> is a list of edge labels. The edges of <A>D</A> are stored in lexicographical order and <C><A>edge_labels</A>[i]</C> is the set labelling edge <C>i</C> of <A>D</A> (when sorted in lexicographical order). 
 DeclareOperation("LocalActionDiagramFromData", [IsDigraph, IsList, IsList, IsPerm]);
 
-#! @Arguments D, v_labels, e_labels, rev
+#! @Returns A local action diagram.
+#! @Arguments D, vertex_labels, edge_labels, rev
 #! @Description
 #! 
 #!	The NC variant of the operation does not check that the arguments given are a valid local action diagram.
@@ -58,9 +112,11 @@ DeclareOperation("LocalActionDiagramFromDataNC", [IsDigraph, IsList, IsList, IsP
 
 #! @EndGroup
 
-
+#! @Returns A local action diagram. 
+#! @Arguments F
 #! @Description
-#!	Constructs a local action diagram corresponding to the Burger-Moses group U(F). 
+#! Constructs a local action diagram corresponding to the Burger-Mozes group <M>U(<A>F</A>)</M> where <A>F</A> is a permutation group. 
+#! This diagram has a single vertex labelled by the group <A>F</A> and a self-reverse loop for each orbit of the action of <A>F</A>. 
 DeclareOperation("LocalActionDiagramUniversalGroup", [IsPermGroup]);
 
 
@@ -69,6 +125,10 @@ DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLoca
 DeclareOperation("CotreeFromScopo", [IsLocalActionDiagram, IsList]);
 DeclareOperation("CotreeFromScopoNC", [IsLocalActionDiagram, IsList]);
 DeclareOperation("RandomLocalActionDiagram", [IsPosInt, IsPosInt]);
+
+
+DeclareOperation("WriteLocalActionDiagram", [IsLocalActionDiagram, IsString]);
+DeclareOperation("ReadLocalActionDiagram", [IsString]);
 
 
 ############################

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Local_Action_Diagram_Attributes_and_Operations">
+<Heading>Local Action Diagram Attributes and Operations</Heading>
+
+<P/>
+<Section Label="Chapter_Local_Action_Diagram_Attributes_and_Operations_Section_Local_Action_Diagram_Attributes">
+<Heading>Local Action Diagram Attributes</Heading>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramVertexLabels" Label="for IsLocalActionDiagram"/>
+ <Returns>A list of groups.
+</Returns>
+ <Description>
+ Returns the groups labelling the vertices of <A>lad</A>. Entry <C>i</C> of the list corresponds to the group labelling vertex <C>i</C> of the digraph. 
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramEdges" Label="for IsLocalActionDiagram"/>
+ <Returns>A list of lists.
+</Returns>
+ <Description>
+ Returns a list of edges of <A>lad</A>. Each edge is stored as a list 
+ <C>[i, j]</C> where <C>i</C> is the origin vertex and <C>j</C> is the
+ terminus vertex. The list is stored in lexicographical order. 
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramEdgeLabels" Label="for IsLocalActionDiagram"/>
+ <Returns>A list of lists.
+</Returns>
+ <Description>
+ Returns the edge labels of <A>lad</A>. Entry <C>i</C> of the list corresponds
+ to the label of edge <C>i</C> of the digraph. 
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramEdgeReversal" Label="for IsLocalActionDiagram"/>
+ <Returns>A permutation.
+</Returns>
+ <Description>
+ Returns the reversal mapping of the local action digram <A>lad</A>. 
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+<Section Label="Chapter_Local_Action_Diagram_Attributes_and_Operations_Section_Local_Action_Diagram_Operations">
+<Heading>Local Action Diagram Operations</Heading>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramScopos" Label="for IsLocalActionDiagram"/>
+ <Returns>A list of lists.
+</Returns>
+ <Description>
+ Returns a list of all scopos of <A>lad</A>. Each entry of the list is a list
+ of edges in the scopo. This list will always contain the empty scopo <C>[]</C>.
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramGroupType" Label="for IsLocalActionDiagram"/>
+ <Returns>A string.
+</Returns>
+ <Description>
+ Returns the group type the local action digram corresponds to. This is either
+ "Fixed Vertex", "Edge Inversion", "Lineal", "Focal", or "General". Note that
+ all "Horocyclic" local action diagrams have infinitely many vertices and so
+ can never be the type returned by this function. 
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramIsDiscrete" Label="for IsLocalActionDiagram"/>
+ <Returns><K>true</K> or <K>false</K>.
+</Returns>
+ <Description>
+ Returns <K>true</K> if <A>lad</A> corresponds to a discrete group and
+ <K>false</K> otherwise. 
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+</Chapter>
+

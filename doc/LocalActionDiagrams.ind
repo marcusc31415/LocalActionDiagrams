@@ -5,11 +5,25 @@
 
   \indexspace
 
+  \item \texttt  {LocalActionDiagramEdgeLabels}
+    \subitem for IsLocalActionDiagram, \hyperpage{5}
+  \item \texttt  {LocalActionDiagramEdgeReversal}
+    \subitem for IsLocalActionDiagram, \hyperpage{5}
+  \item \texttt  {LocalActionDiagramEdges}
+    \subitem for IsLocalActionDiagram, \hyperpage{5}
   \item \texttt  {LocalActionDiagramFromData}
     \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{4}
   \item \texttt  {LocalActionDiagramFromDataNC}
     \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{4}
+  \item \texttt  {LocalActionDiagramGroupType}
+    \subitem for IsLocalActionDiagram, \hyperpage{6}
+  \item \texttt  {LocalActionDiagramIsDiscrete}
+    \subitem for IsLocalActionDiagram, \hyperpage{6}
+  \item \texttt  {LocalActionDiagramScopos}
+    \subitem for IsLocalActionDiagram, \hyperpage{6}
   \item \texttt  {LocalActionDiagramUniversalGroup}
     \subitem for IsPermGroup, \hyperpage{4}
+  \item \texttt  {LocalActionDiagramVertexLabels}
+    \subitem for IsLocalActionDiagram, \hyperpage{5}
 
 \end{theindex}
