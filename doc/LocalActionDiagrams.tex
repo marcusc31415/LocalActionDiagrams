@@ -189,10 +189,10 @@ diagrams. It is built in the \mbox{\texttt{\mdseries\slshape IsDigraph}} categor
 \logpage{[ 2, 1, 2 ]}
 \hyperdef{L}{X83D230F77F47F86F}{}
 {
-\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramFromData({\mdseries\slshape D, v{\textunderscore}labels, e{\textunderscore}labels, rev})\index{LocalActionDiagramFromData@\texttt{LocalActionDiagramFromData}!for IsDigraph, IsList, IsList, IsPerm}
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramFromData({\mdseries\slshape D, vertex{\textunderscore}labels, edge{\textunderscore}labels, rev})\index{LocalActionDiagramFromData@\texttt{LocalActionDiagramFromData}!for IsDigraph, IsList, IsList, IsPerm}
 \label{LocalActionDiagramFromData:for IsDigraph, IsList, IsList, IsPerm}
 }\hfill{\scriptsize (operation)}}\\
-\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramFromDataNC({\mdseries\slshape D, v{\textunderscore}labels, e{\textunderscore}labels, rev})\index{LocalActionDiagramFromDataNC@\texttt{LocalActionDiagramFromDataNC}!for IsDigraph, IsList, IsList, IsPerm}
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramFromDataNC({\mdseries\slshape D, vertex{\textunderscore}labels, edge{\textunderscore}labels, rev})\index{LocalActionDiagramFromDataNC@\texttt{LocalActionDiagramFromDataNC}!for IsDigraph, IsList, IsList, IsPerm}
 \label{LocalActionDiagramFromDataNC:for IsDigraph, IsList, IsList, IsPerm}
 }\hfill{\scriptsize (operation)}}\\
 \textbf{\indent Returns:\ }
@@ -201,9 +201,9 @@ A local action diagram.
 
 
  Constructs a local action diagram, checking that the arguments given are a
-valid local action diagram. The argument \mbox{\texttt{\mdseries\slshape D}} is a digraph and \mbox{\texttt{\mdseries\slshape rev}} must be a compatible involution on the edges of \mbox{\texttt{\mdseries\slshape D}}. The argument \mbox{\texttt{\mdseries\slshape v{\textunderscore}labels}} is a list of vertex labels such that \texttt{\mbox{\texttt{\mdseries\slshape v{\textunderscore}labels}}[i]} is the group labelling vertex \texttt{i} of \mbox{\texttt{\mdseries\slshape D}}. 
+valid local action diagram. The argument \mbox{\texttt{\mdseries\slshape D}} is a digraph and \mbox{\texttt{\mdseries\slshape rev}} must be a compatible involution on the edges of \mbox{\texttt{\mdseries\slshape D}}. The argument \mbox{\texttt{\mdseries\slshape vertex{\textunderscore}labels}} is a list of vertex labels such that \texttt{\mbox{\texttt{\mdseries\slshape vertex{\textunderscore}labels}}[i]} is the group labelling vertex \texttt{i} of \mbox{\texttt{\mdseries\slshape D}}. 
 
- The argument \mbox{\texttt{\mdseries\slshape e{\textunderscore}labels}} is a list of edge labels. The edges of \mbox{\texttt{\mdseries\slshape D}} are stored in lexicographical order and \texttt{\mbox{\texttt{\mdseries\slshape edge{\textunderscore}labels}}[i]} is the set labelling edge \texttt{i} of \mbox{\texttt{\mdseries\slshape D}} (when sorted in lexicographical order). 
+ The argument \mbox{\texttt{\mdseries\slshape edge{\textunderscore}labels}} is a list of edge labels. The edges of \mbox{\texttt{\mdseries\slshape D}} are stored in lexicographical order and \texttt{\mbox{\texttt{\mdseries\slshape edge{\textunderscore}labels}}[i]} is the set labelling edge \texttt{i} of \mbox{\texttt{\mdseries\slshape D}} (when sorted in lexicographical order). 
 
  The NC variant of the operation does not check that the arguments given are a
 valid local action diagram. }
@@ -213,13 +213,15 @@ valid local action diagram. }
 \subsection{\textcolor{Chapter }{LocalActionDiagramUniversalGroup (for IsPermGroup)}}
 \logpage{[ 2, 1, 3 ]}\nobreak
 \hyperdef{L}{X7ACD48EE7C32A9CC}{}
-{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramUniversalGroup({\mdseries\slshape arg})\index{LocalActionDiagramUniversalGroup@\texttt{LocalActionDiagramUniversalGroup}!for IsPermGroup}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramUniversalGroup({\mdseries\slshape F})\index{LocalActionDiagramUniversalGroup@\texttt{LocalActionDiagramUniversalGroup}!for IsPermGroup}
 \label{LocalActionDiagramUniversalGroup:for IsPermGroup}
 }\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A local action diagram. 
 
 
- Constructs a local action diagram corresponding to the Burger-Moses group
-U(F). }
+
+ Constructs a local action diagram corresponding to the Burger-Mozes group $U(\mbox{\texttt{\mdseries\slshape F}})$ where \mbox{\texttt{\mdseries\slshape F}} is a permutation group. This diagram has a single vertex labelled by the group \mbox{\texttt{\mdseries\slshape F}} and a self-reverse loop for each orbit of the action of \mbox{\texttt{\mdseries\slshape F}}. }
 
  }
 
@@ -357,6 +359,90 @@ can never be the type returned by this function. }
 
  }
 
+   
+\chapter{\textcolor{Chapter }{Input/Output and Visualisation}}\label{Chapter_InputOutput_and_Visualisation}
+\logpage{[ 4, 0, 0 ]}
+\hyperdef{L}{X7BD3226C787EC8FB}{}
+{
+  
+\section{\textcolor{Chapter }{Reading and Writing Local Action Diagrams To Files}}\label{Chapter_InputOutput_and_Visualisation_Section_Reading_and_Writing_Local_Action_Diagrams_To_Files}
+\logpage{[ 4, 1, 0 ]}
+\hyperdef{L}{X7B71459086EC944E}{}
+{
+  
+
+ Local action diagrams made in GAP can be written to a file. They can also be
+read from the file into GAP. The format of these files are as follows: 
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  <Digraph String>
+  <Vertex Labels>
+  <Edge Labels>
+  <Edge Reversal Map>
+  <List of Other Attributes>
+\end{Verbatim}
+ 
+
+ Multiple local action diagrams can be stored in the same file. 
+\subsection{\textcolor{Chapter }{Writing Local Action Diagrams}}\label{Writing_Local_Action_Diagrams}
+\logpage{[ 4, 1, 1 ]}
+\hyperdef{L}{X7A766DBD83D79FB7}{}
+{
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{WriteLocalActionDiagram({\mdseries\slshape lad, filename[, directory]})\index{WriteLocalActionDiagram@\texttt{WriteLocalActionDiagram}!for IsLocalActionDiagram, IsString}
+\label{WriteLocalActionDiagram:for IsLocalActionDiagram, IsString}
+}\hfill{\scriptsize (operation)}}\\
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{WriteLocalActionDiagram({\mdseries\slshape lad{\textunderscore}list, filename[, directory]})\index{WriteLocalActionDiagram@\texttt{WriteLocalActionDiagram}!for IsList, IsString}
+\label{WriteLocalActionDiagram:for IsList, IsString}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+\texttt{true} if writing to the file was successful and \texttt{false} otherwise. 
+
+
+
+ 
+
+ Writes the local action diagram \mbox{\texttt{\mdseries\slshape lad}} or every local action diagram in the list \mbox{\texttt{\mdseries\slshape last{\textunderscore}list}} to the file \texttt{\mbox{\texttt{\mdseries\slshape filename}}.lad}. The list \mbox{\texttt{\mdseries\slshape lad{\textunderscore}list}} must be a dense list of local action diagrams. 
+
+ If the optional argument \mbox{\texttt{\mdseries\slshape directory}} is specified then the file is written to that directory. Otherwise the file is
+written to the current directory of the GAP session --- i.e. \texttt{DirectoryCurrent()}. The argument \mbox{\texttt{\mdseries\slshape directory}} can either be in the category \texttt{IsDirectory} or \texttt{IsString}. 
+
+ If the file \texttt{\mbox{\texttt{\mdseries\slshape filename}}.lad} does not exist in the directory then it is create; otherwise the file is
+appended to. }
+
+ 
+\subsection{\textcolor{Chapter }{Reading Local Action Diagrams}}\label{Reading_Local_Action_Diagrams}
+\logpage{[ 4, 1, 2 ]}
+\hyperdef{L}{X7E489CF58169A8D4}{}
+{
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{ReadLocalActionDiagram({\mdseries\slshape filename[, directory]})\index{ReadLocalActionDiagram@\texttt{ReadLocalActionDiagram}!for IsString}
+\label{ReadLocalActionDiagram:for IsString}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A list of local action diagrams if reading the file was successful or raises
+an error and returns \texttt{fail} otherwise. 
+
+
+
+ 
+
+ Reads the file \mbox{\texttt{\mdseries\slshape filename}}. If the optional argument \mbox{\texttt{\mdseries\slshape directory}} is specified then the file is read from that directory. Otherwise the file is
+read from the current directory of the GAP session --- i.e. \texttt{DirectoryCurrent()}. The argument \mbox{\texttt{\mdseries\slshape directory}} can either be in the category \texttt{IsDirectory} or \texttt{IsString}. 
+
+ It is expected that the file was written with the \texttt{WriteLocalActionDiagram} function. Some basic error checking of the file is implemented as it is read
+but this will not catch all errors in the file. }
+
+ }
+
+ 
+\section{\textcolor{Chapter }{Visualising Local Action Diagrams and $\Delta$-trees.}}\label{Chapter_InputOutput_and_Visualisation_Section_Visualising_Local_Action_Diagrams_and_MDeltaM-trees}
+\logpage{[ 4, 2, 0 ]}
+\hyperdef{L}{X85E80D0678A5F364}{}
+{
+  Stuff goes here soon. }
+
+ }
+
  \def\indexname{Index\logpage{[ "Ind", 0, 0 ]}
 \hyperdef{L}{X83A0356F839C696F}{}
 }
@@ -368,7 +454,6 @@ can never be the type returned by this function. }
 
 \printindex
 
-\immediate\write\pagenrlog{["Ind", 0, 0], \arabic{page},}
 \immediate\write\pagenrlog{["Ind", 0, 0], \arabic{page},}
 \newpage
 \immediate\write\pagenrlog{["End"], \arabic{page}];}

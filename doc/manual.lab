@@ -8,6 +8,10 @@
 \makelabel{localactiondiagrams:Local Action Diagram Attributes and Operations}{3}{X7AB5EE64797BB014}
 \makelabel{localactiondiagrams:Local Action Diagram Attributes}{3.1}{X843901697917FCE2}
 \makelabel{localactiondiagrams:Local Action Diagram Operations}{3.2}{X85A1FDBA7F237079}
+\makelabel{localactiondiagrams:Reading and Writing Local Action Diagrams To Files}{4.1}{X7B71459086EC944E}
+\makelabel{localactiondiagrams:Writing Local Action Diagrams}{4.1.1}{X7A766DBD83D79FB7}
+\makelabel{localactiondiagrams:Reading Local Action Diagrams}{4.1.2}{X7E489CF58169A8D4}
+\makelabel{localactiondiagrams:Visualising Local Action Diagrams and ∆-trees.}{4.2}{X85E80D0678A5F364}
 \makelabel{localactiondiagrams:Index}{Ind}{X83A0356F839C696F}
 \makelabel{localactiondiagrams:IsLocalActionDiagram for IsDigraph}{2.1.1}{X78FCE92F7B97951A}
 \makelabel{localactiondiagrams:LocalActionDiagramFromData for IsDigraph, IsList, IsList, IsPerm}{2.1.2}{X83D230F77F47F86F}
@@ -20,3 +24,6 @@
 \makelabel{localactiondiagrams:LocalActionDiagramScopos for IsLocalActionDiagram}{3.2.1}{X823C18F980B022A7}
 \makelabel{localactiondiagrams:LocalActionDiagramGroupType for IsLocalActionDiagram}{3.2.2}{X7E4954157FBEEC4A}
 \makelabel{localactiondiagrams:LocalActionDiagramIsDiscrete for IsLocalActionDiagram}{3.2.3}{X7CC179F27B503D31}
+\makelabel{localactiondiagrams:WriteLocalActionDiagram for IsLocalActionDiagram, IsString}{4.1.1}{X7A766DBD83D79FB7}
+\makelabel{localactiondiagrams:WriteLocalActionDiagram for IsList, IsString}{4.1.1}{X7A766DBD83D79FB7}
+\makelabel{localactiondiagrams:ReadLocalActionDiagram for IsString}{4.1.2}{X7E489CF58169A8D4}

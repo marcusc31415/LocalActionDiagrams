@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_InputOutput_and_Visualisation">
+<Heading>Input/Output and Visualisation</Heading>
+
+<Section Label="Chapter_InputOutput_and_Visualisation_Section_Reading_and_Writing_Local_Action_Diagrams_To_Files">
+<Heading>Reading and Writing Local Action Diagrams To Files</Heading>
+
+<P/>
+ Local action diagrams made in GAP can be written to a file. They can also be read from the file into GAP. The format of these files are as follows:
+<P/>
+<Example><![CDATA[
+<Digraph String>
+<Vertex Labels>
+<Edge Labels>
+<Edge Reversal Map>
+<List of Other Attributes>
+]]></Example>
+
+
+<P/>
+ Multiple local action diagrams can be stored in the same file.
+<ManSection Label="Writing_Local_Action_Diagrams">
+<Heading>Writing Local Action Diagrams</Heading>
+  <Oper Arg="lad, filename[, directory]" Name="WriteLocalActionDiagram" Label="for IsLocalActionDiagram, IsString"/>
+  <Oper Arg="lad_list, filename[, directory]" Name="WriteLocalActionDiagram" Label="for IsList, IsString"/>
+ <Returns><K>true</K> if writing to the file was successful and <K>false</K> otherwise.
+</Returns>
+ <Description>
+<P/>
+ Writes the local action diagram <A>lad</A> or every local action diagram in the list <A>last_list</A> to the file <C><A>filename</A>.lad</C>. The list <A>lad_list</A> must be a dense list of local action diagrams. 
+<P/>
+ If the optional argument <A>directory</A> is specified then the file is written to that directory. Otherwise the file is written to the current directory of the GAP session --- i.e. <C>DirectoryCurrent()</C>. The argument <A>directory</A> can either be in the category <C>IsDirectory</C> or <C>IsString</C>.
+<P/>
+ If the file <C><A>filename</A>.lad</C> does not exist in the directory then it is create; otherwise the file is appended to. 
+ </Description>
+</ManSection>
+
+
+<ManSection Label="Reading_Local_Action_Diagrams">
+<Heading>Reading Local Action Diagrams</Heading>
+  <Oper Arg="filename[, directory]" Name="ReadLocalActionDiagram" Label="for IsString"/>
+ <Returns>A list of local action diagrams if reading the file was successful or raises an error and returns <K>fail</K> otherwise.
+</Returns>
+ <Description>
+<P/>
+ Reads the file <A>filename</A>. If the optional argument <A>directory</A> is specified then the file is read from that directory. Otherwise the file is read from the current directory of the GAP session --- i.e. <C>DirectoryCurrent()</C>. The argument <A>directory</A> can either be in the category <C>IsDirectory</C> or <C>IsString</C>.
+<P/>
+ It is expected that the file was written with the <C>WriteLocalActionDiagram</C> function. Some basic error checking of the file is implemented as it is read but this will not catch all errors in the file. 
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+<Section Label="Chapter_InputOutput_and_Visualisation_Section_Visualising_Local_Action_Diagrams_and_MDeltaM-trees">
+<Heading>Visualising Local Action Diagrams and <M>\Delta</M>-trees.</Heading>
+
+ Stuff goes here soon. 
+</Section>
+
+
+</Chapter>
+

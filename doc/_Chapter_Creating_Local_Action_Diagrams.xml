@@ -19,14 +19,14 @@
 
 <ManSection Label="Creating_Local_Action_Diagrams">
 <Heading>Constructing From Data</Heading>
-  <Oper Arg="D, v_labels, e_labels, rev" Name="LocalActionDiagramFromData" Label="for IsDigraph, IsList, IsList, IsPerm"/>
-  <Oper Arg="D, v_labels, e_labels, rev" Name="LocalActionDiagramFromDataNC" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+  <Oper Arg="D, vertex_labels, edge_labels, rev" Name="LocalActionDiagramFromData" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+  <Oper Arg="D, vertex_labels, edge_labels, rev" Name="LocalActionDiagramFromDataNC" Label="for IsDigraph, IsList, IsList, IsPerm"/>
  <Returns>A local action diagram.
 </Returns>
  <Description>
- 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <A>D</A> is a digraph and <A>rev</A> must be a compatible involution on the edges of <A>D</A>. The argument <A>v_labels</A> is a list of vertex labels such that <C><A>v_labels</A>[i]</C> is the group labelling vertex <C>i</C> of <A>D</A>. 
+ 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <A>D</A> is a digraph and <A>rev</A> must be a compatible involution on the edges of <A>D</A>. The argument <A>vertex_labels</A> is a list of vertex labels such that <C><A>vertex_labels</A>[i]</C> is the group labelling vertex <C>i</C> of <A>D</A>. 
 <P/>
- The argument <A>e_labels</A> is a list of edge labels. The edges of <A>D</A> are stored in lexicographical order and <C><A>edge_labels</A>[i]</C> is the set labelling edge <C>i</C> of <A>D</A> (when sorted in lexicographical order). 
+ The argument <A>edge_labels</A> is a list of edge labels. The edges of <A>D</A> are stored in lexicographical order and <C><A>edge_labels</A>[i]</C> is the set labelling edge <C>i</C> of <A>D</A> (when sorted in lexicographical order). 
 <P/>
 	The NC variant of the operation does not check that the arguments given are a valid local action diagram.
  </Description>
@@ -34,9 +34,12 @@
 
 
 <ManSection>
-  <Oper Arg="arg" Name="LocalActionDiagramUniversalGroup" Label="for IsPermGroup"/>
+  <Oper Arg="F" Name="LocalActionDiagramUniversalGroup" Label="for IsPermGroup"/>
+ <Returns>A local action diagram.
+</Returns>
  <Description>
-	Constructs a local action diagram corresponding to the Burger-Moses group U(F). 
+ Constructs a local action diagram corresponding to the Burger-Mozes group <M>U(<A>F</A>)</M> where <A>F</A> is a permutation group. 
+ This diagram has a single vertex labelled by the group <A>F</A> and a self-reverse loop for each orbit of the action of <A>F</A>. 
  </Description>
 </ManSection>
 

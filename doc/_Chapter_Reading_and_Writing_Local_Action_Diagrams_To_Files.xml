@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Reading_and_Writing_Local_Action_Diagrams_To_Files">
+<Heading>Reading and Writing Local Action Diagrams To Files</Heading>
+
+<Section Label="Chapter_Reading_and_Writing_Local_Action_Diagrams_To_Files_Section_Reading_and_Writing_Local_Action_Diagrams_To_Files">
+<Heading>Reading and Writing Local Action Diagrams To Files</Heading>
+
+<P/>
+ Local action diagrams made in GAP can be written to a file. They can also be read from the file into GAP. The format of these files are as follows:
+<P/>
+<Example><![CDATA[
+<Digraph String>
+<Vertex Labels>
+<Edge Labels>
+<Edge Reversal Map>
+<List of Other Attributes>
+]]></Example>
+
+
+<P/>
+ Multiple local action diagrams can be stored in the same file.
+</Section>
+
+
+</Chapter>
+

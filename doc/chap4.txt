@@ -1,0 +1,59 @@
+  
+  [1X4 [33X[0;0YInput/Output and Visualisation[133X[101X
+  
+  
+  [1X4.1 [33X[0;0YReading and Writing Local Action Diagrams To Files[133X[101X
+  
+  [33X[0;0YLocal action diagrams made in GAP can be written to a file. They can also be
+  read from the file into GAP. The format of these files are as follows:[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[28X<Digraph String>[128X[104X
+    [4X[28X<Vertex Labels>[128X[104X
+    [4X[28X<Edge Labels>[128X[104X
+    [4X[28X<Edge Reversal Map>[128X[104X
+    [4X[28X<List of Other Attributes>[128X[104X
+  [4X[32X[104X
+  
+  [33X[0;0YMultiple local action diagrams can be stored in the same file.[133X
+  
+  
+  [1X4.1-1 [33X[0;0YWriting Local Action Diagrams[133X[101X
+  
+  [33X[1;0Y[29X[2XWriteLocalActionDiagram[102X( [3Xlad[103X, [3Xfilename[103X[, [3Xdirectory[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XWriteLocalActionDiagram[102X( [3Xlad_list[103X, [3Xfilename[103X[, [3Xdirectory[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if writing to the file was successful and [9Xfalse[109X otherwise.[133X
+  
+  [33X[0;0YWrites  the  local  action  diagram [3Xlad[103X or every local action diagram in the
+  list  [3Xlast_list[103X  to the file [10X[3Xfilename[103X[10X.lad[110X. The list [3Xlad_list[103X must be a dense
+  list of local action diagrams.[133X
+  
+  [33X[0;0YIf  the optional argument [3Xdirectory[103X is specified then the file is written to
+  that  directory.  Otherwise  the file is written to the current directory of
+  the  GAP  session  ---  i.e.  [10XDirectoryCurrent()[110X. The argument [3Xdirectory[103X can
+  either be in the category [10XIsDirectory[110X or [10XIsString[110X.[133X
+  
+  [33X[0;0YIf  the file [10X[3Xfilename[103X[10X.lad[110X does not exist in the directory then it is create;
+  otherwise the file is appended to.[133X
+  
+  
+  [1X4.1-2 [33X[0;0YReading Local Action Diagrams[133X[101X
+  
+  [33X[1;0Y[29X[2XReadLocalActionDiagram[102X( [3Xfilename[103X[, [3Xdirectory[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA list of local action diagrams if reading the file was successful
+            or raises an error and returns [9Xfail[109X otherwise.[133X
+  
+  [33X[0;0YReads  the  file  [3Xfilename[103X.  If the optional argument [3Xdirectory[103X is specified
+  then  the  file is read from that directory. Otherwise the file is read from
+  the  current  directory  of the GAP session --- i.e. [10XDirectoryCurrent()[110X. The
+  argument [3Xdirectory[103X can either be in the category [10XIsDirectory[110X or [10XIsString[110X.[133X
+  
+  [33X[0;0YIt  is  expected  that the file was written with the [10XWriteLocalActionDiagram[110X
+  function. Some basic error checking of the file is implemented as it is read
+  but this will not catch all errors in the file.[133X
+  
+  
+  [1X4.2 [33X[0;0YVisualising Local Action Diagrams and [22X∆[122X[101X[1X-trees.[133X[101X
+  
+  [33X[0;0YStuff goes here soon.[133X
+  

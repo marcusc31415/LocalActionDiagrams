@@ -16,17 +16,18 @@
   
   [1X2.1-2 [33X[0;0YConstructing From Data[133X[101X
   
-  [33X[1;0Y[29X[2XLocalActionDiagramFromData[102X( [3XD[103X, [3Xv_labels[103X, [3Xe_labels[103X, [3Xrev[103X ) [32X operation[133X
-  [33X[1;0Y[29X[2XLocalActionDiagramFromDataNC[102X( [3XD[103X, [3Xv_labels[103X, [3Xe_labels[103X, [3Xrev[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XLocalActionDiagramFromData[102X( [3XD[103X, [3Xvertex_labels[103X, [3Xedge_labels[103X, [3Xrev[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XLocalActionDiagramFromDataNC[102X( [3XD[103X, [3Xvertex_labels[103X, [3Xedge_labels[103X, [3Xrev[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA local action diagram.[133X
   
   [33X[0;0YConstructs  a  local action diagram, checking that the arguments given are a
   valid  local  action  diagram. The argument [3XD[103X is a digraph and [3Xrev[103X must be a
-  compatible  involution on the edges of [3XD[103X. The argument [3Xv_labels[103X is a list of
-  vertex labels such that [10X[3Xv_labels[103X[10X[i][110X is the group labelling vertex [10Xi[110X of [3XD[103X.[133X
+  compatible  involution  on  the  edges of [3XD[103X. The argument [3Xvertex_labels[103X is a
+  list  of  vertex  labels  such  that [10X[3Xvertex_labels[103X[10X[i][110X is the group labelling
+  vertex [10Xi[110X of [3XD[103X.[133X
   
-  [33X[0;0YThe argument [3Xe_labels[103X is a list of edge labels. The edges of [3XD[103X are stored in
-  lexicographical  order  and  [10X[3Xedge_labels[103X[10X[i][110X is the set labelling edge [10Xi[110X of [3XD[103X
+  [33X[0;0YThe argument [3Xedge_labels[103X is a list of edge labels. The edges of [3XD[103X are stored
+  in lexicographical order and [10X[3Xedge_labels[103X[10X[i][110X is the set labelling edge [10Xi[110X of [3XD[103X
   (when sorted in lexicographical order).[133X
   
   [33X[0;0YThe  NC variant of the operation does not check that the arguments given are
@@ -34,8 +35,11 @@
   
   [1X2.1-3 LocalActionDiagramUniversalGroup[101X
   
-  [33X[1;0Y[29X[2XLocalActionDiagramUniversalGroup[102X( [3Xarg[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XLocalActionDiagramUniversalGroup[102X( [3XF[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA local action diagram.[133X
   
-  [33X[0;0YConstructs  a  local  action diagram corresponding to the Burger-Moses group
-  U(F).[133X
+  [33X[0;0YConstructs  a  local  action diagram corresponding to the Burger-Mozes group
+  [22XU([3XF[103X)[122X  where  [3XF[103X  is  a  permutation  group.  This diagram has a single vertex
+  labelled by the group [3XF[103X and a self-reverse loop for each orbit of the action
+  of [3XF[103X.[133X
   

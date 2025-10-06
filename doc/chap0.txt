@@ -44,6 +44,11 @@
       3.2-1 LocalActionDiagramScopos
       3.2-2 LocalActionDiagramGroupType
       3.2-3 LocalActionDiagramIsDiscrete
+  4 [33X[0;0YInput/Output and Visualisation[133X
+    4.1 [33X[0;0YReading and Writing Local Action Diagrams To Files[133X
+      4.1-1 [33X[0;0YWriting Local Action Diagrams[133X
+      4.1-2 [33X[0;0YReading Local Action Diagrams[133X
+    4.2 [33X[0;0YVisualising Local Action Diagrams and [22X∆[122X-trees.[133X
   
   
   [32X

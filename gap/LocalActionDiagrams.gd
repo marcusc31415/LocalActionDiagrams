@@ -22,7 +22,7 @@
 #! @Chapter Creating Local Action Diagrams
 #! @Section Creating Local Action Diagrams 
 
-#! @Returns <K>true</K> if <A>lad</A> is of the category <K>IsLocalActionDiagram</K> and <K>false</K> otherwise. 
+#! @Returns <K>true</K> if <A>lad</A> is of the category <C>IsLocalActionDiagram</C> and <K>false</K> otherwise. 
 #! @Arguments lad
 #! @Description
 #! Every local action diagram belongs to the <C>IsLocalActionDiagram</C> category. Every local action diagram is immutable. 
@@ -127,8 +127,6 @@ DeclareOperation("CotreeFromScopoNC", [IsLocalActionDiagram, IsList]);
 DeclareOperation("RandomLocalActionDiagram", [IsPosInt, IsPosInt]);
 
 
-DeclareOperation("WriteLocalActionDiagram", [IsLocalActionDiagram, IsString]);
-DeclareOperation("ReadLocalActionDiagram", [IsString]);
 
 
 ############################

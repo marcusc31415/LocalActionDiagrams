@@ -26,4 +26,15 @@
   \item \texttt  {LocalActionDiagramVertexLabels}
     \subitem for IsLocalActionDiagram, \hyperpage{5}
 
+  \indexspace
+
+  \item \texttt  {ReadLocalActionDiagram}
+    \subitem for IsString, \hyperpage{7}
+
+  \indexspace
+
+  \item \texttt  {WriteLocalActionDiagram}
+    \subitem for IsList, IsString, \hyperpage{7}
+    \subitem for IsLocalActionDiagram, IsString, \hyperpage{7}
+
 \end{theindex}

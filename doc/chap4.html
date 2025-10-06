@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>GAP (LocalActionDiagrams) - Chapter 4: Input/Output and Visualisation</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="GAPDoc2HTML" />
+<link rel="stylesheet" type="text/css" href="manual.css" />
+<script src="manual.js" type="text/javascript"></script>
+<script type="text/javascript">overwriteStyle();</script>
+</head>
+<body class="chap4"  onload="jscontent()">
+
+
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap3.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd.html">[Next Chapter]</a>&nbsp;  </div>
+
+<p id="mathjaxlink" class="pcenter"><a href="chap4_mj.html">[MathJax on]</a></p>
+<p><a id="X7BD3226C787EC8FB" name="X7BD3226C787EC8FB"></a></p>
+<div class="ChapSects"><a href="chap4.html#X7BD3226C787EC8FB">4 <span class="Heading">Input/Output and Visualisation</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X7B71459086EC944E">4.1 <span class="Heading">Reading and Writing Local Action Diagrams To Files</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7A766DBD83D79FB7">4.1-1 <span class="Heading">Writing Local Action Diagrams</span></a>
+</span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7E489CF58169A8D4">4.1-2 <span class="Heading">Reading Local Action Diagrams</span></a>
+</span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X85E80D0678A5F364">4.2 <span class="Heading">Visualising Local Action Diagrams and <span class="SimpleMath">∆</span>-trees.</span></a>
+</span>
+</div>
+</div>
+
+<h3>4 <span class="Heading">Input/Output and Visualisation</span></h3>
+
+<p><a id="X7B71459086EC944E" name="X7B71459086EC944E"></a></p>
+
+<h4>4.1 <span class="Heading">Reading and Writing Local Action Diagrams To Files</span></h4>
+
+<p>Local action diagrams made in GAP can be written to a file. They can also be read from the file into GAP. The format of these files are as follows:</p>
+
+
+<div class="example"><pre>
+&lt;Digraph String&gt;
+&lt;Vertex Labels&gt;
+&lt;Edge Labels&gt;
+&lt;Edge Reversal Map&gt;
+&lt;List of Other Attributes&gt;
+</pre></div>
+
+<p>Multiple local action diagrams can be stored in the same file.</p>
+
+<p><a id="X7A766DBD83D79FB7" name="X7A766DBD83D79FB7"></a></p>
+
+<h5>4.1-1 <span class="Heading">Writing Local Action Diagrams</span></h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; WriteLocalActionDiagram</code>( <var class="Arg">lad</var>, <var class="Arg">filename</var>[, <var class="Arg">directory</var>] )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; WriteLocalActionDiagram</code>( <var class="Arg">lad_list</var>, <var class="Arg">filename</var>[, <var class="Arg">directory</var>] )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if writing to the file was successful and <code class="keyw">false</code> otherwise.</p>
+
+<p>Writes the local action diagram <var class="Arg">lad</var> or every local action diagram in the list <var class="Arg">last_list</var> to the file <code class="code"><var class="Arg">filename</var>.lad</code>. The list <var class="Arg">lad_list</var> must be a dense list of local action diagrams.</p>
+
+<p>If the optional argument <var class="Arg">directory</var> is specified then the file is written to that directory. Otherwise the file is written to the current directory of the GAP session --- i.e. <code class="code">DirectoryCurrent()</code>. The argument <var class="Arg">directory</var> can either be in the category <code class="code">IsDirectory</code> or <code class="code">IsString</code>.</p>
+
+<p>If the file <code class="code"><var class="Arg">filename</var>.lad</code> does not exist in the directory then it is create; otherwise the file is appended to.</p>
+
+<p><a id="X7E489CF58169A8D4" name="X7E489CF58169A8D4"></a></p>
+
+<h5>4.1-2 <span class="Heading">Reading Local Action Diagrams</span></h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; ReadLocalActionDiagram</code>( <var class="Arg">filename</var>[, <var class="Arg">directory</var>] )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A list of local action diagrams if reading the file was successful or raises an error and returns <code class="keyw">fail</code> otherwise.</p>
+
+<p>Reads the file <var class="Arg">filename</var>. If the optional argument <var class="Arg">directory</var> is specified then the file is read from that directory. Otherwise the file is read from the current directory of the GAP session --- i.e. <code class="code">DirectoryCurrent()</code>. The argument <var class="Arg">directory</var> can either be in the category <code class="code">IsDirectory</code> or <code class="code">IsString</code>.</p>
+
+<p>It is expected that the file was written with the <code class="code">WriteLocalActionDiagram</code> function. Some basic error checking of the file is implemented as it is read but this will not catch all errors in the file.</p>
+
+<p><a id="X85E80D0678A5F364" name="X85E80D0678A5F364"></a></p>
+
+<h4>4.2 <span class="Heading">Visualising Local Action Diagrams and <span class="SimpleMath">∆</span>-trees.</span></h4>
+
+<p>Stuff goes here soon.</p>
+
+
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap3.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd.html">[Next Chapter]</a>&nbsp;  </div>
+
+
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<hr />
+<p class="foot">generated by <a href="http://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>
+</body>
+</html>

@@ -14,4 +14,9 @@
 \contentsline {subsection}{\numberline {3.2.1}\textcolor {Chapter }{LocalActionDiagramScopos (for IsLocalActionDiagram)}}{6}{subsection.3.2.1}%
 \contentsline {subsection}{\numberline {3.2.2}\textcolor {Chapter }{LocalActionDiagramGroupType (for IsLocalActionDiagram)}}{6}{subsection.3.2.2}%
 \contentsline {subsection}{\numberline {3.2.3}\textcolor {Chapter }{LocalActionDiagramIsDiscrete (for IsLocalActionDiagram)}}{6}{subsection.3.2.3}%
-\contentsline {chapter}{Index}{7}{section*.2}%
+\contentsline {chapter}{\numberline {4}\textcolor {Chapter }{Input/Output and Visualisation}}{7}{chapter.4}%
+\contentsline {section}{\numberline {4.1}\textcolor {Chapter }{Reading and Writing Local Action Diagrams To Files}}{7}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}\textcolor {Chapter }{Writing Local Action Diagrams}}{7}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}\textcolor {Chapter }{Reading Local Action Diagrams}}{7}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}\textcolor {Chapter }{Visualising Local Action Diagrams and $\Delta $-trees.}}{8}{section.4.2}%
+\contentsline {chapter}{Index}{9}{section*.2}%
