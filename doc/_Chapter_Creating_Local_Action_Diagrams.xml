@@ -9,7 +9,7 @@
 
 <ManSection>
   <Filt Arg="lad" Name="IsLocalActionDiagram" Label="for IsDigraph"/>
- <Returns><K>true</K> if <A>lad</A> is of the category <K>IsLocalActionDiagram</K> and <K>false</K> otherwise.
+ <Returns><K>true</K> if <A>lad</A> is of the category <C>IsLocalActionDiagram</C> and <K>false</K> otherwise.
 </Returns>
  <Description>
  Every local action diagram belongs to the <C>IsLocalActionDiagram</C> category. Every local action diagram is immutable. 

@@ -12,3 +12,4 @@
 \indexentry{WriteLocalActionDiagram@\texttt  {WriteLocalActionDiagram}!for IsLocalActionDiagram, IsString|hyperpage}{7}
 \indexentry{WriteLocalActionDiagram@\texttt  {WriteLocalActionDiagram}!for IsList, IsString|hyperpage}{7}
 \indexentry{ReadLocalActionDiagram@\texttt  {ReadLocalActionDiagram}!for IsString|hyperpage}{7}
+\indexentry{GenerateTikZCode@\texttt  {GenerateTikZCode}!for IsLocalActionDiagram, IsString|hyperpage}{8}

@@ -55,5 +55,25 @@
   
   [1X4.2 [33X[0;0YVisualising Local Action Diagrams and [22X∆[122X[101X[1X-trees.[133X[101X
   
-  [33X[0;0YStuff goes here soon.[133X
+  [33X[0;0YFunctions  are  provided  to  visualise  local  action diagrams and [22X∆[122X-trees.
+  Insert some more text here?[133X
+  
+  [1X4.2-1 GenerateTikZCode[101X
+  
+  [33X[1;0Y[29X[2XGenerateTikZCode[102X( [3Xlad[103X, [3Xfilename[103X[, [3Xhighlight_edges[103X, [3Xdirectory[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if the code was generated successfully and [9Xfail[109X otherwise.[133X
+  
+  [33X[0;0YGenerates  TikZ code that draws the local action diagram [3Xlad[103X. Currently this
+  function  only  supports local action diagrams with one or two vertices. The
+  TikZ code is written to [10X[3Xfilename[103X[10X.tex[110X. This file must be compiled separately.[133X
+  
+  [33X[0;0YThe  optional  argument  [3Xhighlight_edges[103X  must be a list of edges --- i.e. a
+  subset  of  [10XLocalActionDiagramEdges([3Xlad[103X[10X)[110X.  If  given, the edges specified in
+  this  list  are highlighted. This could, for example, highlight a particular
+  scopo in [3Xlad[103X.[133X
+  
+  [33X[0;0YBy  default  the output file is written in the current working directory ---
+  i.e.  [10XDirectoryCurrent()[110X.  The  optional  argument [3Xdirectory[103X can either be a
+  string or directory object. If it is given then then the file will be output
+  to the specified directory.[133X
   

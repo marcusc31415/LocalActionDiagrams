@@ -221,7 +221,8 @@ A local action diagram.
 
 
 
- Constructs a local action diagram corresponding to the Burger-Mozes group $U(\mbox{\texttt{\mdseries\slshape F}})$ where \mbox{\texttt{\mdseries\slshape F}} is a permutation group. This diagram has a single vertex labelled by the group \mbox{\texttt{\mdseries\slshape F}} and a self-reverse loop for each orbit of the action of \mbox{\texttt{\mdseries\slshape F}}. }
+ Constructs a local action diagram corresponding to the
+Burger\texttt{\symbol{45}}Mozes group $U(\mbox{\texttt{\mdseries\slshape F}})$ where \mbox{\texttt{\mdseries\slshape F}} is a permutation group. This diagram has a single vertex labelled by the group \mbox{\texttt{\mdseries\slshape F}} and a self\texttt{\symbol{45}}reverse loop for each orbit of the action of \mbox{\texttt{\mdseries\slshape F}}. }
 
  }
 
@@ -405,7 +406,8 @@ read from the file into GAP. The format of these files are as follows:
  Writes the local action diagram \mbox{\texttt{\mdseries\slshape lad}} or every local action diagram in the list \mbox{\texttt{\mdseries\slshape last{\textunderscore}list}} to the file \texttt{\mbox{\texttt{\mdseries\slshape filename}}.lad}. The list \mbox{\texttt{\mdseries\slshape lad{\textunderscore}list}} must be a dense list of local action diagrams. 
 
  If the optional argument \mbox{\texttt{\mdseries\slshape directory}} is specified then the file is written to that directory. Otherwise the file is
-written to the current directory of the GAP session --- i.e. \texttt{DirectoryCurrent()}. The argument \mbox{\texttt{\mdseries\slshape directory}} can either be in the category \texttt{IsDirectory} or \texttt{IsString}. 
+written to the current directory of the GAP session
+\texttt{\symbol{45}}\texttt{\symbol{45}}\texttt{\symbol{45}} i.e. \texttt{DirectoryCurrent()}. The argument \mbox{\texttt{\mdseries\slshape directory}} can either be in the category \texttt{IsDirectory} or \texttt{IsString}. 
 
  If the file \texttt{\mbox{\texttt{\mdseries\slshape filename}}.lad} does not exist in the directory then it is create; otherwise the file is
 appended to. }
@@ -427,7 +429,8 @@ an error and returns \texttt{fail} otherwise.
  
 
  Reads the file \mbox{\texttt{\mdseries\slshape filename}}. If the optional argument \mbox{\texttt{\mdseries\slshape directory}} is specified then the file is read from that directory. Otherwise the file is
-read from the current directory of the GAP session --- i.e. \texttt{DirectoryCurrent()}. The argument \mbox{\texttt{\mdseries\slshape directory}} can either be in the category \texttt{IsDirectory} or \texttt{IsString}. 
+read from the current directory of the GAP session
+\texttt{\symbol{45}}\texttt{\symbol{45}}\texttt{\symbol{45}} i.e. \texttt{DirectoryCurrent()}. The argument \mbox{\texttt{\mdseries\slshape directory}} can either be in the category \texttt{IsDirectory} or \texttt{IsString}. 
 
  It is expected that the file was written with the \texttt{WriteLocalActionDiagram} function. Some basic error checking of the file is implemented as it is read
 but this will not catch all errors in the file. }
@@ -435,11 +438,35 @@ but this will not catch all errors in the file. }
  }
 
  
-\section{\textcolor{Chapter }{Visualising Local Action Diagrams and $\Delta$-trees.}}\label{Chapter_InputOutput_and_Visualisation_Section_Visualising_Local_Action_Diagrams_and_MDeltaM-trees}
+\section{\textcolor{Chapter }{Visualising Local Action Diagrams and $\Delta$\texttt{\symbol{45}}trees.}}\label{Chapter_InputOutput_and_Visualisation_Section_Visualising_Local_Action_Diagrams_and_MDeltaM-trees}
 \logpage{[ 4, 2, 0 ]}
 \hyperdef{L}{X85E80D0678A5F364}{}
 {
-  Stuff goes here soon. }
+  Functions are provided to visualise local action diagrams and $\Delta$\texttt{\symbol{45}}trees. Insert some more text here? 
+
+\subsection{\textcolor{Chapter }{GenerateTikZCode (for IsLocalActionDiagram, IsString)}}
+\logpage{[ 4, 2, 1 ]}\nobreak
+\hyperdef{L}{X841F1D0A7C4F247A}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{GenerateTikZCode({\mdseries\slshape lad, filename[, highlight{\textunderscore}edges, directory]})\index{GenerateTikZCode@\texttt{GenerateTikZCode}!for IsLocalActionDiagram, IsString}
+\label{GenerateTikZCode:for IsLocalActionDiagram, IsString}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+\texttt{true} if the code was generated successfully and \texttt{fail} otherwise. 
+
+
+
+ Generates TikZ code that draws the local action diagram \mbox{\texttt{\mdseries\slshape lad}}. Currently this function only supports local action diagrams with one or two
+vertices. The TikZ code is written to \texttt{\mbox{\texttt{\mdseries\slshape filename}}.tex}. This file must be compiled separately. 
+
+ The optional argument \mbox{\texttt{\mdseries\slshape highlight{\textunderscore}edges}} must be a list of edges
+\texttt{\symbol{45}}\texttt{\symbol{45}}\texttt{\symbol{45}} i.e. a subset of \texttt{LocalActionDiagramEdges(\mbox{\texttt{\mdseries\slshape lad}})}. If given, the edges specified in this list are highlighted. This could, for
+example, highlight a particular scopo in \mbox{\texttt{\mdseries\slshape lad}}. 
+
+ By default the output file is written in the current working directory
+\texttt{\symbol{45}}\texttt{\symbol{45}}\texttt{\symbol{45}} i.e. \texttt{DirectoryCurrent()}. The optional argument \mbox{\texttt{\mdseries\slshape directory}} can either be a string or directory object. If it is given then then the file
+will be output to the specified directory. }
+
+ }
 
  }
 

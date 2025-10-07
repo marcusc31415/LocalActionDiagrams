@@ -112,6 +112,517 @@ _LAD_ReadLADString@ := function(lad_string)
 	return lad_list;
 end;
 
+_LAD_COLOURS@ := [["blue"], ["blue", "red"], ["blue", "green", "red"], ["blue", "green", "yellow", "orange"], ["blue", "green", "yellow", "orange", "red"], ["blue", "cyan", "green", "yellow", "orange", "red"]];
+
+_LAD_GAP_NAMES@ := ["1", "C2", "C3", "S3", "C2 x C2", "C4", "D8", "A4", "S4", "C5", "C6", "D10", "D12", "C5 : C4", "A5", "S5", "C6", "C2 x C2 x C2", "C4 x C2", "C3 x C3", "C2 x D8", "(C3 x C3) : C2", "C3 x S3", "C2 x A4", "S3 x S3", "(C3 x C3) : C4", "C2 x S4", "(S3 x S3) : C2", "A6", "S6"];
+_LAD_LATEX_NAMES@ := ["\\langle\\mathrm{id}\\rangle", "C_{2}", "C_{3}", "S_{3}", "C_{2}\\times C_{2}", "C_{4}", "D_{4}", "A_{4}", "S_{4}", "C_{5}", "C_{6}", "D_{5}", "D_{6}", "\\mathrm{AGL}(1,5)", "A_{5}", "S_{5}", "C_{6}", "C_{2}^{3}", "C_{4}\\times C_{2}", "C_{3}\\times C_{3}", "C_{2}\\times D_{4}", "C_{3}^{2}\\rtimes C_{2}", "C_{3}\\times S_{3}", "C_{2}\\times A_{4}", "S_{3}\\times S_{3}", "C_{3}^{2}\\rtimes C_{4}", "C_{2}\\times S_{4}", "S_{3} \\wr C_{2}", "A_{6}", "S_{6}"];
+
+_LAD_TikzOutputString@ := function(D)
+	local grp, deg, grp_name, nr, grps, degs, grp_names, M, arc_labels, arc_reversal, arcs, arc_colours, i, j, domain, orbits, nr_colours, k, l, f, output_string;
+
+	if DigraphNrVertices(D) > 2 then
+		Error("Drawing is currently only implemented for local action diagrams on up to two vertices. Try Splash(DotDigraph(D)) for more vertices to get an indication.");
+	elif DigraphNrVertices(D) = 1 then
+		# Setup
+		grp := LocalActionDiagramVertexLabels(D)[1];
+		deg := Maximum(PermGroupDomain(grp));
+		grp_name := _LAD_LATEX_NAMES@[Position(_LAD_GAP_NAMES@, StructureDescription(grp))];
+		arc_labels := LocalActionDiagramEdgeLabels(D);
+		arc_reversal := LocalActionDiagramEdgeReversal(D);
+		# rainbow-y arc colours
+		arcs := DigraphEdges(D);
+		arc_colours := [];
+
+		domain := Positions(arcs, [1,1]);
+		orbits := AsSortedList(Orbits(Group(arc_reversal), domain));
+		nr_colours := Size(orbits);
+		for k in [1..Length(orbits)] do
+			for l in orbits[k] do
+				arc_colours[l] := _LAD_COLOURS@[nr_colours][k];
+			od;
+		od;
+#		return arc_colours;
+		
+		# Drawing
+#		f := Filename(DirectoryCurrent(), Concatenation("local_action_diagram", ".tex"));
+
+		
+		output_string := "\\documentclass{standalone}";
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{tikz}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{bm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usetikzlibrary{decorations.markings}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		# Picture
+		output_string := Concatenation(output_string, "\\begin{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{scope}[xscale=1, yscale=1, thick]");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopangle{10}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopsize{2}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\looplabelsep{0}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\vertexlabelsep{1mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");	
+		
+		# Loops
+		domain := Positions(arcs, [1,1]);
+		output_string := Concatenation(output_string, Concatenation("\\def\\nrloops{", String(Size(arcs)), "}"));
+		output_string := Concatenation(output_string, "\n");
+		for j in [1..Size(domain)] do
+			output_string := Concatenation(output_string, Concatenation("\\draw [", arc_colours[domain[j]], "] (0:0) .. controls ({\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops}:\\loopsize) and ({\\loopangle+", String(j), "*(180-2*\\loopangle)/\\nrloops}:\\loopsize) .. (0:0);"));
+			output_string := Concatenation(output_string, "\n");
+			output_string := Concatenation(output_string, Concatenation("\\node at ({\\loopangle+", String(j-1),"*(180-2*\\loopangle)/\\nrloops+(180-2*\\loopangle)/\\nrloops/2}:\\loopsize-0.3+\\looplabelsep) {\\scriptsize{$\\{", String(arc_labels[domain[j]]){[2..Length(String(arc_labels[domain[j]]))-1]},"\\}$}};"));
+			output_string := Concatenation(output_string, "\n");
+			output_string := Concatenation(output_string, "\n");
+		od;
+		
+		# Vertices and their labels
+		output_string := Concatenation(output_string, "\\node (0) at (0:0) {};");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\draw [fill] (0) circle [radius=1pt];");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, Concatenation("\\node [below=\\vertexlabelsep] at (0) {\\scriptsize{$", String(grp_name), "$}};"));
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		
+		# End
+		output_string := Concatenation(output_string, "\\end{scope}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+	else
+		# Setup
+		nr := DigraphNrVertices(D);
+		grps := LocalActionDiagramVertexLabels(D);
+		degs := List(grps, grp -> Maximum(PermGroupDomain(grp)));
+		grp_names := List(grps, grp -> _LAD_LATEX_NAMES@[Position(_LAD_GAP_NAMES@, StructureDescription(grp))]);
+		M := AdjacencyMatrix(D);
+		arc_labels := LocalActionDiagramEdgeLabels(D);
+		arc_reversal := LocalActionDiagramEdgeReversal(D);
+		# rainbow-y arc colours
+		arcs := DigraphEdges(D);
+		arc_colours := [];
+		for i in [1..nr] do
+			for j in [i..nr] do
+				domain := Union(Positions(arcs, [i,j]), Positions(arcs, [j,i]));
+				orbits := AsSortedList(Orbits(Group(arc_reversal), domain));
+				nr_colours := Size(orbits);
+				for k in [1..Length(orbits)] do
+					for l in orbits[k] do
+						arc_colours[l] := _LAD_COLOURS@[nr_colours][k];
+					od;
+				od;
+			od;				
+		od;	
+#		return arc_colours;
+		
+		# Drawing
+#		f := Filename(DirectoryCurrent(), Concatenation("local_action_diagram", ".tex"));
+		#f := OutputTextFile( Concatenation("local_action_diagram", ".tex"), false );;
+		#SetPrintFormattingStatus(f, false);
+		
+		
+		output_string :=  "\\documentclass{standalone}";
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{tikz}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{bm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usetikzlibrary{decorations.markings}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		# Picture
+		output_string := Concatenation(output_string, "\\begin{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{scope}[xscale=2, yscale=2, thick]");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, Concatenation("\\def\\nr{", String(nr), "}"));
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\foreach \\n in {0,...,\\nr} {\\node (\\n) at (\\n*360/\\nr:1) {};}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopangle{45}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopsize{1.3}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\looplabelsep{-2mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\edgestart{0.15}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\edgesep{0.3}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\edgelabelsep{-0.3mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\vertexlabelsep{3mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");	
+		
+		# Loops
+		for i in [1..nr] do
+			domain := Positions(arcs, [i,i]);
+			if domain = [] then continue; else
+				output_string := Concatenation(output_string, Concatenation("\\def\\nrloops", String(i), "{", String(Size(domain)), "}"));
+				output_string := Concatenation(output_string, "\n");
+				for j in [1..Size(domain)] do
+					output_string := Concatenation(output_string, Concatenation("\\begin{scope}[rotate={", String(i-1), "*360/\\nr}, xshift=1cm, decoration={markings, mark=at position 0.5 with {\\node[label={[black, label distance=\\looplabelsep]{", String(i-1), "*360/\\nr-90+\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops", String(i), "+(180-2*\\loopangle)/\\nrloops", String(i), "/2}:\\tiny{$\\{", String(arc_labels[domain[j]]){[2..Length(String(arc_labels[domain[j]]))-1]}, "\\}$}}]{};}}] \\draw [", arc_colours[domain[j]], ", postaction=decorate] (0:0) .. controls ({-90+\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops", String(i), "}:\\loopsize) and ({-90+\\loopangle+", String(j), "*(180-2*\\loopangle)/\\nrloops", String(i), "}:\\loopsize) .. (0:0); \\end{scope}"));
+					output_string := Concatenation(output_string, "\n");
+					output_string := Concatenation(output_string, "\n");
+				od;
+			fi;
+		od;
+		
+		# Arcs (only works for one or two vertices at the moment, TODO: improve this to work for any number of vertices, the rest of the code should be mostly fine)
+		# 1 to 2
+		domain := Positions(arcs, [1,2]);
+		if not domain = [] then
+			output_string := Concatenation(output_string, Concatenation("\\def\\nrarcs_", String(i), "_", String(j), "{", String(Size(domain)), "}"));
+			output_string := Concatenation(output_string, "\n");
+			for k in [1..Size(domain)] do
+				# arc
+				output_string := Concatenation(output_string, Concatenation("\\begin{scope} [decoration={markings, mark=at position 0.5 with {\\arrow{>}}, mark=at position 0.5 with {\\node[rotate=-90+180/\\nr, above=\\edgelabelsep]{\\tiny{$\\{", String(arc_labels[domain[k]]){[2..Length(String(arc_labels[domain[k]]))-1]}, "\\}$}};} }] \\draw [", arc_colours[domain[k]], ", postaction=decorate] (0:1) .. controls (360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) and (2*360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) .. (360/\\nr:1); \\end{scope}"));
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, "\n");
+			od;
+		fi;
+		
+		
+		# 2 to 1
+		domain := Positions(arcs, [2,1]);
+		if not domain = [] then
+			output_string := Concatenation(output_string, Concatenation("\\def\\nrarcs_", String(i), "_", String(j), "{", String(Size(domain)), "}"));
+			output_string := Concatenation(output_string, "\n");
+			for k in [1..Size(domain)] do
+				# arc
+				output_string := Concatenation(output_string, Concatenation("\\begin{scope} [decoration={markings, mark=at position 0.5 with {\\arrow{<}}, mark=at position 0.5 with {\\node[rotate=-90+180/\\nr, below=\\edgelabelsep]{\\tiny{$\\{", String(arc_labels[domain[k]]){[2..Length(String(arc_labels[domain[k]]))-1]}, "\\}$}};} }] \\draw [", arc_colours[domain[k]], ", postaction=decorate, xshift=1cm, rotate=360/\\nr/2, xscale=-1, rotate=-360/\\nr/2, xshift=-1cm] (0:1) .. controls (360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) and (2*360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) .. (360/\\nr:1); \\end{scope}"));
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, "\n");
+			od;
+		fi;		
+		
+		# Vertices and their labels
+		for i in [1..nr] do
+			output_string := Concatenation(output_string, Concatenation("\\node (", String(i), ") at (", String(i), "*360/\\nr:1) {};"));
+			output_string := Concatenation(output_string, "\n");
+			output_string := Concatenation(output_string, Concatenation("\\draw [fill] (", String(i), ") circle [radius=1pt];"));
+			output_string := Concatenation(output_string, "\n");
+			output_string := Concatenation(output_string, Concatenation("\\node [below=\\vertexlabelsep] at (", String(i), ") {\\tiny{$", String(grp_names[i]), "$}};"));
+			output_string := Concatenation(output_string, "\n");
+
+		od;
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		
+		# End
+		output_string := Concatenation(output_string, "\\end{scope}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");			
+	fi;
+
+	return output_string;
+end;
+
+_LAD_TikzOutputStringScopo@ := function(D, scopo)
+	local grp, deg, grp_name, nr, grps, degs, grp_names, M, arc_labels, arc_reversal, arcs, arc_colours, i, j, domain, orbits, nr_colours, k, l, f, output_string;
+
+	if not ForAll(scopo, i -> i in [1..DigraphNrEdges(D)]) then
+		Error("The scopo must be set of indices of list of edges of D");
+	elif DigraphNrVertices(D) > 2 then
+		Error("Drawing is currently only implemented for local action diagrams on up to two vertices. Try Splash(DotDigraph(D)) for more vertices to get an indication.");
+	elif DigraphNrVertices(D) = 1 then
+		# Setup
+		grp := LocalActionDiagramVertexLabels(D)[1];
+		deg := Maximum(PermGroupDomain(grp));
+		grp_name := _LAD_LATEX_NAMES@[Position(_LAD_GAP_NAMES@, StructureDescription(grp))];
+		arc_labels := LocalActionDiagramEdgeLabels(D);
+		arc_reversal := LocalActionDiagramEdgeReversal(D);
+		# rainbow-y arc colours
+		arcs := DigraphEdges(D);
+		arc_colours := [];
+
+		domain := Positions(arcs, [1,1]);
+		orbits := AsSortedList(Orbits(Group(arc_reversal), domain));
+		nr_colours := Size(orbits);
+		for k in [1..Length(orbits)] do
+			for l in orbits[k] do
+				arc_colours[l] := _LAD_COLOURS@[nr_colours][k];
+			od;
+		od;
+#		return arc_colours;
+		
+		# Drawing
+#		f := Filename(DirectoryCurrent(), Concatenation("local_action_diagram", ".tex"));
+		
+		output_string :=  "\\documentclass{standalone}";
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{tikz}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{bm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usetikzlibrary{decorations.markings}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		# Picture
+		output_string := Concatenation(output_string, "\\begin{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{scope}[xscale=1, yscale=1, thick]");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopangle{10}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopsize{2}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\looplabelsep{0}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\vertexlabelsep{1mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");	
+		
+		# Loops
+		domain := Positions(arcs, [1,1]);
+		output_string := Concatenation(output_string, Concatenation("\\def\\nrloops{", String(Size(arcs)), "}"));
+		output_string := Concatenation(output_string, "\n");
+		for j in [1..Size(domain)] do
+			if domain[j] in scopo then
+				output_string := Concatenation(output_string, Concatenation("\\draw [dashed, ", arc_colours[domain[j]], "] (0:0) .. controls ({\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops}:\\loopsize) and ({\\loopangle+", String(j), "*(180-2*\\loopangle)/\\nrloops}:\\loopsize) .. (0:0);"));
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, Concatenation("\\node at ({\\loopangle+", String(j-1),"*(180-2*\\loopangle)/\\nrloops+(180-2*\\loopangle)/\\nrloops/2}:\\loopsize-0.3+\\looplabelsep) {\\scriptsize{$\\{", String(arc_labels[domain[j]]){[2..Length(String(arc_labels[domain[j]]))-1]},"\\}$}};"));
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, "\n");
+			else
+				output_string := Concatenation(output_string, Concatenation("\\draw [", arc_colours[domain[j]], "] (0:0) .. controls ({\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops}:\\loopsize) and ({\\loopangle+", String(j), "*(180-2*\\loopangle)/\\nrloops}:\\loopsize) .. (0:0);"));
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, Concatenation("\\node at ({\\loopangle+", String(j-1),"*(180-2*\\loopangle)/\\nrloops+(180-2*\\loopangle)/\\nrloops/2}:\\loopsize-0.3+\\looplabelsep) {\\scriptsize{$\\{", String(arc_labels[domain[j]]){[2..Length(String(arc_labels[domain[j]]))-1]},"\\}$}};"));
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, "\n");
+			fi;
+		od;
+		
+		# Vertices and their labels
+		output_string := Concatenation(output_string, "\\node (0) at (0:0) {};");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\draw [fill] (0) circle [radius=1pt];");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, Concatenation("\\node [below=\\vertexlabelsep] at (0) {\\scriptsize{$", String(grp_name), "$}};"));
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		
+		# End
+		output_string := Concatenation(output_string, "\\end{scope}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+	else
+		# Setup
+		nr := DigraphNrVertices(D);
+		grps := LocalActionDiagramVertexLabels(D);
+		degs := List(grps, grp -> Maximum(PermGroupDomain((grp))));
+		grp_names := List(grps, grp -> _LAD_LATEX_NAMES@[Position(_LAD_GAP_NAMES@, StructureDescription(grp))]);
+		M := AdjacencyMatrix(D);
+		arc_labels := LocalActionDiagramEdgeLabels(D);
+		arc_reversal := LocalActionDiagramEdgeReversal(D);
+		# rainbow-y arc colours
+		arcs := DigraphEdges(D);
+		arc_colours := [];
+		for i in [1..nr] do
+			for j in [i..nr] do
+				domain := Union(Positions(arcs, [i,j]), Positions(arcs, [j,i]));
+				orbits := AsSortedList(Orbits(Group(arc_reversal), domain));
+				nr_colours := Size(orbits);
+				for k in [1..Length(orbits)] do
+					for l in orbits[k] do
+						arc_colours[l] := _LAD_COLOURS@[nr_colours][k];
+					od;
+				od;
+			od;				
+		od;	
+#		return arc_colours;
+		
+		# Drawing
+#		f := Filename(DirectoryCurrent(), Concatenation("local_action_diagram", ".tex"));
+		
+		
+		output_string := "\\documentclass{standalone}";
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{tikz}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usepackage{bm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\usetikzlibrary{decorations.markings}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		# Picture
+		output_string := Concatenation(output_string, "\\begin{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\begin{scope}[xscale=2, yscale=2, thick]");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, Concatenation("\\def\\nr{", String(nr), "}"));
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\foreach \\n in {0,...,\\nr} {\\node (\\n) at (\\n*360/\\nr:1) {};}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopangle{45}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\loopsize{1.3}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\looplabelsep{-2mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\edgestart{0.15}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\edgesep{0.3}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\edgelabelsep{-0.3mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\def\\vertexlabelsep{3mm}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");	
+		
+		# Loops
+		for i in [1..nr] do
+			domain := Positions(arcs, [i,i]);
+			if domain = [] then continue; else
+				output_string := Concatenation(output_string, Concatenation("\\def\\nrloops", String(i), "{", String(Size(domain)), "}"));
+				output_string := Concatenation(output_string, "\n");
+				for j in [1..Size(domain)] do
+					if domain[j] in scopo then
+						output_string := Concatenation(output_string, Concatenation("\\begin{scope}[rotate={", String(i-1), "*360/\\nr}, xshift=1cm, decoration={markings, mark=at position 0.5 with {\\node[label={[black, label distance=\\looplabelsep]{", String(i-1), "*360/\\nr-90+\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops", String(i), "+(180-2*\\loopangle)/\\nrloops", String(i), "/2}:\\tiny{$\\{", String(arc_labels[domain[j]]){[2..Length(String(arc_labels[domain[j]]))-1]}, "\\}$}}]{};}}] \\draw [dashed,", arc_colours[domain[j]], ", postaction=decorate] (0:0) .. controls ({-90+\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops", String(i), "}:\\loopsize) and ({-90+\\loopangle+", String(j), "*(180-2*\\loopangle)/\\nrloops", String(i), "}:\\loopsize) .. (0:0); \\end{scope}"));
+					else
+						output_string := Concatenation(output_string, Concatenation("\\begin{scope}[rotate={", String(i-1), "*360/\\nr}, xshift=1cm, decoration={markings, mark=at position 0.5 with {\\node[label={[black, label distance=\\looplabelsep]{", String(i-1), "*360/\\nr-90+\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops", String(i), "+(180-2*\\loopangle)/\\nrloops", String(i), "/2}:\\tiny{$\\{", String(arc_labels[domain[j]]){[2..Length(String(arc_labels[domain[j]]))-1]}, "\\}$}}]{};}}] \\draw [", arc_colours[domain[j]], ", postaction=decorate] (0:0) .. controls ({-90+\\loopangle+", String(j-1), "*(180-2*\\loopangle)/\\nrloops", String(i), "}:\\loopsize) and ({-90+\\loopangle+", String(j), "*(180-2*\\loopangle)/\\nrloops", String(i), "}:\\loopsize) .. (0:0); \\end{scope}"));
+					fi;
+					output_string := Concatenation(output_string, "\n");
+					output_string := Concatenation(output_string, "\n");
+				od;
+			fi;
+		od;
+		
+		# Arcs (only works for one or two vertices at the moment, TODO: improve this to work for any number of vertices, the rest of the code should be mostly fine)
+		# 1 to 2
+		domain := Positions(arcs, [1,2]);
+		if not domain = [] then
+			output_string := Concatenation(output_string, Concatenation("\\def\\nrarcs_", String(i), "_", String(j), "{", String(Size(domain)), "}"));
+			output_string := Concatenation(output_string, "\n");
+			for k in [1..Size(domain)] do
+				# arc
+				if domain[k] in scopo then
+					output_string := Concatenation(output_string, Concatenation("\\begin{scope} [decoration={markings, mark=at position 0.5 with {\\arrow{>}}, mark=at position 0.5 with {\\node[rotate=-90+180/\\nr, above=\\edgelabelsep]{\\tiny{$\\{", String(arc_labels[domain[k]]){[2..Length(String(arc_labels[domain[k]]))-1]}, "\\}$}};} }] \\draw [dashed,", arc_colours[domain[k]], ", postaction=decorate] (0:1) .. controls (360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) and (2*360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) .. (360/\\nr:1); \\end{scope}"));
+				else
+					output_string := Concatenation(output_string, Concatenation("\\begin{scope} [decoration={markings, mark=at position 0.5 with {\\arrow{>}}, mark=at position 0.5 with {\\node[rotate=-90+180/\\nr, above=\\edgelabelsep]{\\tiny{$\\{", String(arc_labels[domain[k]]){[2..Length(String(arc_labels[domain[k]]))-1]}, "\\}$}};} }] \\draw [", arc_colours[domain[k]], ", postaction=decorate] (0:1) .. controls (360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) and (2*360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) .. (360/\\nr:1); \\end{scope}"));
+				fi;
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, "\n");
+			od;
+		fi;
+		
+		
+		# 2 to 1
+		domain := Positions(arcs, [2,1]);
+		if not domain = [] then
+			output_string := Concatenation(output_string, Concatenation("\\def\\nrarcs_", String(i), "_", String(j), "{", String(Size(domain)), "}"));
+			output_string := Concatenation(output_string, "\n");
+			for k in [1..Size(domain)] do
+				# arc
+				if domain[k] in scopo then
+					output_string := Concatenation(output_string, Concatenation("\\begin{scope} [decoration={markings, mark=at position 0.5 with {\\arrow{<}}, mark=at position 0.5 with {\\node[rotate=-90+180/\\nr, below=\\edgelabelsep]{\\tiny{$\\{", String(arc_labels[domain[k]]){[2..Length(String(arc_labels[domain[k]]))-1]}, "\\}$}};} }] \\draw [dashed,", arc_colours[domain[k]], ", postaction=decorate, xshift=1cm, rotate=360/\\nr/2, xscale=-1, rotate=-360/\\nr/2, xshift=-1cm] (0:1) .. controls (360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) and (2*360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) .. (360/\\nr:1); \\end{scope}"));
+				else
+					output_string := Concatenation(output_string, Concatenation("\\begin{scope} [decoration={markings, mark=at position 0.5 with {\\arrow{<}}, mark=at position 0.5 with {\\node[rotate=-90+180/\\nr, below=\\edgelabelsep]{\\tiny{$\\{", String(arc_labels[domain[k]]){[2..Length(String(arc_labels[domain[k]]))-1]}, "\\}$}};} }] \\draw [", arc_colours[domain[k]], ", postaction=decorate, xshift=1cm, rotate=360/\\nr/2, xscale=-1, rotate=-360/\\nr/2, xshift=-1cm] (0:1) .. controls (360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) and (2*360/\\nr/3:\\edgestart+", String(k-1), "*\\edgesep) .. (360/\\nr:1); \\end{scope}"));
+				fi;
+				output_string := Concatenation(output_string, "\n");
+				output_string := Concatenation(output_string, "\n");
+			od;
+		fi;
+
+		
+		
+		
+		
+		
+		
+		# Vertices and their labels
+		for i in [1..nr] do
+			output_string := Concatenation(output_string, Concatenation("\\node (", String(i), ") at (", String(i), "*360/\\nr:1) {};"));
+			output_string := Concatenation(output_string, "\n");
+			output_string := Concatenation(output_string, Concatenation("\\draw [fill] (", String(i), ") circle [radius=1pt];"));
+			output_string := Concatenation(output_string, "\n");
+			output_string := Concatenation(output_string, Concatenation("\\node [below=\\vertexlabelsep] at (", String(i), ") {\\tiny{$", String(grp_names[i]), "$}};"));
+			output_string := Concatenation(output_string, "\n");
+
+		od;
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+
+		
+		# End
+		output_string := Concatenation(output_string, "\\end{scope}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{tikzpicture}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\\end{document}");
+		output_string := Concatenation(output_string, "\n");
+		output_string := Concatenation(output_string, "\n");
+	
+		
+	fi;
+
+	return output_string;
+end;
+
+#######################
+### Install Methods ###
+#######################
+
 InstallMethod(WriteLocalActionDiagram, "Label This", [IsLocalActionDiagram, IsString],
 function(lad, file_name)
 	local output_string, output_stream, vl, el, fl_name;
@@ -333,5 +844,119 @@ function(file_name, dir_string)
 	fi;
 
 	return lad_list;
+end);
+
+InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString],
+function(lad, file_name)
+	local fl_name, output_stream, output_string;
+
+	output_string := _LAD_TikzOutputString@(lad); 
+
+	fl_name := Filename(DirectoryCurrent(), StringFormatted("{1}.tex", file_name));
+	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
+	AppendTo(output_stream, output_string);
+	CloseStream(output_stream);
+
+	return true;
+end);
+
+InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsList],
+function(lad, file_name, scopo)
+	local fl_name, output_stream, output_string;
+
+	output_string := _LAD_TikzOutputStringScopo@(lad, scopo); 
+
+	fl_name := Filename(DirectoryCurrent(), StringFormatted("{1}.tex", file_name));
+	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
+	AppendTo(output_stream, output_string);
+	CloseStream(output_stream);
+
+	return true;
+end);
+
+InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsDirectory],
+function(lad, file_name, dir)
+	local fl_name, output_stream, output_string;
+
+	if DirectoryContents(dir) = fail then
+		ErrorNoReturn(StringFormatted("Directory <{1}> does not exist.", dir![1]));
+		return fail;
+	fi;
+
+	output_string := _LAD_TikzOutputString@(lad); 
+
+	fl_name := Filename(dir, StringFormatted("{1}.tex", file_name));
+	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
+	AppendTo(output_stream, output_string);
+	CloseStream(output_stream);
+
+	return true;
+end);
+
+InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsString],
+function(lad, file_name, dir_name)
+	local fl_name, output_stream, output_string, dir;
+
+	dir := Directory(dir_name);
+
+	if DirectoryContents(dir) = fail then
+		ErrorNoReturn(StringFormatted("Directory <{1}> does not exist.", dir![1]));
+		return fail;
+	fi;
+
+	output_string := _LAD_TikzOutputString@(lad); 
+
+	fl_name := Filename(dir, StringFormatted("{1}.tex", file_name));
+	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
+	AppendTo(output_stream, output_string);
+	CloseStream(output_stream);
+
+	return true;
+end);
+
+InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsList, IsDirectory],
+function(lad, file_name, scopo, dir)
+	local fl_name, output_stream, output_string;
+
+	if DirectoryContents(dir) = fail then
+		ErrorNoReturn(StringFormatted("Directory <{1}> does not exist.", dir![1]));
+		return fail;
+	fi;
+
+	output_string := _LAD_TikzOutputStringScopo@(lad, scopo); 
+
+	fl_name := Filename(dir, StringFormatted("{1}.tex", file_name));
+	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
+	AppendTo(output_stream, output_string);
+	CloseStream(output_stream);
+
+	return true;
+end);
+
+InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsList, IsString],
+function(lad, file_name, scopo, dir_name)
+	local fl_name, output_stream, output_string, dir;
+
+	dir := Directory(dir_name);
+
+	if DirectoryContents(dir) = fail then
+		ErrorNoReturn(StringFormatted("Directory <{1}> does not exist.", dir![1]));
+		return fail;
+	fi;
+
+	output_string := _LAD_TikzOutputStringScopo@(lad, scopo); 
+
+	fl_name := Filename(dir, StringFormatted("{1}.tex", file_name));
+	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
+	AppendTo(output_stream, output_string);
+	CloseStream(output_stream);
+
+	return true;
 end);
 

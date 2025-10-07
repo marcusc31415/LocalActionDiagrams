@@ -1,5 +1,10 @@
 \begin{theindex}
 
+  \item \texttt  {GenerateTikZCode}
+    \subitem for IsLocalActionDiagram, IsString, \hyperpage{8}
+
+  \indexspace
+
   \item \texttt  {IsLocalActionDiagram}
     \subitem for IsDigraph, \hyperpage{4}
 

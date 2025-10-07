@@ -7,7 +7,7 @@
   [1X2.1-1 IsLocalActionDiagram[101X
   
   [33X[1;0Y[29X[2XIsLocalActionDiagram[102X( [3Xlad[103X ) [32X filter[133X
-  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  [3Xlad[103X  is  of  the category [9XIsLocalActionDiagram[109X and [9Xfalse[109X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  [3Xlad[103X  is  of  the category [10XIsLocalActionDiagram[110X and [9Xfalse[109X
             otherwise.[133X
   
   [33X[0;0YEvery  local  action  diagram  belongs to the [10XIsLocalActionDiagram[110X category.

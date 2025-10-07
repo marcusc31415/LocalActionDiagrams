@@ -1,7 +1,3 @@
-# generates TikZ code of a given local action diagram in the same directory
-DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram]);
-# generates TikZ code of a given local action diagram in the same directory, highlighting the set of arcs given by the second argument (subset of DigraphEdges), e.g. a scopo
-DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsList]);
 
 # Example
 # G := Group(());; SetPermGroupDomain(G,[1..6]);

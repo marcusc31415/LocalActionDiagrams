@@ -27,3 +27,4 @@
 \makelabel{localactiondiagrams:WriteLocalActionDiagram for IsLocalActionDiagram, IsString}{4.1.1}{X7A766DBD83D79FB7}
 \makelabel{localactiondiagrams:WriteLocalActionDiagram for IsList, IsString}{4.1.1}{X7A766DBD83D79FB7}
 \makelabel{localactiondiagrams:ReadLocalActionDiagram for IsString}{4.1.2}{X7E489CF58169A8D4}
+\makelabel{localactiondiagrams:GenerateTikZCode for IsLocalActionDiagram, IsString}{4.2.1}{X841F1D0A7C4F247A}

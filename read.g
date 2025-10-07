@@ -10,4 +10,3 @@ ReadPackage( "LocalActionDiagrams", "gap/LocalActionDiagrams.gi");
 
 ReadPackage( "LocalActionDiagrams", "gap/io.gi");
 
-ReadPackage( "LocalActionDiagrams", "gap/draw_tikz.g");

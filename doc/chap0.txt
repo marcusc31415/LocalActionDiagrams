@@ -49,6 +49,7 @@
       4.1-1 [33X[0;0YWriting Local Action Diagrams[133X
       4.1-2 [33X[0;0YReading Local Action Diagrams[133X
     4.2 [33X[0;0YVisualising Local Action Diagrams and [22X∆[122X-trees.[133X
+      4.2-1 GenerateTikZCode
   
   
   [32X

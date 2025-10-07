@@ -7,8 +7,8 @@
 #! @Chapter Local Action Diagram Attributes and Operations
 #! @Chapter Input/Output and Visualisation 
 #! @Section Reading and Writing Local Action Diagrams To Files
-#!
-#! Local action diagrams made in GAP can be written to a file. They can also be read from the file into GAP. The format of these files are as follows:
+#! 
+#! Local action diagrams made in GAP can be written to a file. They can also be read from the file into GAP. The format of these files are as follows:  
 #!
 #! @BeginExampleSession
 #! <Digraph String>
@@ -18,7 +18,7 @@
 #! <List of Other Attributes>
 #! @EndExampleSession
 #!
-#! Multiple local action diagrams can be stored in the same file.
+#! Multiple local action diagrams can be stored in the same file. 
 
 #! @BeginGroup Writing Local Action Diagrams
 #! @GroupTitle Writing Local Action Diagrams
@@ -61,5 +61,20 @@ DeclareOperation("ReadLocalActionDiagram", [IsString, IsDirectory]);
 DeclareOperation("ReadLocalActionDiagram", [IsString, IsString]);
 
 #! @Section Visualising Local Action Diagrams and <M>\Delta</M>-trees. 
-#! Stuff goes here soon. 
+#! Functions are provided to visualise local action diagrams and <M>\Delta</M>-trees. Insert some more text here? 
+
+#! @Returns <K>true</K> if the code was generated successfully and <K>fail</K> otherwise. 
+#! @Arguments lad, filename[,highlight_edges,directory]
+#! @Description Generates TikZ code that draws the local action diagram <A>lad</A>. Currently this function only supports local action diagrams with one or two vertices. The TikZ code is written to <C><A>filename</A>.tex</C>. This file must be compiled separately. 
+#!
+#! The optional argument <A>highlight_edges</A> must be a list of edges --- i.e. a subset of <C>LocalActionDiagramEdges(<A>lad</A>)</C>. If given, the edges specified in this list are highlighted. This could, for example, highlight a particular scopo in <A>lad</A>.  
+#!
+#! By default the output file is written in the current working directory --- i.e. <C>DirectoryCurrent()</C>. The optional argument <A>directory</A> can either be a string or directory object. If it is given then then the file will be output to the specified directory. 
+DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString]);
+
+DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsList]);
+DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsDirectory]);
+DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsString]);
+DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsList, IsDirectory]);
+DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsList, IsString]);
 
