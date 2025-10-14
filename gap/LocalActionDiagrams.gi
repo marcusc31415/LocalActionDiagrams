@@ -170,6 +170,8 @@ function(G)
 	return lad;
 end );
 
+
+
 # Check if *lad1* and *lad2* are isomorphic. 
 InstallMethod(IsomorphismLocalActionDiagrams, [IsLocalActionDiagram, IsLocalActionDiagram],
 function(lad1, lad2)
@@ -259,6 +261,9 @@ InstallMethod(LocalActionDiagramGroupType, [IsLocalActionDiagram], GroupType@);
 
 # Is Discrete "variable". It first runs the computation and then will return the computation.
 InstallMethod(LocalActionDiagramIsDiscrete, [IsLocalActionDiagram], IsDiscrete@);
+
+# Is Discrete "variable". It first runs the computation and then will return the computation.
+InstallMethod(LocalActionDiagramIsUniscalar, [IsLocalActionDiagram], IsUniscalar@);
 
 # Scopo "variable". It first runs the computation and then will return the computation.
 InstallMethod(LocalActionDiagramScopos, [IsLocalActionDiagram], FindAllScopos@);

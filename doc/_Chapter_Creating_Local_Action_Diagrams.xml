@@ -40,6 +40,17 @@
  <Description>
  Constructs a local action diagram corresponding to the Burger-Mozes group <M>U(<A>F</A>)</M> where <A>F</A> is a permutation group. 
  This diagram has a single vertex labelled by the group <A>F</A> and a self-reverse loop for each orbit of the action of <A>F</A>. 
+ The argument <A>F</A> can instead by an object of the category <C>IsLocalAction</C> from the package <Package>UGALY</Package>. 
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Oper Arg="lad" Name="LocalActionDiagramToUniversalGroup" Label="for IsLocalActionDiagram"/>
+ <Returns>A local action.
+</Returns>
+ <Description>
+ Given a local action diagram <A>lad</A> corresponding to a Burger-Mozes group this returns the corresponding group as an object of the category <C>IsLocalAction</C> from the package <Package>UGALY</Package>. The local action diagram <A>lad</A> must have a single vertex and have only self-reverse edges. It must also have at least one edge. 
  </Description>
 </ManSection>
 

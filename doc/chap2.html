@@ -29,6 +29,7 @@
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X83D230F77F47F86F">2.1-2 <span class="Heading">Constructing From Data</span></a>
 </span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7ACD48EE7C32A9CC">2.1-3 LocalActionDiagramUniversalGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X791D12FA87CE3D99">2.1-4 LocalActionDiagramToUniversalGroup</a></span>
 </div></div>
 </div>
 
@@ -68,7 +69,16 @@
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramUniversalGroup</code>( <var class="Arg">F</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
 <p>Returns: A local action diagram.</p>
 
-<p>Constructs a local action diagram corresponding to the Burger-Mozes group <span class="SimpleMath">U(<var class="Arg">F</var>)</span> where <var class="Arg">F</var> is a permutation group. This diagram has a single vertex labelled by the group <var class="Arg">F</var> and a self-reverse loop for each orbit of the action of <var class="Arg">F</var>.</p>
+<p>Constructs a local action diagram corresponding to the Burger-Mozes group <span class="SimpleMath">U(<var class="Arg">F</var>)</span> where <var class="Arg">F</var> is a permutation group. This diagram has a single vertex labelled by the group <var class="Arg">F</var> and a self-reverse loop for each orbit of the action of <var class="Arg">F</var>. The argument <var class="Arg">F</var> can instead by an object of the category <code class="code">IsLocalAction</code> from the package <strong class="pkg">UGALY</strong>.</p>
+
+<p><a id="X791D12FA87CE3D99" name="X791D12FA87CE3D99"></a></p>
+
+<h5>2.1-4 LocalActionDiagramToUniversalGroup</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramToUniversalGroup</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A local action.</p>
+
+<p>Given a local action diagram <var class="Arg">lad</var> corresponding to a Burger-Mozes group this returns the corresponding group as an object of the category <code class="code">IsLocalAction</code> from the package <strong class="pkg">UGALY</strong>. The local action diagram <var class="Arg">lad</var> must have a single vertex and have only self-reverse edges. It must also have at least one edge.</p>
 
 
 <div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap1.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap3.html">[Next Chapter]</a>&nbsp;  </div>

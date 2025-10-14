@@ -39,6 +39,7 @@
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X823C18F980B022A7">3.2-1 LocalActionDiagramScopos</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7E4954157FBEEC4A">3.2-2 LocalActionDiagramGroupType</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7CC179F27B503D31">3.2-3 LocalActionDiagramIsDiscrete</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7D93C024847EDC1C">3.2-4 LocalActionDiagramIsUniscalar</a></span>
 </div></div>
 </div>
 
@@ -114,6 +115,17 @@
 <p>Returns: <code class="keyw">true</code> or <code class="keyw">false</code>.</p>
 
 <p>Returns <code class="keyw">true</code> if <var class="Arg">lad</var> corresponds to a discrete group and <code class="keyw">false</code> otherwise.</p>
+
+<p><a id="X7D93C024847EDC1C" name="X7D93C024847EDC1C"></a></p>
+
+<h5>3.2-4 LocalActionDiagramIsUniscalar</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsUniscalar</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the corresponding group is uniscalar and <code class="keyw">false</code> otherwise.</p>
+
+<p>If <var class="Arg">lad</var> is of type "Fixed Vertex", "Edge Inversion", or "Lineal" then it is always uniscalar and so the function returns true. If it is of type "General" then it is uniscalar if and only if all vertices in the unique minimal cotree of <var class="Arg">lad</var> are semi-regular with their action restricted to the cotree.</p>
+
+<p>Is it better to describe the maths here or just say returns true or false. Maybe give a theorem citation in the paper?</p>
 
 
 <div class="chlinkprevnextbot">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4_mj.html">[Next Chapter]</a>&nbsp;  </div>

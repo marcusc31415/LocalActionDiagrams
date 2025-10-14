@@ -682,3 +682,58 @@ IsDiscrete@ := function(lad)
 end;
 
 
+# Check if *lad* corresponds to a uniscalar group. 
+IsUniscalar@ := function(lad)
+	local group_type, v_label, max_cotree, max_scopo, scopos, edge_no, v_in_scopo, idx, scopo, edge_list, edge_label_list, idy, remove_domain, max_scopo_with_rev;
+
+	group_type := LocalActionDiagramGroupType(lad);
+
+	# These types are always discrete for finite LADs. 
+	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" or group_type = "Lineal" then
+		return true;
+	# Focal is never discrete. 
+	elif group_type = "Focal" then
+		return false;
+	elif group_type = "General Type" then
+		# Get the unique maximum scopo.
+		scopos := LocalActionDiagramScopos(lad);
+		max_scopo := Position(List(scopos, Length), Maximum(List(scopos, Length)));
+		max_scopo := scopos[max_scopo];
+		max_scopo_with_rev := Concatenation(max_scopo, List(max_scopo, x -> x^LocalActionDiagramEdgeReversal(lad)));
+
+
+
+		# Get every vertex in the scopo (origin vertices of edges in scopo).
+		# These are the vertices not in the cotree.
+		v_in_scopo := [];
+		for edge_no in max_scopo do
+			Add(v_in_scopo, LocalActionDiagramEdges(lad)[edge_no][1]);
+		od;
+
+
+		edge_list := LocalActionDiagramEdges(lad);
+		edge_label_list := LocalActionDiagramEdgeLabels(lad);
+
+		for idx in [1..DigraphNrVertices(lad)] do
+			v_label := LocalActionDiagramVertexLabels(lad)[idx];
+			# Vertex in the cotree. Need to check if the vertex label
+			# is semi-regular when restricted to the cotree. 
+			if not idx in v_in_scopo then
+				remove_domain := [];
+				for idy in [1..Length(edge_list)] do
+					if edge_list[idy][1] = idx and idy in max_scopo_with_rev then
+						remove_domain := Concatenation(remove_domain, edge_label_list[idy]);
+					fi;
+				od;
+				if not IsSemiRegular(v_label, Difference(PermGroupDomain(v_label), remove_domain)) then
+					return false;
+				fi;
+			fi;
+		od;
+		
+		# General type is discrete if above loop finished. 
+		return true;
+	else
+		Error("Something really bad happend with the group type check.");
+	fi;
+end;

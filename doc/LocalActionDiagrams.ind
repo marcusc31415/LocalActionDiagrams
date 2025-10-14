@@ -1,7 +1,7 @@
 \begin{theindex}
 
   \item \texttt  {GenerateTikZCode}
-    \subitem for IsLocalActionDiagram, IsString, \hyperpage{8}
+    \subitem for IsLocalActionDiagram, IsString, \hyperpage{9}
 
   \indexspace
 
@@ -11,35 +11,39 @@
   \indexspace
 
   \item \texttt  {LocalActionDiagramEdgeLabels}
-    \subitem for IsLocalActionDiagram, \hyperpage{5}
+    \subitem for IsLocalActionDiagram, \hyperpage{6}
   \item \texttt  {LocalActionDiagramEdgeReversal}
-    \subitem for IsLocalActionDiagram, \hyperpage{5}
+    \subitem for IsLocalActionDiagram, \hyperpage{6}
   \item \texttt  {LocalActionDiagramEdges}
-    \subitem for IsLocalActionDiagram, \hyperpage{5}
+    \subitem for IsLocalActionDiagram, \hyperpage{6}
   \item \texttt  {LocalActionDiagramFromData}
     \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{4}
   \item \texttt  {LocalActionDiagramFromDataNC}
     \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{4}
   \item \texttt  {LocalActionDiagramGroupType}
-    \subitem for IsLocalActionDiagram, \hyperpage{6}
+    \subitem for IsLocalActionDiagram, \hyperpage{7}
   \item \texttt  {LocalActionDiagramIsDiscrete}
-    \subitem for IsLocalActionDiagram, \hyperpage{6}
+    \subitem for IsLocalActionDiagram, \hyperpage{7}
+  \item \texttt  {LocalActionDiagramIsUniscalar}
+    \subitem for IsLocalActionDiagram, \hyperpage{7}
   \item \texttt  {LocalActionDiagramScopos}
-    \subitem for IsLocalActionDiagram, \hyperpage{6}
+    \subitem for IsLocalActionDiagram, \hyperpage{7}
+  \item \texttt  {LocalActionDiagramToUniversalGroup}
+    \subitem for IsLocalActionDiagram, \hyperpage{5}
   \item \texttt  {LocalActionDiagramUniversalGroup}
     \subitem for IsPermGroup, \hyperpage{4}
   \item \texttt  {LocalActionDiagramVertexLabels}
-    \subitem for IsLocalActionDiagram, \hyperpage{5}
+    \subitem for IsLocalActionDiagram, \hyperpage{6}
 
   \indexspace
 
   \item \texttt  {ReadLocalActionDiagram}
-    \subitem for IsString, \hyperpage{7}
+    \subitem for IsString, \hyperpage{8}
 
   \indexspace
 
   \item \texttt  {WriteLocalActionDiagram}
-    \subitem for IsList, IsString, \hyperpage{7}
-    \subitem for IsLocalActionDiagram, IsString, \hyperpage{7}
+    \subitem for IsList, IsString, \hyperpage{8}
+    \subitem for IsLocalActionDiagram, IsString, \hyperpage{8}
 
 \end{theindex}

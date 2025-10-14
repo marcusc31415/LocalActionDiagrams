@@ -4,20 +4,22 @@
 \contentsline {subsection}{\numberline {2.1.1}\textcolor {Chapter }{IsLocalActionDiagram (for IsDigraph)}}{4}{subsection.2.1.1}%
 \contentsline {subsection}{\numberline {2.1.2}\textcolor {Chapter }{Constructing From Data}}{4}{subsection.2.1.2}%
 \contentsline {subsection}{\numberline {2.1.3}\textcolor {Chapter }{LocalActionDiagramUniversalGroup (for IsPermGroup)}}{4}{subsection.2.1.3}%
-\contentsline {chapter}{\numberline {3}\textcolor {Chapter }{Local Action Diagram Attributes and Operations}}{5}{chapter.3}%
-\contentsline {section}{\numberline {3.1}\textcolor {Chapter }{Local Action Diagram Attributes}}{5}{section.3.1}%
-\contentsline {subsection}{\numberline {3.1.1}\textcolor {Chapter }{LocalActionDiagramVertexLabels (for IsLocalActionDiagram)}}{5}{subsection.3.1.1}%
-\contentsline {subsection}{\numberline {3.1.2}\textcolor {Chapter }{LocalActionDiagramEdges (for IsLocalActionDiagram)}}{5}{subsection.3.1.2}%
-\contentsline {subsection}{\numberline {3.1.3}\textcolor {Chapter }{LocalActionDiagramEdgeLabels (for IsLocalActionDiagram)}}{5}{subsection.3.1.3}%
-\contentsline {subsection}{\numberline {3.1.4}\textcolor {Chapter }{LocalActionDiagramEdgeReversal (for IsLocalActionDiagram)}}{5}{subsection.3.1.4}%
-\contentsline {section}{\numberline {3.2}\textcolor {Chapter }{Local Action Diagram Operations}}{6}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}\textcolor {Chapter }{LocalActionDiagramScopos (for IsLocalActionDiagram)}}{6}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}\textcolor {Chapter }{LocalActionDiagramGroupType (for IsLocalActionDiagram)}}{6}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}\textcolor {Chapter }{LocalActionDiagramIsDiscrete (for IsLocalActionDiagram)}}{6}{subsection.3.2.3}%
-\contentsline {chapter}{\numberline {4}\textcolor {Chapter }{Input/Output and Visualisation}}{7}{chapter.4}%
-\contentsline {section}{\numberline {4.1}\textcolor {Chapter }{Reading and Writing Local Action Diagrams To Files}}{7}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}\textcolor {Chapter }{Writing Local Action Diagrams}}{7}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}\textcolor {Chapter }{Reading Local Action Diagrams}}{7}{subsection.4.1.2}%
-\contentsline {section}{\numberline {4.2}\textcolor {Chapter }{Visualising Local Action Diagrams and $\Delta $\texttt {\symbol {45}}trees.}}{8}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}\textcolor {Chapter }{GenerateTikZCode (for IsLocalActionDiagram, IsString)}}{8}{subsection.4.2.1}%
-\contentsline {chapter}{Index}{9}{section*.2}%
+\contentsline {subsection}{\numberline {2.1.4}\textcolor {Chapter }{LocalActionDiagramToUniversalGroup (for IsLocalActionDiagram)}}{5}{subsection.2.1.4}%
+\contentsline {chapter}{\numberline {3}\textcolor {Chapter }{Local Action Diagram Attributes and Operations}}{6}{chapter.3}%
+\contentsline {section}{\numberline {3.1}\textcolor {Chapter }{Local Action Diagram Attributes}}{6}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}\textcolor {Chapter }{LocalActionDiagramVertexLabels (for IsLocalActionDiagram)}}{6}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}\textcolor {Chapter }{LocalActionDiagramEdges (for IsLocalActionDiagram)}}{6}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}\textcolor {Chapter }{LocalActionDiagramEdgeLabels (for IsLocalActionDiagram)}}{6}{subsection.3.1.3}%
+\contentsline {subsection}{\numberline {3.1.4}\textcolor {Chapter }{LocalActionDiagramEdgeReversal (for IsLocalActionDiagram)}}{6}{subsection.3.1.4}%
+\contentsline {section}{\numberline {3.2}\textcolor {Chapter }{Local Action Diagram Operations}}{7}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}\textcolor {Chapter }{LocalActionDiagramScopos (for IsLocalActionDiagram)}}{7}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}\textcolor {Chapter }{LocalActionDiagramGroupType (for IsLocalActionDiagram)}}{7}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}\textcolor {Chapter }{LocalActionDiagramIsDiscrete (for IsLocalActionDiagram)}}{7}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}\textcolor {Chapter }{LocalActionDiagramIsUniscalar (for IsLocalActionDiagram)}}{7}{subsection.3.2.4}%
+\contentsline {chapter}{\numberline {4}\textcolor {Chapter }{Input/Output and Visualisation}}{8}{chapter.4}%
+\contentsline {section}{\numberline {4.1}\textcolor {Chapter }{Reading and Writing Local Action Diagrams To Files}}{8}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}\textcolor {Chapter }{Writing Local Action Diagrams}}{8}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}\textcolor {Chapter }{Reading Local Action Diagrams}}{8}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}\textcolor {Chapter }{Visualising Local Action Diagrams and $\Delta $\texttt {\symbol {45}}trees.}}{9}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}\textcolor {Chapter }{GenerateTikZCode (for IsLocalActionDiagram, IsString)}}{9}{subsection.4.2.1}%
+\contentsline {chapter}{Index}{10}{section*.2}%

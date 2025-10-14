@@ -88,6 +88,20 @@ DeclareAttribute("LocalActionDiagramGroupType", IsLocalActionDiagram);
 #! <K>false</K> otherwise. 
 DeclareAttribute("LocalActionDiagramIsDiscrete", IsLocalActionDiagram);
 
+#! @Returns <K>true</K> if the corresponding group is uniscalar and <K>false</K> otherwise.
+#! @Arguments lad
+#! @Description  
+#! If <A>lad</A> is of type "Fixed Vertex", "Edge Inversion", or "Lineal" then
+#! it is always uniscalar and so the function returns true. If it is of type
+#! "General" then it is uniscalar if and only if all vertices in the unique
+#! minimal cotree of <A>lad</A> are semi-regular with their action restricted
+#! to the cotree. 
+#!
+#! Is it better to describe the maths here or just say returns true or false. 
+#! Maybe give a theorem citation in the paper? 
+DeclareAttribute("LocalActionDiagramIsUniscalar", IsLocalActionDiagram);
+
+
 #! @Chapter Creating Local Action Diagrams
 #! @Section Creating Local Action Diagrams 
 
@@ -117,8 +131,8 @@ DeclareOperation("LocalActionDiagramFromDataNC", [IsDigraph, IsList, IsList, IsP
 #! @Description
 #! Constructs a local action diagram corresponding to the Burger-Mozes group <M>U(<A>F</A>)</M> where <A>F</A> is a permutation group. 
 #! This diagram has a single vertex labelled by the group <A>F</A> and a self-reverse loop for each orbit of the action of <A>F</A>. 
+#! The argument <A>F</A> can instead by an object of the category <C>IsLocalAction</C> from the package <Package>UGALY</Package>. 
 DeclareOperation("LocalActionDiagramUniversalGroup", [IsPermGroup]);
-
 
 
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);

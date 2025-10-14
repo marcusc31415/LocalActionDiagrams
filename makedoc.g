@@ -13,7 +13,7 @@ AutoDoc( rec(
         LaTeXOptions := rec( EarlyExtraPreamble := """
             \usepackage{a4wide}
             \newcommand{\bbZ}{\mathbb{Z}}
-        """ )
+        """ ),
     ),
     scaffold := true 
 ));

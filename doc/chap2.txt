@@ -41,5 +41,17 @@
   [33X[0;0YConstructs  a  local  action diagram corresponding to the Burger-Mozes group
   [22XU([3XF[103X)[122X  where  [3XF[103X  is  a  permutation  group.  This diagram has a single vertex
   labelled by the group [3XF[103X and a self-reverse loop for each orbit of the action
-  of [3XF[103X.[133X
+  of  [3XF[103X. The argument [3XF[103X can instead by an object of the category [10XIsLocalAction[110X
+  from the package [5XUGALY[105X.[133X
+  
+  [1X2.1-4 LocalActionDiagramToUniversalGroup[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramToUniversalGroup[102X( [3Xlad[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA local action.[133X
+  
+  [33X[0;0YGiven  a local action diagram [3Xlad[103X corresponding to a Burger-Mozes group this
+  returns  the  corresponding group as an object of the category [10XIsLocalAction[110X
+  from  the  package  [5XUGALY[105X.  The  local action diagram [3Xlad[103X must have a single
+  vertex  and  have  only  self-reverse  edges. It must also have at least one
+  edge.[133X
   

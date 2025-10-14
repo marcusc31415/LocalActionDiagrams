@@ -68,6 +68,13 @@ Dependencies := rec(
   ExternalConditions := [ ],
 ),
 
+Extensions := [
+	rec (
+		needed := [ ["ugaly", "4.1.3"] ],
+		filename := "gap/ugaly_extension_read.g",
+	),
+],
+
 AvailabilityTest := ReturnTrue,
 
 TestFile := "tst/testall.g",

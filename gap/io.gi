@@ -863,11 +863,21 @@ end);
 
 InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsList],
 function(lad, file_name, scopo)
-	local fl_name, output_stream, output_string;
+	local fl_name, output_stream, output_string, dir;
 
-	output_string := _LAD_TikzOutputStringScopo@(lad, scopo); 
+	# Function could have the last parameter be the output directory string or a scopo. 
+	# Need to check because IsList is a sub-category of IsString. GAP complains if 
+	# you have two methods for both. 
+	if IsString(scopo) then
+		dir := Directory(scopo);
+		output_string := _LAD_TikzOutputStringScopo@(lad); 
+	else
+		dir := DirectoryCurrent();
+		output_string := _LAD_TikzOutputStringScopo@(lad, scopo); 
+	fi;
 
-	fl_name := Filename(DirectoryCurrent(), StringFormatted("{1}.tex", file_name));
+
+	fl_name := Filename(dir, StringFormatted("{1}.tex", file_name));
 	output_stream := OutputTextFile(fl_name, true);
 	SetPrintFormattingStatus(output_stream, false);		
 	AppendTo(output_stream, output_string);
@@ -896,27 +906,27 @@ function(lad, file_name, dir)
 	return true;
 end);
 
-InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsString],
-function(lad, file_name, dir_name)
-	local fl_name, output_stream, output_string, dir;
-
-	dir := Directory(dir_name);
-
-	if DirectoryContents(dir) = fail then
-		ErrorNoReturn(StringFormatted("Directory <{1}> does not exist.", dir![1]));
-		return fail;
-	fi;
-
-	output_string := _LAD_TikzOutputString@(lad); 
-
-	fl_name := Filename(dir, StringFormatted("{1}.tex", file_name));
-	output_stream := OutputTextFile(fl_name, true);
-	SetPrintFormattingStatus(output_stream, false);		
-	AppendTo(output_stream, output_string);
-	CloseStream(output_stream);
-
-	return true;
-end);
+#InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsString],
+#function(lad, file_name, dir_name)
+#	local fl_name, output_stream, output_string, dir;
+#
+#	dir := Directory(dir_name);
+#
+#	if DirectoryContents(dir) = fail then
+#		ErrorNoReturn(StringFormatted("Directory <{1}> does not exist.", dir![1]));
+#		return fail;
+#	fi;
+#
+#	output_string := _LAD_TikzOutputString@(lad); 
+#
+#	fl_name := Filename(dir, StringFormatted("{1}.tex", file_name));
+#	output_stream := OutputTextFile(fl_name, true);
+#	SetPrintFormattingStatus(output_stream, false);		
+#	AppendTo(output_stream, output_string);
+#	CloseStream(output_stream);
+#
+#	return true;
+#end);
 
 InstallMethod(GenerateTikZCode, "Label This", [IsLocalActionDiagram, IsString, IsList, IsDirectory],
 function(lad, file_name, scopo, dir)

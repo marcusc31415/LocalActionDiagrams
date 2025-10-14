@@ -74,7 +74,7 @@ DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString]);
 
 DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsList]);
 DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsDirectory]);
-DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsString]);
+#DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsString]);
 DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsList, IsDirectory]);
 DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram, IsString, IsList, IsString]);
 

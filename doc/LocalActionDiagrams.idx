@@ -2,14 +2,16 @@
 \indexentry{LocalActionDiagramFromData@\texttt  {LocalActionDiagramFromData}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{4}
 \indexentry{LocalActionDiagramFromDataNC@\texttt  {LocalActionDiagramFromDataNC}!for IsDigraph, IsList, IsList, IsPerm|hyperpage}{4}
 \indexentry{LocalActionDiagramUniversalGroup@\texttt  {LocalActionDiagramUniversalGroup}!for IsPermGroup|hyperpage}{4}
-\indexentry{LocalActionDiagramVertexLabels@\texttt  {LocalActionDiagramVertexLabels}!for IsLocalActionDiagram|hyperpage}{5}
-\indexentry{LocalActionDiagramEdges@\texttt  {LocalActionDiagramEdges}!for IsLocalActionDiagram|hyperpage}{5}
-\indexentry{LocalActionDiagramEdgeLabels@\texttt  {LocalActionDiagramEdgeLabels}!for IsLocalActionDiagram|hyperpage}{5}
-\indexentry{LocalActionDiagramEdgeReversal@\texttt  {LocalActionDiagramEdgeReversal}!for IsLocalActionDiagram|hyperpage}{5}
-\indexentry{LocalActionDiagramScopos@\texttt  {LocalActionDiagramScopos}!for IsLocalActionDiagram|hyperpage}{6}
-\indexentry{LocalActionDiagramGroupType@\texttt  {LocalActionDiagramGroupType}!for IsLocalActionDiagram|hyperpage}{6}
-\indexentry{LocalActionDiagramIsDiscrete@\texttt  {LocalActionDiagramIsDiscrete}!for IsLocalActionDiagram|hyperpage}{6}
-\indexentry{WriteLocalActionDiagram@\texttt  {WriteLocalActionDiagram}!for IsLocalActionDiagram, IsString|hyperpage}{7}
-\indexentry{WriteLocalActionDiagram@\texttt  {WriteLocalActionDiagram}!for IsList, IsString|hyperpage}{7}
-\indexentry{ReadLocalActionDiagram@\texttt  {ReadLocalActionDiagram}!for IsString|hyperpage}{7}
-\indexentry{GenerateTikZCode@\texttt  {GenerateTikZCode}!for IsLocalActionDiagram, IsString|hyperpage}{8}
+\indexentry{LocalActionDiagramToUniversalGroup@\texttt  {LocalActionDiagramToUniversalGroup}!for IsLocalActionDiagram|hyperpage}{5}
+\indexentry{LocalActionDiagramVertexLabels@\texttt  {LocalActionDiagramVertexLabels}!for IsLocalActionDiagram|hyperpage}{6}
+\indexentry{LocalActionDiagramEdges@\texttt  {LocalActionDiagramEdges}!for IsLocalActionDiagram|hyperpage}{6}
+\indexentry{LocalActionDiagramEdgeLabels@\texttt  {LocalActionDiagramEdgeLabels}!for IsLocalActionDiagram|hyperpage}{6}
+\indexentry{LocalActionDiagramEdgeReversal@\texttt  {LocalActionDiagramEdgeReversal}!for IsLocalActionDiagram|hyperpage}{6}
+\indexentry{LocalActionDiagramScopos@\texttt  {LocalActionDiagramScopos}!for IsLocalActionDiagram|hyperpage}{7}
+\indexentry{LocalActionDiagramGroupType@\texttt  {LocalActionDiagramGroupType}!for IsLocalActionDiagram|hyperpage}{7}
+\indexentry{LocalActionDiagramIsDiscrete@\texttt  {LocalActionDiagramIsDiscrete}!for IsLocalActionDiagram|hyperpage}{7}
+\indexentry{LocalActionDiagramIsUniscalar@\texttt  {LocalActionDiagramIsUniscalar}!for IsLocalActionDiagram|hyperpage}{7}
+\indexentry{WriteLocalActionDiagram@\texttt  {WriteLocalActionDiagram}!for IsLocalActionDiagram, IsString|hyperpage}{8}
+\indexentry{WriteLocalActionDiagram@\texttt  {WriteLocalActionDiagram}!for IsList, IsString|hyperpage}{8}
+\indexentry{ReadLocalActionDiagram@\texttt  {ReadLocalActionDiagram}!for IsString|hyperpage}{8}
+\indexentry{GenerateTikZCode@\texttt  {GenerateTikZCode}!for IsLocalActionDiagram, IsString|hyperpage}{9}

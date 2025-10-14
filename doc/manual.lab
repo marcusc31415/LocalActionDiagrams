@@ -17,6 +17,7 @@
 \makelabel{localactiondiagrams:LocalActionDiagramFromData for IsDigraph, IsList, IsList, IsPerm}{2.1.2}{X83D230F77F47F86F}
 \makelabel{localactiondiagrams:LocalActionDiagramFromDataNC for IsDigraph, IsList, IsList, IsPerm}{2.1.2}{X83D230F77F47F86F}
 \makelabel{localactiondiagrams:LocalActionDiagramUniversalGroup for IsPermGroup}{2.1.3}{X7ACD48EE7C32A9CC}
+\makelabel{localactiondiagrams:LocalActionDiagramToUniversalGroup for IsLocalActionDiagram}{2.1.4}{X791D12FA87CE3D99}
 \makelabel{localactiondiagrams:LocalActionDiagramVertexLabels for IsLocalActionDiagram}{3.1.1}{X82F7822E7CE957E9}
 \makelabel{localactiondiagrams:LocalActionDiagramEdges for IsLocalActionDiagram}{3.1.2}{X7EFA9F8A7AF03169}
 \makelabel{localactiondiagrams:LocalActionDiagramEdgeLabels for IsLocalActionDiagram}{3.1.3}{X7DBFDBD67BEFFEDC}
@@ -24,6 +25,7 @@
 \makelabel{localactiondiagrams:LocalActionDiagramScopos for IsLocalActionDiagram}{3.2.1}{X823C18F980B022A7}
 \makelabel{localactiondiagrams:LocalActionDiagramGroupType for IsLocalActionDiagram}{3.2.2}{X7E4954157FBEEC4A}
 \makelabel{localactiondiagrams:LocalActionDiagramIsDiscrete for IsLocalActionDiagram}{3.2.3}{X7CC179F27B503D31}
+\makelabel{localactiondiagrams:LocalActionDiagramIsUniscalar for IsLocalActionDiagram}{3.2.4}{X7D93C024847EDC1C}
 \makelabel{localactiondiagrams:WriteLocalActionDiagram for IsLocalActionDiagram, IsString}{4.1.1}{X7A766DBD83D79FB7}
 \makelabel{localactiondiagrams:WriteLocalActionDiagram for IsList, IsString}{4.1.1}{X7A766DBD83D79FB7}
 \makelabel{localactiondiagrams:ReadLocalActionDiagram for IsString}{4.1.2}{X7E489CF58169A8D4}
