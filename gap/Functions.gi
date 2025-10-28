@@ -737,3 +737,132 @@ IsUniscalar@ := function(lad)
 		Error("Something really bad happend with the group type check.");
 	fi;
 end;
+
+_LAD_IsUnimodular@ := function(lad)
+	local lad_edges, spanning_tree, spanning_tree_no, lad_rev, lad_edges_no, find_cycle_base, cycle_base, lad_edge_label_size, is_unimodular, prod, prod_rev, i, edge_no;
+
+	lad_edges := LocalActionDiagramEdges(lad);
+	lad_edges_no := [1..Size(lad_edges)];
+	lad_rev := LocalActionDiagramEdgeReversal(lad);
+	lad_edge_label_size := List(LocalActionDiagramEdgeLabels(lad), x -> Size(x));
+
+	# Gets a spanning tree of *lad*. Does not include any of the loops.
+	# Includes edges and their reverses. 
+	spanning_tree := UndirectedSpanningTree(lad);
+
+	# Return the first instance of edge [u, v] in the edge list of *lad*. 
+	# This allows us to deal with multiple edges between vertices. 
+	spanning_tree_no := List(DigraphEdges(spanning_tree), x -> Position(lad_edges, x));
+
+	find_cycle_base := function(lad_edges, lad_edges_no, spanning_tree, spanning_tree_no)
+		local find_cycle, tree_edges, visited_edges, edge_no;
+
+
+
+		find_cycle := function(spanning_tree, spanning_tree_no, edge, edge_no, lad_rev)
+			local current_vertex, sp_tree_cycle, tree_edges, vert_stack, edge_stack, visited_edges, added_edge, out_edge, _tree_edges, _edge, edge_pos, edge_no_stack, idx, out_neighbours;
+
+			current_vertex := edge[1];
+			_tree_edges := DigraphEdges(spanning_tree);
+			tree_edges := [];
+			vert_stack := [current_vertex];
+			edge_stack := [edge, [edge[2], edge[1]]];
+			edge_no_stack := [edge_no, edge_no^lad_rev];
+			visited_edges := [];
+
+
+			for idx in [1..Size(_tree_edges)] do
+				Add(tree_edges, [_tree_edges[idx], spanning_tree_no[idx]]);
+			od;
+
+			out_neighbours := List([1..DigraphNrVertices(spanning_tree)], x -> []);
+
+			# Each *i* of out_neighbours is a list of edges originating at *i*. 
+			for _edge in tree_edges do
+				Add(out_neighbours[_edge[1][1]], _edge);
+			od;	
+
+
+			# DFS to identify the cycle. 
+			while Size(vert_stack) > 0 do
+				
+				if current_vertex = edge[2] then
+					return [edge_stack, edge_no_stack];
+				fi;
+
+
+				added_edge := false;
+				for out_edge in out_neighbours[current_vertex] do
+					# Haven't already visited this edge and not backtracking
+					if not out_edge[2] in visited_edges then
+						Add(edge_stack, out_edge[1]);
+						Add(edge_stack, [out_edge[1][2], out_edge[1][1]]); # There is a unique reverse in the spanning tree. 
+						Add(edge_no_stack, out_edge[2]);
+						Add(edge_no_stack, out_edge[2]^lad_rev);
+						Add(visited_edges, out_edge[2]);
+						Add(visited_edges, out_edge[2]^lad_rev);
+						Add(vert_stack, current_vertex);
+						current_vertex := out_edge[1][2];
+						added_edge := true;
+						break;
+					fi;
+				od;
+
+				# Reached a dead end. 
+				if not added_edge then
+					Remove(edge_stack);
+					Remove(edge_stack);
+					Remove(edge_no_stack);
+					Remove(edge_no_stack);
+					Remove(vert_stack);
+					current_vertex := Last(vert_stack);
+				else
+					added_edge := false;
+				fi;
+			od;
+		end;
+
+		tree_edges := DigraphEdges(spanning_tree);
+
+		visited_edges := [];
+
+		cycle_base := [];
+
+		for edge_no in [1..Size(lad_edges)] do
+			if not (edge_no in visited_edges) and not (lad_edges[edge_no] in tree_edges) and (edge_no <> edge_no^lad_rev) then
+				Add(cycle_base, find_cycle(spanning_tree, spanning_tree_no, lad_edges[edge_no], edge_no, lad_rev));
+				Add(visited_edges, edge_no);
+				Add(visited_edges, edge_no^lad_rev);
+			fi;
+		od;
+
+		return cycle_base;
+
+	end;
+
+	cycle_base := find_cycle_base(lad_edges, lad_edges_no, spanning_tree, spanning_tree_no);
+
+	is_unimodular := true;
+
+	for cycle in cycle_base do
+		i := 1;
+		prod := 1;
+		prod_rev := 1;
+		for edge_no in cycle[2] do
+			if i mod 2 = 1 then
+				prod := prod * lad_edge_label_size[edge_no];
+				i := i + 1;
+			else
+				prod_rev := prod_rev * lad_edge_label_size[edge_no];
+				i := i + 1;
+			fi;
+		od;
+		if prod <> prod_rev then
+			is_unimodular := false;
+			break;
+		fi;
+	od;
+
+	return is_unimodular;
+
+end;
