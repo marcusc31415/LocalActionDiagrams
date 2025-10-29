@@ -791,6 +791,7 @@ _LAD_IsUnimodular@ := function(lad)
 				fi;
 
 
+
 				added_edge := false;
 				for out_edge in out_neighbours[current_vertex] do
 					# Haven't already visited this edge and not backtracking
@@ -801,8 +802,8 @@ _LAD_IsUnimodular@ := function(lad)
 						Add(edge_no_stack, out_edge[2]^lad_rev);
 						Add(visited_edges, out_edge[2]);
 						Add(visited_edges, out_edge[2]^lad_rev);
-						Add(vert_stack, current_vertex);
 						current_vertex := out_edge[1][2];
+						Add(vert_stack, current_vertex);
 						added_edge := true;
 						break;
 					fi;
@@ -820,6 +821,8 @@ _LAD_IsUnimodular@ := function(lad)
 					added_edge := false;
 				fi;
 			od;
+			
+			Error("Cycle not found when edge added to the spanning tree. Something went really wrong here.");
 		end;
 
 		tree_edges := DigraphEdges(spanning_tree);
@@ -841,6 +844,7 @@ _LAD_IsUnimodular@ := function(lad)
 	end;
 
 	cycle_base := find_cycle_base(lad_edges, lad_edges_no, spanning_tree, spanning_tree_no);
+
 
 	is_unimodular := true;
 
