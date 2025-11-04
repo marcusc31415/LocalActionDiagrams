@@ -29,6 +29,7 @@
 DeclareCategory("IsLocalActionDiagram", IsDigraph);
 
 
+DeclareAttribute("LocalActionDiagramDigraph", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramVertices", IsLocalActionDiagram);
 
 #! @Chapter Local Action Diagram Attributes and Operations
@@ -92,14 +93,30 @@ DeclareAttribute("LocalActionDiagramIsDiscrete", IsLocalActionDiagram);
 #! @Arguments lad
 #! @Description  
 #! If <A>lad</A> is of type "Fixed Vertex", "Edge Inversion", or "Lineal" then
-#! it is always uniscalar and so the function returns true. If it is of type
-#! "General" then it is uniscalar if and only if all vertices in the unique
-#! minimal cotree of <A>lad</A> are semi-regular with their action restricted
-#! to the cotree. 
+#! it is always uniscalar and so the function returns true. If it is of type 
+#! focal then it is never uniscalar and so the function returns false. If it 
+#! is of type "General" then it is uniscalar if and only if all vertices in 
+#! the unique minimal cotree of <A>lad</A> are semi-regular with their action 
+#! restricted to the cotree. 
 #!
 #! Is it better to describe the maths here or just say returns true or false. 
 #! Maybe give a theorem citation in the paper? 
 DeclareAttribute("LocalActionDiagramIsUniscalar", IsLocalActionDiagram);
+
+#! @Returns <K>true</K> if the corresponding group is unimodular and <K>false</K> otherwise.
+#! @Arguments lad
+#! @Description  
+#! If <A>lad</A> is of type "Fixed Vertex", "Edge Inversion", or "Lineal" then
+#! it is always unimodular and so the function returns true. If it is of type
+#! "Focal" then it is never unimodular and so the function returns false. If
+#! it is of type "General" then it is unimodular if and only if the product
+#! of sizes of edge labels for an orientation of each cycle in a cycle base is 
+#! equal to the product of the reverse orientation. 
+#!
+#! Is it better to describe the maths here or just say returns true or false. 
+#! Maybe give a theorem citation in the paper? 
+DeclareAttribute("LocalActionDiagramIsUnimodular", IsLocalActionDiagram);
+
 
 
 #! @Chapter Creating Local Action Diagrams
@@ -134,6 +151,19 @@ DeclareOperation("LocalActionDiagramFromDataNC", [IsDigraph, IsList, IsList, IsP
 #! The argument <A>F</A> can instead by an object of the category <C>IsLocalAction</C> from the package <Package>UGALY</Package>. 
 DeclareOperation("LocalActionDiagramUniversalGroup", [IsPermGroup]);
 
+#! @Chapter Operations
+#! @Section Operations On Local Action Diagrams
+
+
+#! @Returns <K>true</K> if <A>lad1</A> is the same as <A>lad2</A> and <K>false</K> otherwise. 
+#! @Arguments lad1, lad2
+#! @Description
+#! Returns true of all the components of the local action diagrams are equal. This means that
+#! the two underlying digraphs are equal (in the sense of <Package>Digraphs</Package> and the
+#! vertex labels, edge labels, and reverse map are equal. Note that this requires the order
+#! of the vertex and edge labels to be the same. For an order agnostic test, see
+#! <A>IsomorphismLocalActionDiagrams</A>.
+DeclareOperation("\=", [IsLocalActionDiagram, IsLocalActionDiagram]);
 
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
 DeclareOperation("CotreeFromScopo", [IsLocalActionDiagram, IsList]);

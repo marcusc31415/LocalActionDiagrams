@@ -578,8 +578,6 @@ GroupType@ := function(lad)
 
 					# Check if there's an edge originating here that isn't the reverse and isn't
 					# a loop. 
-					Print(cotree_edge_list);
-					Print(out_edges);
 					if out_edges[1][2] <> prev_vertex and out_edges[1][2] <> current_vertex then
 						Add(orientation_edges, out_edges[1]);
 						prev_vertex := current_vertex;
@@ -632,6 +630,8 @@ IsDiscrete@ := function(lad)
 
 	# These types are always discrete for finite LADs. 
 	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" then
+		SetLocalActionDiagramIsUniscalar(lad, true); # Discrete implies uniscalar and unimodular. 
+		SetLocalActionDiagramIsUnimodular(lad, true);
 		return true;
 	# Focal is never discrete. 
 	elif group_type = "Focal" then
@@ -643,6 +643,8 @@ IsDiscrete@ := function(lad)
 				return false;
 			fi;
 		od;
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
 		return true; 
 	elif group_type = "General Type" then
 		# Get the unique maximum scopo.
@@ -675,6 +677,8 @@ IsDiscrete@ := function(lad)
 		od;
 		
 		# General type is discrete if above loop finished. 
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
 		return true;
 	else
 		Error("Something really bad happend with the group type check.");
@@ -690,6 +694,7 @@ IsUniscalar@ := function(lad)
 
 	# These types are always discrete for finite LADs. 
 	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" or group_type = "Lineal" then
+		SetLocalActionDiagramIsUnimodular(lad, true); # Uniscalar implies unimodular. 
 		return true;
 	# Focal is never discrete. 
 	elif group_type = "Focal" then
@@ -732,6 +737,7 @@ IsUniscalar@ := function(lad)
 		od;
 		
 		# General type is discrete if above loop finished. 
+		SetLocalActionDiagramIsUnimodular(lad, true);
 		return true;
 	else
 		Error("Something really bad happend with the group type check.");
@@ -739,7 +745,7 @@ IsUniscalar@ := function(lad)
 end;
 
 _LAD_IsUnimodular@ := function(lad)
-	local lad_edges, spanning_tree, spanning_tree_no, lad_rev, lad_edges_no, find_cycle_base, cycle_base, lad_edge_label_size, is_unimodular, prod, prod_rev, i, edge_no;
+	local lad_edges, spanning_tree, spanning_tree_no, lad_rev, lad_edges_no, find_cycle_base, cycle_base, lad_edge_label_size, is_unimodular, prod, prod_rev, i, edge_no, cycle;
 
 	lad_edges := LocalActionDiagramEdges(lad);
 	lad_edges_no := [1..Size(lad_edges)];

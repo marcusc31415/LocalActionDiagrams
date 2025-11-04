@@ -1,5 +1,8 @@
+_LAD_ATTR_LIST@ := ["LocalActionDiagramScopos", "LocalActionDiagramGroupType", "LocalActionDiagramIsDiscrete", \
+		"LocalActionDiagramIsUniscalar", "LocalActionDiagramIsUnimodular"];
+
 _LAD_WriteSingleLADStringFormat@ := function(lad)
-	local output_string, vl, el, attr, attr_list, attr_output_list;
+	local output_string, vl, el, attr, attr_list, attr_output_rec;
 
 	output_string := "";
 
@@ -29,30 +32,32 @@ _LAD_WriteSingleLADStringFormat@ := function(lad)
 	
 	# Store all known attributes of the object. 
 	# Does not compute any unknown attributes. 
-	attr_list := ["LocalActionDiagramScopos", "LocalActionDiagramGroupType", "LocalActionDiagramIsDiscrete"];
-	attr_output_list := [];
+	attr_list := _LAD_ATTR_LIST@;
+	attr_output_rec := rec();
 
 	for attr in attr_list do
 		if attr in KnownAttributesOfObject(x) then
-			Add(attr_output_list, EvalString(attr)(x));
+			attr_output_rec.(attr) :=  EvalString(attr)(x);
 		fi;
 	od;
 
-	output_string := Concatenation(output_string, String(attr_output_list));
+	Print(attr_output_rec);
+
+	output_string := Concatenation(output_string, String(attr_output_rec));
 	output_string := Concatenation(output_string, "\n");
 
 	return output_string;
 end;
 
 _LAD_ReadLADString@ := function(lad_string)
-	local input_lines, lad_list, idx_x, line, digraph, v_labels, v_label, e_labels, e_label, rev, lad, attr_list, idx_y, lad_attrs, input_line;
+	local input_lines, lad_list, idx_x, line, digraph, v_labels, v_label, e_labels, e_label, rev, lad, attr_list, idx_y, lad_attrs, input_line, attr;
 
 	input_lines := SplitString(lad_string, "\n");
 
 	lad_list := [];
 	idx_x := 1; 
 
-	attr_list := ["LocalActionDiagramScopos", "LocalActionDiagramGroupType", "LocalActionDiagramIsDiscrete"];
+	attr_list := _LAD_ATTR_LIST@;
 
 	input_line := 0;
 	for line in input_lines do
@@ -95,13 +100,11 @@ _LAD_ReadLADString@ := function(lad_string)
 		else
 			# Read the stored attributes of the local action diagram and set them. 
 			lad_attrs := EvalString(line);
-			if IsList(lad_attrs) = false then
+			if IsRecord(lad_attrs) = false then
 				return input_line;
 			fi;
-			for idx_y in [1..Length(attr_list)] do
-				if IsBound(lad_attrs[idx_y]) then
-					EvalString(Concatenation("Set", attr_list[idx_y]))(lad, lad_attrs[idx_y]);
-				fi;
+			for attr in RecNames(lad_attrs) do
+				EvalString(Concatenation("Set", attr))(lad, lad_attrs.(attr));
 			od;
 			# Add the local action diagram to the list and reset the index. 
 			Add(lad_list, lad);
@@ -631,6 +634,7 @@ function(lad, file_name)
 
 	fl_name := Filename(DirectoryCurrent(), StringFormatted("{1}.lad", file_name));
 	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
 	AppendTo(output_stream, output_string);
 	CloseStream(output_stream);
 
@@ -652,6 +656,7 @@ function(lad, file_name, dir)
 
 	fl_name := Filename(dir, StringFormatted("{1}.lad", file_name));
 	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
 	AppendTo(output_stream, output_string);
 	CloseStream(output_stream);
 
@@ -673,6 +678,7 @@ function(lad, file_name, dir_string)
 
 	fl_name := Filename(dir, StringFormatted("{1}.lad", file_name));
 	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
 	AppendTo(output_stream, output_string);
 	CloseStream(output_stream);
 
@@ -698,6 +704,7 @@ function(lad_list, file_name)
 
 	fl_name := Filename(DirectoryCurrent(), StringFormatted("{1}.lad", file_name));
 	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
 	AppendTo(output_stream, output_string);
 	CloseStream(output_stream);
 
@@ -725,6 +732,7 @@ function(lad_list, file_name, dir)
 
 	fl_name := Filename(dir, StringFormatted("{1}.lad", file_name));
 	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
 	AppendTo(output_stream, output_string);
 	CloseStream(output_stream);
 
@@ -754,6 +762,7 @@ function(lad_list, file_name, dir_string)
 
 	fl_name := Filename(dir, StringFormatted("{1}.lad", file_name));
 	output_stream := OutputTextFile(fl_name, true);
+	SetPrintFormattingStatus(output_stream, false);		
 	AppendTo(output_stream, output_string);
 	CloseStream(output_stream);
 
