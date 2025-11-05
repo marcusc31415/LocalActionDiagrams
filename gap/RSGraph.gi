@@ -34,11 +34,32 @@ function(arc_list, rev_map, vertex_ids)
 
 end);
 
+BindGlobal("LAD_RSGraphAdjMatToAdjList@",
+function(adj_mat, vertex_ids)
+	local adj_list, idx_x, idx_y, _;
+
+	adj_list := [];
+
+	for idx_x in [1..NumberRows(adj_mat)] do
+		for idx_y in [1..NumberColumns(adj_mat)] do
+			for _ in [1..adj_mat[idx_x][idx_y]] do
+				Add(adj_list, [vertex_ids[idx_x], vertex_ids[idx_y]]);
+			od;
+		od;
+	od;
+
+	return adj_list;
+end);
+
 InstallMethod(RSGraphByAdjacencyList, [IsList, IsPerm],
 function(arc_list, rev_map)
 	local vertex_ids;
 
-	vertex_ids := [1..Maximum(Flat(arc_list))];
+	if IsEmpty(arc_list) then
+		vertex_ids := [];
+	else
+		vertex_ids := [1..Maximum(Flat(arc_list))];
+	fi;
 
 	LAD_RSGraphConsCheck@(arc_list, rev_map, vertex_ids);
 	
@@ -57,7 +78,11 @@ InstallMethod(RSGraphByAdjacencyListNC, [IsList, IsPerm],
 function(arc_list, rev_map)
 	local vertex_ids;
 
-	vertex_ids := [1..Maximum(Flat(arc_list))];
+	if IsEmpty(arc_list) then
+		vertex_ids := [];
+	else
+		vertex_ids := [1..Maximum(Flat(arc_list))];
+	fi;
 	
 	return RSGraphByAdjacencyListNC(arc_list, rev_map, vertex_ids);
 end);
@@ -87,5 +112,44 @@ function(arc_list, rev_map, vertex_ids)
 	return RSGraphConsNC(IsRSGraph, graph_data);
 end);
 
+InstallMethod(RSGraphByAdjacencyMatrix, [IsMatrix, IsPerm],
+function(adj_mat, rev_map)
+	local adj_list, vertex_ids;
+
+	vertex_ids := [1..NumberRows(adj_mat)];
+
+	adj_list := LAD_RSGraphAdjMatToAdjList@(adj_mat, vertex_ids);
+
+	return RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);
+end);
+
+InstallMethod(RSGraphByAdjacencyMatrix, [IsMatrix, IsPerm, IsList],
+function(adj_mat, rev_map, vertex_ids)
+	local adj_list;
+
+	adj_list := LAD_RSGraphAdjMatToAdjList@(adj_mat, vertex_ids);
+
+	return RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);
+end);
+
+InstallMethod(RSGraphByAdjacencyMatrixNC, [IsMatrix, IsPerm],
+function(adj_mat, rev_map)
+	local adj_list, vertex_ids;
+
+	vertex_ids := [1..NumberRows(adj_mat)];
+
+	adj_list := LAD_RSGraphAdjMatToAdjList@(adj_mat, vertex_ids);
+
+	return RSGraphByAdjacencyListNC(adj_list, rev_map, vertex_ids);
+end);
+
+InstallMethod(RSGraphByAdjacencyMatrixNC, [IsMatrix, IsPerm, IsList],
+function(adj_mat, rev_map, vertex_ids)
+	local adj_list;
+
+	adj_list := LAD_RSGraphAdjMatToAdjList@(adj_mat, vertex_ids);
+
+	return RSGraphByAdjacencyListNC(adj_list, rev_map, vertex_ids);
+end);
 
 # Have adjacency matrix functions convert it to an adjacency list then use the above. 
