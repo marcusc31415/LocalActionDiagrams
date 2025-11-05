@@ -7,3 +7,5 @@
 ReadPackage( "LocalActionDiagrams", "gap/LocalActionDiagrams.gd");
 
 ReadPackage( "LocalActionDiagrams", "gap/io.gd");
+
+ReadPackage( "LocalActionDiagrams", "gap/RSGraph.gd");
