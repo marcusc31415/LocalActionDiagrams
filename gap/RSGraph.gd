@@ -29,9 +29,21 @@ DeclareAttribute("RSGraphReverseMap", IsRSGraph);
 DeclareAttribute("RSGraphAdjacencyMatrix", IsRSGraph);
 DeclareAttribute("RSGraphCannonicalForm", IsRSGraph);
 DeclareAttribute("RSGraphMG5String", IsRSGraph);
+DeclareAttribute("RSGraphOutNeighbours", IsRSGraph);
 
 # Input/Output Format
 DeclareOperation("RSGraphFromCannonicalFrom", [IsString]);
 DeclareOperation("RSGraphFromMG5String", [IsString]);
 
-# Make iterator for graph arcs. Returns [arc id, arc record]. 
+# [id, record]
+DeclareOperation("RSGraphArcIterator", [IsRSGraph]);
+
+DeclareOperation("RSGraphSubgraph", [IsRSGraph, IsList]);
+DeclareOperation("RSGraphSubgraphNC", [IsRSGraph, IsList]);
+
+# Optional argument for bfs/dfs switch. 
+DeclareOperation("RSGraphSpanningTree", [IsRSGraph]);
+DeclareOperation("RSGraphSpanningTree", [IsRSGraph, IsString]);
+
+# Need to fix reversal map when going to cannonical form. 
+# Or enforce adjacency lists to be in lexigraphical order. 

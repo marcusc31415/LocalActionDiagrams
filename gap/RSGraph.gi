@@ -22,8 +22,8 @@ end);
 # Input Checking For RSGraph Construction.
 
 BindGlobal("LAD_RSGraphConsCheck@", 
-function(arc_list, rev_map, vertex_ids)
-	local idx;
+function(_arc_list, rev_map, vertex_ids, arc_ids)
+	local idx, visited_verts, dfs, arc_list, arc;
 
 	if rev_map*rev_map <> () then
 		ErrorNoReturn("Reverse map must be an involution.");
@@ -33,13 +33,20 @@ function(arc_list, rev_map, vertex_ids)
 		ErrorNoReturn("Vertex Ids must be integers.");
 	fi;
 
-	# The reverse map moves more points then there
-	# are arcs. 
-	if Maximum(MovedPoints(rev_map)) > Size(arc_list) then
-		ErrorNoReturn("Reverse map has a mapping for a non-existant arc.");
+	# Supports either an adjacency listing or an RSGraph 
+	# record of arcs (e.g. for subgraph checks).  
+	if IsList(_arc_list) then
+		arc_list := _arc_list;
+	elif IsRecord(_arc_list) then
+		arc_list := [];
+		for arc in Set(RecNames(_arc_list)) do
+			arc_list[Int(arc)] :=  [_arc_list.(arc).origin, _arc_list.(arc).terminus];
+		od;
+	else
+		ErrorNoReturn("Something went wrong with the construction check");
 	fi;
 
-	for idx in [1..Length(arc_list)] do
+	for idx in arc_ids do
 		if arc_list[idx^rev_map][1] <> arc_list[idx][2] or arc_list[idx^rev_map][2] <> arc_list[idx][1] then
 			ErrorNoReturn("Reversal mapping must send the terminal vertex of an arc to the origin vertex of the arc.");
 		fi;
@@ -49,6 +56,39 @@ function(arc_list, rev_map, vertex_ids)
 		fi;
 	od;
 
+	# Check that the graph is connected. 
+	visited_verts := [];
+
+	dfs := function(vert_id)
+		local arc, neighbours, vert;
+
+		AddSet(visited_verts, vert_id);
+
+
+		# Get a list of neighbours. Only need
+		# for each vertex connection and ignores 
+		# loops.  
+		neighbours := [];
+		for arc in arc_list do
+			if arc[1] = vert_id and arc[2] <> vert_id then
+				AddSet(neighbours, arc[2]);
+			fi;
+		od;
+
+
+		for vert in neighbours do
+			if not vert in visited_verts then
+				dfs(vert);
+			fi;
+		od;
+	end;
+
+	dfs(vertex_ids[1]);
+
+
+	if Length(visited_verts) <> Length(vertex_ids) then
+		Error("Graph must be connected.");
+	fi;
 
 end);
 
@@ -79,7 +119,7 @@ function(arc_list, rev_map)
 		vertex_ids := [1..Maximum(Flat(arc_list))];
 	fi;
 
-	LAD_RSGraphConsCheck@(arc_list, rev_map, vertex_ids);
+	LAD_RSGraphConsCheck@(arc_list, rev_map, vertex_ids, [1..Length(arc_list)]);
 	
 	return RSGraphByAdjacencyListNC(arc_list, rev_map, vertex_ids);
 end);
@@ -87,7 +127,7 @@ end);
 InstallMethod(RSGraphByAdjacencyList, [IsList, IsPerm, IsList],
 function(arc_list, rev_map, vertex_ids)
 
-	LAD_RSGraphConsCheck@(arc_list, rev_map, vertex_ids);
+	LAD_RSGraphConsCheck@(arc_list, rev_map, vertex_ids, [1..Length(arc_list)]);
 	
 	return RSGraphByAdjacencyListNC(arc_list, rev_map, vertex_ids);
 end);
@@ -248,7 +288,8 @@ function(graph)
 	adj_mat := RSGraphAdjacencyMatrix(graph);
 
 	# Convert the adjacency matrix into a mutable string. 
-	adj_string := MutableCopyMat(String(Flat(adj_mat)));
+	# Make a shallow copy so the string is mutable. 
+	adj_string := ShallowCopy(String(Flat(adj_mat)));
 	# Remove whitespace, [, and ]. 
 	RemoveCharacters(adj_string, " []");
 
@@ -419,7 +460,202 @@ function(mg5_string)
 
 end);
 
+InstallMethod(RSGraphOutNeighbours, [IsRSGraph],
+function(graph)
+	local out_rec, id, arc_rec;
+
+	out_rec := rec();
+
+	for id in RSGraphVertices(graph) do
+		out_rec.(id) := [];
+	od;
+
+	for id in RSGraphArcIds(graph) do
+		arc_rec := RSGraphArcs(graph).(id);
+		AddSet(out_rec.(arc_rec.origin), arc_rec.terminus);
+	od;
+
+	return out_rec;
+end);
+
 InstallMethod(\=, "for RSGraphs", IsIdenticalObj, [IsRSGraph, IsRSGraph], 0,
 function(graph1, graph2)
 	return RSGraphCannonicalForm(graph1) = RSGraphCannonicalForm(graph2);
 end);
+
+InstallMethod(RSGraphArcIterator, "for RSGraphs", [IsRSGraph],
+function(graph)
+	local NextIterator, IsDoneIterator, ShallowCopy;
+
+	NextIterator := function(iter)
+		local count;
+
+		# Find the next arc id. Skip over any holes from subgraphs. 
+		count := iter!.counter;
+		while not IsBound(RSGraphArcs(iter!.graph).(count)) do
+			count := count + 1;
+		od;
+
+		# Store the next arc id to check from. 
+		iter!.counter := count + 1; 
+
+		# Return [*id*, *arc record*]
+		return [count, RSGraphArcs(iter!.graph).(count)];
+	end;
+
+	IsDoneIterator := function(iter)
+		return iter!.counter > Length(RSGraphArcIds(iter!.graph));
+	end;
+
+	ShallowCopy := function(iter)
+		return rec(
+			graph := iter!.graph,
+			counter := iter!.counter);
+	end;
+
+	return IteratorByFunctions(rec(
+		NextIterator := NextIterator,
+		IsDoneIterator := IsDoneIterator,
+		ShallowCopy := ShallowCopy,
+		counter := 1,
+		graph := graph));
+end);
+
+BindGlobal("LAD_Subgraph_Cons@", 
+function(graph, arc_ids)
+	local vertex_ids, arc_records, subgraph_data, id;
+
+	vertex_ids := [];
+	arc_records := rec();
+
+	for id in arc_ids do
+		arc_records.(id) := RSGraphArcs(graph).(id);
+		AddSet(vertex_ids, arc_records.(id).origin);
+		AddSet(vertex_ids, arc_records.(id).terminus);
+	od;
+
+	subgraph_data := rec();
+
+	subgraph_data.vertices := vertex_ids;
+	subgraph_data.arc_ids := arc_ids;
+
+	subgraph_data.arcs := arc_records;
+	subgraph_data.reverse_map := RSGraphReverseMap(graph);
+
+	return subgraph_data;
+end);
+
+InstallMethod(RSGraphSubgraph, "for RSGraphs", [IsRSGraph, IsList],
+function(graph, arc_ids)
+	local subgraph_data, id;
+
+	if not ForAll(arc_ids, IsInt) then
+		ErrorNoReturn("The list of arc ids must be integers.");
+	fi;
+
+	for id in arc_ids do
+		if not id^RSGraphReverseMap(graph) in arc_ids then
+			ErrorNoReturn(StringFormatted("Reverse of arc {1} is not in the list of arc ids.", id));
+		fi;
+	od;
+
+	subgraph_data := LAD_Subgraph_Cons@(graph, arc_ids);
+
+	LAD_RSGraphConsCheck@(subgraph_data.arcs, subgraph_data.reverse_map, subgraph_data.vertices, subgraph_data.arc_ids);
+
+	return RSGraphConsNC(IsRSGraph, subgraph_data);
+end);
+
+InstallMethod(RSGraphSubgraphNC, "for RSGraphs", [IsRSGraph, IsList],
+function(graph, arc_ids)
+	local subgraph_data;
+
+	subgraph_data := LAD_Subgraph_Cons@(graph, arc_ids);
+
+	return RSGraphConsNC(IsRSGraph, subgraph_data);
+end);
+
+
+BindGlobal("LAD_BFS_Tree@", 
+function(graph)
+	local seen_verts, arc_id_subgraph, queue, current, arc;
+
+	seen_verts := [];
+	arc_id_subgraph := [];
+
+	# Start at the first vertex id. 
+	queue := [RSGraphVertices(graph)[1]];
+
+	while Size(queue) > 0 do
+		current := Remove(queue, 1); # Pop left. 
+		Add(seen_verts, current);
+
+		for arc in RSGraphArcIterator(graph) do
+			# The arc originates at the current vertex, 
+			# haven't already visited the terminus vertex,
+			# and the terminus is not already queued. 
+			if arc[2].origin = current and not arc[2].terminus in seen_verts and not arc[2].terminus in queue then
+				Add(queue, arc[2].terminus); # Push right. 
+
+				# Add the arc and its reverse. 
+				Add(arc_id_subgraph, arc[1]);
+				Add(arc_id_subgraph, arc[1]^RSGraphReverseMap(graph));
+			fi;
+		od;
+	od;
+
+	return arc_id_subgraph;
+
+end);
+
+BindGlobal("LAD_DFS_Tree@", 
+function(graph)
+	local seen_verts, arc_id_subgraph, dfs;
+
+	seen_verts := [];
+	arc_id_subgraph := [];
+
+	# Start at the first vertex id. 
+	dfs := function(vertex_id)
+		local neighbours, arc; 
+
+		Add(seen_verts, vertex_id);
+
+		for arc in RSGraphArcIterator(graph) do
+			# Haven't already traversed the arc, the arc originates at
+			# the current vertex, and haven't already visited the 
+			# terminus vertex. 
+			if not arc[1] in arc_id_subgraph and arc[2].origin = vertex_id and not arc[2].terminus in seen_verts  then
+				# Add the arc and its reverse. 
+				Add(arc_id_subgraph, arc[1]);
+				Add(arc_id_subgraph, arc[1]^RSGraphReverseMap(graph));
+
+				dfs(arc[2].terminus); 
+			fi;
+		od;
+	end;
+
+	dfs(RSGraphVertices(graph)[1]);
+
+	return arc_id_subgraph;
+end);
+
+InstallMethod(RSGraphSpanningTree, "for and RSGraph", [IsRSGraph],
+graph -> RSGraphSpanningTree(graph, "bfs"));
+
+InstallMethod(RSGraphSpanningTree, "for and RSGraph", [IsRSGraph, IsString],
+function(graph, type)
+	local arc_ids;
+
+	if type = "dfs" then
+		arc_ids := LAD_DFS_Tree@(graph);
+	else
+		arc_ids := LAD_BFS_Tree@(graph);
+	fi;
+
+	return RSGraphSubgraph(graph, arc_ids);
+end);
+
+
+
+
