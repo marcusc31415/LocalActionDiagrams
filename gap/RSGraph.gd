@@ -27,12 +27,10 @@ DeclareAttribute("RSGraphNumberArcs", IsRSGraph);
 DeclareAttribute("RSGraphArcIds", IsRSGraph);
 DeclareAttribute("RSGraphReverseMap", IsRSGraph);
 DeclareAttribute("RSGraphAdjacencyMatrix", IsRSGraph);
-DeclareAttribute("RSGraphCannonicalForm", IsRSGraph);
 DeclareAttribute("RSGraphMG5String", IsRSGraph);
 DeclareAttribute("RSGraphOutNeighbours", IsRSGraph);
 
 # Input/Output Format
-DeclareOperation("RSGraphFromCannonicalFrom", [IsString]);
 DeclareOperation("RSGraphFromMG5String", [IsString]);
 
 # [id, record]
@@ -45,5 +43,3 @@ DeclareOperation("RSGraphSubgraphNC", [IsRSGraph, IsList]);
 DeclareOperation("RSGraphSpanningTree", [IsRSGraph]);
 DeclareOperation("RSGraphSpanningTree", [IsRSGraph, IsString]);
 
-# Need to fix reversal map when going to cannonical form. 
-# Or enforce adjacency lists to be in lexigraphical order. 

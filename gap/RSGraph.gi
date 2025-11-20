@@ -231,7 +231,7 @@ function(graph)
 
 	print_string := "Vertices = { ";
 	if Size(vertex_ids) = 1 then
-		print_string := Concatenation(print_string, vertex_ids[1]);
+		print_string := Concatenation(print_string, String(vertex_ids[1]));
 	else
 		for vert in vertex_ids do
 			print_string := Concatenation(print_string, StringFormatted("{1}, ", vert));
@@ -281,55 +281,6 @@ function(graph)
 	return adj_mat;
 end);
 
-InstallMethod(RSGraphCannonicalForm, "for an RSGraph", [IsRSGraph],
-function(graph)
-	local adj_mat, adj_string;
-
-	adj_mat := RSGraphAdjacencyMatrix(graph);
-
-	# Convert the adjacency matrix into a mutable string. 
-	# Make a shallow copy so the string is mutable. 
-	adj_string := ShallowCopy(String(Flat(adj_mat)));
-	# Remove whitespace, [, and ]. 
-	RemoveCharacters(adj_string, " []");
-
-	return StringFormatted("{1}&{2}", adj_string, RSGraphReverseMap(graph));
-end);
-
-InstallMethod(RSGraphFromCannonicalFrom, "for an RSGraph", [IsString],
-function(graph_string)
-	local split_string, adj_mat, rev_map, no_verts, row, col, number, graph;
-
-	split_string := SplitString(graph_string, "&");
-
-	rev_map := EvalString(split_string[2]); 
-
-	# Number of ',' charters + 1 is the square of the number of vertices. 
-	no_verts := Sqrt(Size(Positions(split_string[1], ','))+1);
-
-
-	adj_mat := List([1..no_verts], x -> List([1..no_verts], x -> 0));
-
-	row := 1;
-	col := 1;
-
-	for number in SplitString(split_string[1], ",") do
-		adj_mat[row][col] := Int(number);
-
-		row := row+1;
-
-		if row > no_verts then
-			row := 1;
-			col := col + 1;
-		fi;
-	od;
-
-	graph := RSGraphByAdjacencyMatrix(adj_mat, rev_map);
-	SetRSGraphCannonicalForm(graph, graph_string);
-	SetRSGraphNumberVertices(graph, no_verts);
-	return graph;
-end);
-
 BindGlobal("LAD_dec_to_bin@", 
 function(dec_no)
 	local output_string, quot, idx, len_number;
@@ -371,7 +322,7 @@ end);
 
 InstallMethod(RSGraphMG5String, "for an RSGraph", [IsRSGraph],
 function(graph)
-	local no_vert, flat_adj_mat, idx, output_string, dec_no, bin_no, pos;
+	local no_vert, flat_adj_mat, idx, output_string, dec_no, bin_no, pos, rev_map, arc_list, arc, lex_sort, ids, id_perm, new_rev_map;
 
 	no_vert := RSGraphNumberVertices(graph);
 	flat_adj_mat := Flat(RSGraphAdjacencyMatrix(graph));
@@ -404,13 +355,40 @@ function(graph)
 		output_string[idx] := CharInt(LAD_bin_to_dec@(output_string[idx]));
 	od;
 
-	return StringFormatted("{1}|{2}", output_string, String(RSGraphReverseMap(graph)));
+	# Have the reverse map work with a potential reordering of the arcs
+	# (due to the adjacency matrix not taking ids into account). 
+	rev_map := RSGraphReverseMap(graph);
+
+	arc_list := [];
+
+	# List will contain [id, [origin, terminus]]. 
+	for arc in RSGraphArcIterator(graph) do
+		Add(arc_list, [arc[1], [arc[2].origin, arc[2].terminus]]);
+	od;
+
+	# Sort the arcs in lexicographical order.  
+	lex_sort := function(x, y) return x[2] < y[2]; end;
+	Sort(arc_list, lex_sort);
+
+	ids := List(arc_list, x -> x[1]);
+
+	id_perm := [];
+
+	for idx in [1..Length(ids)] do
+		# Element *idx* will map to the reverse id of the
+		# corresponding id in the original list. 
+		id_perm[idx] := Position(ids, ids[idx]^rev_map);
+	od;
+
+	new_rev_map := PermList(id_perm);
+
+	return StringFormatted("{1}|{2}", output_string, new_rev_map);
 
 end);
 
 InstallMethod(RSGraphFromMG5String, "for RSGraphs", [IsString], 
 function(mg5_string)
-	local adj_mat, flat_adj_mat, bin_string, idx, dec_no, block, bin_no, no_vert, char, rev_map, split_string;
+	local adj_mat, flat_adj_mat, bin_string, idx, dec_no, block, bin_no, no_vert, char, rev_map, split_string, graph;
 
 	split_string := SplitString(mg5_string, "|");
 
@@ -456,7 +434,9 @@ function(mg5_string)
 	# to IsMatrix list of lists. 
 	adj_mat := Unpack(Matrix(Integers, flat_adj_mat, no_vert));
 
-	return RSGraphByAdjacencyMatrix(adj_mat, rev_map);
+	graph := RSGraphByAdjacencyMatrix(adj_mat, rev_map);
+	SetRSGraphMG5String(graph, mg5_string);
+	return graph;
 
 end);
 
@@ -480,7 +460,7 @@ end);
 
 InstallMethod(\=, "for RSGraphs", IsIdenticalObj, [IsRSGraph, IsRSGraph], 0,
 function(graph1, graph2)
-	return RSGraphCannonicalForm(graph1) = RSGraphCannonicalForm(graph2);
+	return RSGraphMG5String(graph1) = RSGraphMG5String(graph2);
 end);
 
 InstallMethod(RSGraphArcIterator, "for RSGraphs", [IsRSGraph],
@@ -504,7 +484,7 @@ function(graph)
 	end;
 
 	IsDoneIterator := function(iter)
-		return iter!.counter > Length(RSGraphArcIds(iter!.graph));
+		return iter!.counter > Maximum(RSGraphArcIds(iter!.graph));
 	end;
 
 	ShallowCopy := function(iter)
