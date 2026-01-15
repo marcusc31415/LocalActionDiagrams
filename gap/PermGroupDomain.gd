@@ -1,0 +1,1 @@
+DeclareAttribute("PermGroupDomain", IsPermGroup, "mutable"); 
