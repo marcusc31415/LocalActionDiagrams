@@ -18,3 +18,7 @@ DeclareOperation("LocalActionDiagramFromUniversalGroup", [IsPermGroup]);
 DeclareAttribute("LocalActionDiagramRSGraph", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramVertexLabels", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramArcLabels", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramVertices", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramArcs", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramArcIDs", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramReverseMap", IsLocalActionDiagram);

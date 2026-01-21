@@ -24,7 +24,7 @@ DeclareAttribute("RSGraphVertices", IsRSGraph);
 DeclareAttribute("RSGraphNumberVertices", IsRSGraph);
 DeclareAttribute("RSGraphArcs", IsRSGraph);
 DeclareAttribute("RSGraphNumberArcs", IsRSGraph);
-DeclareAttribute("RSGraphArcIds", IsRSGraph);
+DeclareAttribute("RSGraphArcIDs", IsRSGraph);
 DeclareAttribute("RSGraphReverseMap", IsRSGraph);
 DeclareAttribute("RSGraphAdjacencyMatrix", IsRSGraph);
 DeclareAttribute("RSGraphMG5String", IsRSGraph);

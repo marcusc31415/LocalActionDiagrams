@@ -14,7 +14,7 @@ function(_, graph_data)
 	return ObjectifyWithAttributes(rec(), RSGraphType, 
 		RSGraphVertices, graph_data.vertices,
 		RSGraphArcs, graph_data.arcs,
-		RSGraphArcIds, graph_data.arc_ids,
+		RSGraphArcIDs, graph_data.arc_ids,
 		RSGraphReverseMap, graph_data.reverse_map
 	);
 end);
@@ -30,7 +30,7 @@ function(_arc_list, rev_map, vertex_ids, arc_ids)
 	fi;
 
 	if not ForAll(vertex_ids, IsInt) then
-		ErrorNoReturn("Vertex Ids must be integers.");
+		ErrorNoReturn("Vertex IDs must be integers.");
 	fi;
 
 	# Supports either an adjacency listing or an RSGraph 
@@ -242,7 +242,7 @@ function(graph)
 
 	print_string := Concatenation(print_string, " }\nArcs = {\n");
 
-	for idx in RSGraphArcIds(graph) do
+	for idx in RSGraphArcIDs(graph) do
 		print_string := Concatenation(print_string, StringFormatted("\t{1} = ( origin = {2}, terminus = {3}, inverse = {4} )\n", idx, arc_rec.(idx).origin, arc_rec.(idx).terminus, idx^rev_map));
 	od;
 
@@ -254,12 +254,12 @@ end);
 
 InstallMethod(ViewString, "for an RSGraph", [IsRSGraph],
 function(graph)
-	return StringFormatted("<RSGraph with {1} vertices and {2} arcs>", Size(RSGraphVertices(graph)), Size(RSGraphArcIds(graph)));
+	return StringFormatted("<RSGraph with {1} vertices and {2} arcs>", Size(RSGraphVertices(graph)), Size(RSGraphArcIDs(graph)));
 end);
 
 InstallMethod(RSGraphNumberVertices, "for an RSGraph", [IsRSGraph], graph -> Size(RSGraphVertices(graph)));
 
-InstallMethod(RSGraphNumberArcs, "for an RSGraph", [IsRSGraph], graph -> Size(RSGraphArcIds(graph)));
+InstallMethod(RSGraphNumberArcs, "for an RSGraph", [IsRSGraph], graph -> Size(RSGraphArcIDs(graph)));
 
 InstallMethod(RSGraphAdjacencyMatrix, "for an RSGraph", [IsRSGraph],
 function(graph)
@@ -267,7 +267,7 @@ function(graph)
 
 	vertex_ids := SortedList(RSGraphVertices(graph));
 	standard_range := [1..RSGraphNumberVertices(graph)];
-	arc_ids := RSGraphArcIds(graph);
+	arc_ids := RSGraphArcIDs(graph);
 	arc_rec := RSGraphArcs(graph);
 
 	vert_id_map := MappingPermListList(vertex_ids, standard_range);
@@ -450,7 +450,7 @@ function(graph)
 		out_rec.(id) := [];
 	od;
 
-	for id in RSGraphArcIds(graph) do
+	for id in RSGraphArcIDs(graph) do
 		arc_rec := RSGraphArcs(graph).(id);
 		AddSet(out_rec.(arc_rec.origin), arc_rec.terminus);
 	od;
@@ -484,7 +484,7 @@ function(graph)
 	end;
 
 	IsDoneIterator := function(iter)
-		return iter!.counter > Maximum(RSGraphArcIds(iter!.graph));
+		return iter!.counter > Maximum(RSGraphArcIDs(iter!.graph));
 	end;
 
 	ShallowCopy := function(iter)

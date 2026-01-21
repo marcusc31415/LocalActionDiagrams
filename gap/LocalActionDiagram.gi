@@ -53,7 +53,7 @@ function(graph, _vert_labels, _arc_labels)
 		ErrorNoReturn("Must have a vertex label for each vertex in the graph.");
 	fi;
 
-	if Length(_arc_labels) <> Length(RSGraphArcIds(graph)) then
+	if Length(_arc_labels) <> Length(RSGraphArcIDs(graph)) then
 		ErrorNoReturn("Must have an arc label for each arc in the graph.");
 	fi;
 
@@ -65,7 +65,7 @@ function(graph, _vert_labels, _arc_labels)
 	od;
 
 	for idx in [1..Length(_arc_labels)] do
-		arc_labels.(RSGraphArcIds(graph)[idx]) := _arc_labels[idx];
+		arc_labels.(RSGraphArcIDs(graph)[idx]) := _arc_labels[idx];
 	od;
 
 	LAD_LocalActionDiagramConsCheck@(graph, vert_labels, arc_labels);
@@ -79,7 +79,7 @@ function(graph, vert_labels, arc_labels)
 		ErrorNoReturn("Must have a vertex label for each vertex in the graph.");
 	fi;
 
-	if Length(RecNames(arc_labels)) <> Length(RSGraphArcIds(graph)) then
+	if Length(RecNames(arc_labels)) <> Length(RSGraphArcIDs(graph)) then
 		ErrorNoReturn("Must have an arc label for each arc in the graph.");
 	fi;
 
@@ -100,7 +100,7 @@ function(graph, _vert_labels, _arc_labels)
 	od;
 
 	for idx in [1..Length(_arc_labels)] do
-		arc_labels.(RSGraphArcIds(graph)[idx]) := _arc_labels[idx];
+		arc_labels.(RSGraphArcIDs(graph)[idx]) := _arc_labels[idx];
 	od;
 
 	return LocalActionDiagramFromDataNC(graph, vert_labels, arc_labels);
@@ -172,8 +172,12 @@ function(lad)
 
 end);
 
+InstallMethod(LocalActionDiagramVertices, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphVertices(LocalActionDiagramRSGraph(lad)));
 
+InstallMethod(LocalActionDiagramArcs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphArcs(LocalActionDiagramRSGraph(lad)));
 
+InstallMethod(LocalActionDiagramArcIDs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphArcIDs(LocalActionDiagramRSGraph(lad)));
 
+InstallMethod(LocalActionDiagramReverseMap, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphReverseMap(LocalActionDiagramRSGraph(lad)));
 
 
