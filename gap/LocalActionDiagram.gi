@@ -19,27 +19,35 @@ end);
 
 BindGlobal("LAD_LocalActionDiagramConsCheck@", 
 function(graph, vert_labels, arc_labels)
-	local orbits, arc, arc_label_combined, idx;
+	local orbits, arc, arc_label_combined, idx, name;
 	# Check vertex label orbit condition. 
 	
 	orbits := rec();
 
 	for idx in Set(RecNames(vert_labels)) do
-		orbits.(idx) := Orbits(vert_labels.(idx));
+		orbits.(idx) := Orbits(vert_labels.(idx), PermGroupDomain(vert_labels.(idx)));
 	od;
 
-	arc_label_combined := List(RecNames(vert_labels), x -> []);
+	arc_label_combined := rec();
+
+	for name in RecNames(vert_labels) do
+		arc_label_combined.(name) := [];
+	od;
 
 
 	for arc in RSGraphArcIterator(graph) do
 		if not arc_labels.(arc[1]) in orbits.(arc[2].origin) then
 			ErrorNoReturn("Arc labels must be orbits of the group labels");
 		fi;
-		Add(arc_label_combined[arc[2].origin], arc_labels.(arc[1]));
+		Add(arc_label_combined.(arc[2].origin), arc_labels.(arc[1]));
 	od;
 
-	for idx in [1..Length(RecNames(vert_labels))] do
-		if Set(orbits.(idx)) <> Set(arc_label_combined[idx]) then
+	for idx in Set(RecNames(vert_labels)) do
+		if Set(orbits.(idx)) <> Set(arc_label_combined.(idx)) then
+			Print(orbits.(idx));
+			Print(arc_label_combined.(idx));
+			Print(arc_label_combined);
+			Print(orbits);
 			ErrorNoReturn("Must have an arc label for each orbit of the vertex labels.");
 		fi;
 	od;
@@ -180,4 +188,118 @@ InstallMethod(LocalActionDiagramArcIDs, "Local Action Diagram Vertex IDs", [IsLo
 
 InstallMethod(LocalActionDiagramReverseMap, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphReverseMap(LocalActionDiagramRSGraph(lad)));
 
+InstallMethod(LocalActionDiagramOutNeighbours, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
 
+InstallMethod(LocalActionDiagramInNeighbours, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
+
+InstallMethod(LocalActionDiagramOutArcs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
+
+InstallMethod(LocalActionDiagramInArcs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
+
+
+InstallMethod(LocalActionDiagramScopos, "List of Scopos of Local Action Diagram", [IsLocalActionDiagram], 
+function(lad)
+	local candidate_arcs, candidate, candidate_scopos, scopo_list, arc, new_arcs, combined_new_arcs, candidates_to_remove, rev, idx, arc_labels, CheckScopoInArcCondition, ScopoInArcs;
+
+	rev := LocalActionDiagramReverseMap(lad);
+	arc_labels := LocalActionDiagramArcLabels(lad);
+	scopo_list := [];
+
+	# Start by finding all arcs that have a label of size 1. 
+	# These are the arcs that could be part of a scopo. 
+	candidate_arcs := [];
+	for idx in RecNames(arc_labels) do
+		if Size(arc_labels.(idx)) = 1 then
+			Add(candidate_arcs, Int(idx)); # Cast the string to integer. 
+		fi;
+	od;
+
+	# Get all arcs that terminate at the origin of the arc labelled by *arc_id*. 
+	ScopoInArcs := function(lad, arc_id)
+		local in_arcs, arc;
+
+		arc := LocalActionDiagramArcs(lad).(arc_id);
+		# Get all the arcs that terminate at *arc.origin*. 
+		in_arcs := LocalActionDiagramInArcs(lad).(arc.origin);
+		# Exclude the reverse arc. 
+		in_arcs := Difference(in_arcs, [arc_id^LocalActionDiagramReverseMap(lad)]);
+
+		return in_arcs;
+	end;
+
+	# Returns false if an incoming arc has a size greater than one. Otherwise returns true. 
+	CheckScopoInArcCondition := function(lad, in_arcs)
+		local arc_id;
+
+		for arc_id in in_arcs do
+			if Size(LocalActionDiagramArcLabels(lad).(arc_id)) <> 1 then
+				return false;
+			fi;
+		od;
+
+		return true;
+	end;
+
+
+	# Returns all candidate arcs whose incoming arcs are all labelled with size one. 
+	candidate_arcs := ListBlist(candidate_arcs, List(candidate_arcs, x -> CheckScopoInArcCondition(lad, ScopoInArcs(lad, x))));
+	candidate_scopos := List(candidate_arcs, x -> [[x]]); # Scopos will be lists of arc ids. 
+
+	scopo_list := [ [] ]; # The empty scopo is always there. 
+	candidates_to_remove := [];
+
+	while true do
+		# Leave loop if there are no scopos. 
+		candidate_scopos := Difference(candidate_scopos, candidates_to_remove);
+		if candidate_scopos = [] then
+			break;
+		fi;
+		for candidate in candidate_scopos do
+			combined_new_arcs := [];
+			for arc in Last(candidate) do
+				# Get all the new arcs needed for a scopo.
+				new_arcs := ScopoInArcs(lad, arc);
+				if arc = arc^LocalActionDiagramReverseMap(lad) then 
+					# Scopo can't contain a self-reverse arc. 
+					Add(candidates_to_remove, candidate);
+					break;
+				elif CheckScopoInArcCondition(lad, new_arcs) then
+					# All the in arcs have a label of size one so they can be
+					# part of the candidate scopo. 
+					combined_new_arcs := Concatenation(combined_new_arcs, new_arcs);
+				else
+					# Not all the in arcs have a label of size one so this
+					# can't be a scopo. 
+					Add(candidates_to_remove, candidate);
+					break;
+				fi;
+			od;
+			if candidate in candidates_to_remove then
+				# Not a scopo so can skip the rest of the function. 
+				continue;
+			fi;
+			# If this is empty then it's a scopo because there are no new arcs to add.
+			if combined_new_arcs = [] then
+				Add(scopo_list, Concatenation(candidate));
+				# Remove the known scopo so we can eventually terminate the function. 
+				Add(candidates_to_remove, candidate);
+				continue;
+			fi;
+			# If all arcs are already in the scopo then we are looping so it's a scopo.
+			if ForAll(combined_new_arcs, x -> ForAny(candidate, y -> x in y)) then
+				Add(scopo_list, Concatenation(candidate));
+				Add(candidates_to_remove, candidate);
+				continue;
+			fi;
+			# This is the reverse of an arc in then candidate so it isn't a scopo. 
+			if ForAny(combined_new_arcs, x -> ForAny(candidate, y -> x^rev in y)) then
+				Add(candidates_to_remove, candidate);
+				continue;
+			fi;
+			Add(candidate, combined_new_arcs); # Hope this works.
+		od;
+	od;
+
+
+	return Set(List(scopo_list, x -> Set(x)));
+end);

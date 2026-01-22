@@ -29,6 +29,9 @@ DeclareAttribute("RSGraphReverseMap", IsRSGraph);
 DeclareAttribute("RSGraphAdjacencyMatrix", IsRSGraph);
 DeclareAttribute("RSGraphMG5String", IsRSGraph);
 DeclareAttribute("RSGraphOutNeighbours", IsRSGraph);
+DeclareAttribute("RSGraphInNeighbours", IsRSGraph);
+DeclareAttribute("RSGraphOutArcs", IsRSGraph);
+DeclareAttribute("RSGraphInArcs", IsRSGraph);
 
 # Input/Output Format
 DeclareOperation("RSGraphFromMG5String", [IsString]);

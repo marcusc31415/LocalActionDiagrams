@@ -458,6 +458,61 @@ function(graph)
 	return out_rec;
 end);
 
+InstallMethod(RSGraphInNeighbours, [IsRSGraph],
+function(graph)
+	local in_rec, id, arc_rec;
+
+	in_rec := rec();
+
+	for id in RSGraphVertices(graph) do
+		in_rec.(id) := [];
+	od;
+
+	for id in RSGraphArcIDs(graph) do
+		arc_rec := RSGraphArcs(graph).(id);
+		AddSet(in_rec.(arc_rec.terminus), arc_rec.origin);
+	od;
+
+	return in_rec;
+end);
+
+InstallMethod(RSGraphOutArcs, [IsRSGraph],
+function(graph)
+	local out_rec, id, arc_rec;
+
+	out_rec := rec();
+
+	for id in RSGraphVertices(graph) do
+		out_rec.(id) := [];
+	od;
+
+	for id in RSGraphArcIDs(graph) do
+		arc_rec := RSGraphArcs(graph).(id);
+		AddSet(out_rec.(arc_rec.origin), id);
+	od;
+
+	return out_rec;
+end);
+
+InstallMethod(RSGraphInArcs, [IsRSGraph],
+function(graph)
+	local in_rec, id, arc_rec;
+
+	in_rec := rec();
+
+	for id in RSGraphVertices(graph) do
+		in_rec.(id) := [];
+	od;
+
+	for id in RSGraphArcIDs(graph) do
+		arc_rec := RSGraphArcs(graph).(id);
+		AddSet(in_rec.(arc_rec.terminus), id);
+	od;
+
+	return in_rec;
+end);
+
+
 InstallMethod(\=, "for RSGraphs", IsIdenticalObj, [IsRSGraph, IsRSGraph], 0,
 function(graph1, graph2)
 	return RSGraphMG5String(graph1) = RSGraphMG5String(graph2);
