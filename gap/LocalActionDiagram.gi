@@ -44,10 +44,6 @@ function(graph, vert_labels, arc_labels)
 
 	for idx in Set(RecNames(vert_labels)) do
 		if Set(orbits.(idx)) <> Set(arc_label_combined.(idx)) then
-			Print(orbits.(idx));
-			Print(arc_label_combined.(idx));
-			Print(arc_label_combined);
-			Print(orbits);
 			ErrorNoReturn("Must have an arc label for each orbit of the vertex labels.");
 		fi;
 	od;
@@ -190,11 +186,11 @@ InstallMethod(LocalActionDiagramReverseMap, "Local Action Diagram Vertex IDs", [
 
 InstallMethod(LocalActionDiagramOutNeighbours, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
 
-InstallMethod(LocalActionDiagramInNeighbours, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
+InstallMethod(LocalActionDiagramInNeighbours, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphInNeighbours(LocalActionDiagramRSGraph(lad)));
 
-InstallMethod(LocalActionDiagramOutArcs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
+InstallMethod(LocalActionDiagramOutArcs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutArcs(LocalActionDiagramRSGraph(lad)));
 
-InstallMethod(LocalActionDiagramInArcs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphOutNeighbours(LocalActionDiagramRSGraph(lad)));
+InstallMethod(LocalActionDiagramInArcs, "Local Action Diagram Vertex IDs", [IsLocalActionDiagram], lad -> RSGraphInArcs(LocalActionDiagramRSGraph(lad)));
 
 
 InstallMethod(LocalActionDiagramScopos, "List of Scopos of Local Action Diagram", [IsLocalActionDiagram], 
@@ -213,6 +209,7 @@ function(lad)
 			Add(candidate_arcs, Int(idx)); # Cast the string to integer. 
 		fi;
 	od;
+
 
 	# Get all arcs that terminate at the origin of the arc labelled by *arc_id*. 
 	ScopoInArcs := function(lad, arc_id)
@@ -241,9 +238,11 @@ function(lad)
 	end;
 
 
+
 	# Returns all candidate arcs whose incoming arcs are all labelled with size one. 
 	candidate_arcs := ListBlist(candidate_arcs, List(candidate_arcs, x -> CheckScopoInArcCondition(lad, ScopoInArcs(lad, x))));
 	candidate_scopos := List(candidate_arcs, x -> [[x]]); # Scopos will be lists of arc ids. 
+
 
 	scopo_list := [ [] ]; # The empty scopo is always there. 
 	candidates_to_remove := [];
