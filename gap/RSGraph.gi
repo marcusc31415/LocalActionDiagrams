@@ -738,9 +738,11 @@ function(graph)
 		fi;
 	od;
 
-	# Check there are no self-reverse loops by the MovedPoints of the reverse map.
-	
-	if Size(MovedPoints(RSGraphReverseMap(graph))) <> RSGraphNumberArcs(graph) then
+	# Check there are no self-reverse loops. 
+	# The Filtered list on the left is the number of arcs that are 
+	# fixed by the reverse map (i.e. self-reverse arcs). If it is 
+	# not of length 0 then there is a self-reverse arc. 
+	if Size(Filtered(RSGraphArcIDs(graph), x -> x = x^RSGraphReverseMap(graph))) <> 0 then
 		return false;
 	fi;
 

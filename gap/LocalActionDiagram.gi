@@ -305,7 +305,7 @@ end);
 
 InstallMethod(LocalActionDiagramGroupType, "Type of the corresponding group", [IsLocalActionDiagram], 
 function(lad)
-	local scopos, CotreeFromScopo, cotrees, cotree, labels, start_vertex, orientation, rev_orientation, current_vertex, out_arc_ids, arc_id;
+	local scopos, CotreeFromScopo, cotrees, cotree, labels, start_vertex, orientation, rev_orientation, current_vertex, out_arc_ids, arc_id, idx;
 
 	CotreeFromScopo := function(scopo)
 		local exclude_edges;
@@ -331,8 +331,12 @@ function(lad)
 			fi;
 		fi;
 
-		# Pretty sure this should never happen. 
-		Assert(1, RSGraphNumberVertices(cotree) <> 0);
+		# This cotree corresponds to a "full scopo" (an arc from every
+		# edge of the local action diagram belonging to the scopo). 
+		# There's nothing to consider with this cotree. 
+		if RSGraphNumberVertices(cotree) = 0 then
+			continue;
+		fi;
 
 		# Check for a cycle graph cotree. 
 		if RSGraphIsCycle(cotree) then
@@ -347,6 +351,8 @@ function(lad)
 			current_vertex := RSGraphVertices(cotree)[1];
 			orientation := [];
 			rev_orientation := [];
+			# The cotree is a cycle so this is the number of times
+			# needed to iterate to walk the cyclic path. 
 			for idx in [1..RSGraphNumberVertices(cotree)] do
 				out_arc_ids := RSGraphOutArcs(cotree).(current_vertex);
 				if out_arc_ids[1] in rev_orientation then
@@ -379,4 +385,6 @@ function(lad)
 		fi;
 	od;
 	return "General";
+
+	# TODO: Use the scopo to get the cyclic orientation instead of calculating it.
 end);
