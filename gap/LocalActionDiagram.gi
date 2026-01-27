@@ -302,3 +302,81 @@ function(lad)
 
 	return Set(List(scopo_list, x -> Set(x)));
 end);
+
+InstallMethod(LocalActionDiagramGroupType, "Type of the corresponding group", [IsLocalActionDiagram], 
+function(lad)
+	local scopos, CotreeFromScopo, cotrees, cotree, labels, start_vertex, orientation, rev_orientation, current_vertex, out_arc_ids, arc_id;
+
+	CotreeFromScopo := function(scopo)
+		local exclude_edges;
+		exclude_edges := Concatenation(scopo, List(scopo, x -> x^LocalActionDiagramReverseMap(lad)));
+		return RSGraphSubgraph(LocalActionDiagramRSGraph(lad), Difference(LocalActionDiagramArcIDs(lad), exclude_edges));
+	end;
+
+	scopos := LocalActionDiagramScopos(lad);
+
+	cotrees := List(scopos, x -> CotreeFromScopo(x));
+
+	for cotree in cotrees do
+		# Single vertex cotree with no arcs. 
+		if RSGraphNumberVertices(cotree) = 1 and RSGraphNumberArcs(cotree) = 0 then
+			return "Fixed Vertex";
+		fi;
+
+		# Single vertex cotree with one (self-reverse) arc. 
+		if RSGraphNumberVertices(cotree) = 1 and RSGraphNumberArcs(cotree) = 1 then
+			# The arc is labelled by a set of size 1. 
+			if Size(LocalActionDiagramArcLabels(lad).(RSGraphArcIDs(cotree)[1])) = 1 then
+				return "Edge Inversion";
+			fi;
+		fi;
+
+		# Pretty sure this should never happen. 
+		Assert(1, RSGraphNumberVertices(cotree) <> 0);
+
+		# Check for a cycle graph cotree. 
+		if RSGraphIsCycle(cotree) then
+			labels := List(RSGraphArcIDs(cotree), x -> LocalActionDiagramArcLabels(lad).(x));
+			# Every arc label in the cycle has a size of one. 
+			if ForAll(labels, x -> Size(x) = 1) then
+				return "Lineal";
+			fi;
+
+			# Get cyclic orientation. 
+			start_vertex := RSGraphVertices(cotree)[1];
+			current_vertex := RSGraphVertices(cotree)[1];
+			orientation := [];
+			rev_orientation := [];
+			for idx in [1..RSGraphNumberVertices(cotree)] do
+				out_arc_ids := RSGraphOutArcs(cotree).(current_vertex);
+				if out_arc_ids[1] in rev_orientation then
+					arc_id := out_arc_ids[2];
+				else
+					arc_id := out_arc_ids[1];
+				fi;
+				Add(orientation, arc_id);
+				Add(rev_orientation, arc_id^LocalActionDiagramReverseMap(lad));
+				current_vertex := RSGraphArcs(cotree).(arc_id).terminus;
+			od;
+
+			# Will be true if it's a cyclic orientation. 
+			Assert(1, current_vertex = start_vertex);
+			Assert(1, Size(orientation) = RSGraphNumberVertices(cotree));
+			Assert(1, Size(rev_orientation) = RSGraphNumberVertices(cotree));
+
+			labels := List(orientation, x -> LocalActionDiagramArcLabels(lad).(x));
+			# Every label in this orientation has a size of 1. 
+			if ForAll(labels, x -> Size(x) = 1) then
+				return "Focal";
+			fi;
+
+			labels := List(rev_orientation, x -> LocalActionDiagramArcLabels(lad).(x));
+			# Every label in this orientation has a size of 1. 
+			if ForAll(labels, x -> Size(x) = 1) then
+				return "Focal";
+			fi;
+
+		fi;
+	od;
+	return "General";
+end);

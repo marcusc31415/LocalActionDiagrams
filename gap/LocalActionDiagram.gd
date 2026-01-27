@@ -29,6 +29,7 @@ DeclareAttribute("LocalActionDiagramInArcs", IsLocalActionDiagram);
 
 # Attributes needing some calculation
 DeclareAttribute("LocalActionDiagramScopos", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramGroupType", IsLocalActionDiagram);
 
 # Arc iterator? 
 # --- Option for [arc_id, arc_rec, origin_label, terminus_label]

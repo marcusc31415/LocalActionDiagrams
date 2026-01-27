@@ -83,7 +83,9 @@ function(_arc_list, rev_map, vertex_ids, arc_ids)
 		od;
 	end;
 
-	dfs(vertex_ids[1]);
+	if not IsEmpty(vertex_ids) then
+		dfs(vertex_ids[1]);
+	fi;
 
 
 	if Length(visited_verts) <> Length(vertex_ids) then
@@ -691,6 +693,63 @@ function(graph, type)
 	return RSGraphSubgraph(graph, arc_ids);
 end);
 
+InstallMethod(RSGraphIsCycle, "for an RSGraph", [IsRSGraph],
+function(graph)
+
+	# Need to check if the graph is a cycle graph in the sense of
+	# Reid-Smith. 
+	# Check the 1 and 2 cycle cases separately. 
+	# Then check if number of arcs = 2*number vertices.
+	# The follow the path to see if it's a cycle. 
+	
+	local arc1, out_arcs, current_vertex, start_vertex, iter, RecIter;
+	
+	# 0 vertex case.
+	if RSGraphNumberVertices(graph) = 0 then
+		return false;
+	fi;
+
+	# 1 vertex case. 
+	if RSGraphNumberVertices(graph) = 1 then
+		if RSGraphNumberArcs(graph) = 2 then
+			arc1 := RSGraphArcs(graph).(RSGraphArcIDs(graph)[1]);
+			if arc1.inverse = RSGraphArcIDs(graph)[2] then
+				return true;
+			else
+				return false;
+			fi;
+		else
+			return false;
+		fi;
+	fi;
+		
+	# Must have 2*NumberVertices arcs for it to be a cycle graph. 
+	if RSGraphNumberArcs(graph) <> 2*RSGraphNumberVertices(graph) then
+		return false;
+	fi;
+
+	# Record iteration function. 
+	RecIter := x -> List(RecNames(x), y -> x.(y));
+
+	# Check if each vertex has exactly two arcs originating at it. 
+	for out_arcs in RecIter(RSGraphOutArcs(graph)) do
+		if Size(out_arcs) <> 2 then
+			return false;
+		fi;
+	od;
+
+	# Check there are no self-reverse loops by the MovedPoints of the reverse map.
+	
+	if Size(MovedPoints(RSGraphReverseMap(graph))) <> RSGraphNumberArcs(graph) then
+		return false;
+	fi;
+
+	# The graph has two arcs originating at each vertex and there are
+	# no self-reverse arcs. The only way this can happen is if the graph
+	# is a cycle graph. 
+	return true;
+
+end);
 
 
 

@@ -32,6 +32,7 @@ DeclareAttribute("RSGraphOutNeighbours", IsRSGraph);
 DeclareAttribute("RSGraphInNeighbours", IsRSGraph);
 DeclareAttribute("RSGraphOutArcs", IsRSGraph);
 DeclareAttribute("RSGraphInArcs", IsRSGraph);
+DeclareProperty("RSGraphIsCycle", IsRSGraph);
 
 # Input/Output Format
 DeclareOperation("RSGraphFromMG5String", [IsString]);
