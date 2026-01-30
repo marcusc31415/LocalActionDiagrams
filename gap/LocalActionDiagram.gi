@@ -388,3 +388,131 @@ function(lad)
 
 	# TODO: Use the scopo to get the cyclic orientation instead of calculating it.
 end);
+
+InstallMethod(LocalActionDiagramIsDiscrete, "Check if corresponding group is discrete.", [IsLocalActionDiagram], 
+function(lad)
+	local group_type, v_label, RecIter, scopos, max_scopo, v_in_scopo, arc_id, vertex_id;
+
+	# Helper function for iterating records. 
+	RecIter := x -> List(RecNames(x), y -> x.(y));
+
+	group_type := LocalActionDiagramGroupType(lad);
+
+	# Fixed Vertex and Edge Inversion are always discrete. 
+	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" then
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	# Focal is never discrete. 
+	elif group_type = "Focal" then
+		return false;
+	elif group_type = "Lineal" then
+		# Discrete iff each vertex label is trivial. 
+		for v_label in RecIter(LocalActionDiagramVertexLabels(lad)) do
+			if v_label <> Group(()) then
+				return false;
+			fi;
+		od;
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	elif group_type = "General" then
+		# Get the unique maximal scopo. 
+		scopos := LocalActionDiagramScopos(lad);
+		max_scopo := Position(List(scopos, Length), Maximum(List(scopos, Length)));
+		max_scopo := scopos[max_scopo];
+
+		# Get every vertex in the scopo (origin vertices of edges in scopo).
+		# These are the vertices not in the cotree.
+		v_in_scopo := [];
+		for arc_id in max_scopo do
+			Add(v_in_scopo, LocalActionDiagramArcs(lad).(arc_id).origin);
+		od;
+
+		for vertex_id in LocalActionDiagramVertices(lad) do
+			v_label := LocalActionDiagramVertexLabels(lad).(vertex_id);
+			# Vertex label not in cotree and not trivial.
+			if vertex_id in v_in_scopo then
+				if v_label <> Group(()) then
+					return false;
+				fi;
+			# Vertex label in cotree and not semi-regular. 
+			elif not vertex_id in v_in_scopo then
+				if not IsSemiRegular(v_label, PermGroupDomain(v_label)) then
+					return false;
+				fi;
+			else
+				Error("Something wrong with general type discrete check. Vertex not in scopo and not in cotree...");
+			fi;
+		od;
+		
+		# General type is discrete if above loop finished. 
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	else
+		Error("Something really bad happend with the group type check.");
+	fi;
+
+end);
+
+InstallMethod(LocalActionDiagramIsUniscalar, "Check if corresponding group is discrete.", [IsLocalActionDiagram], 
+function(lad)
+	local group_type, v_label, max_cotree, max_scopo, scopos, arc_id, v_in_scopo, vertex_id, scopo, arc_list, arc_label_rec, arc, remove_domain, max_scopo_with_rev, RecIterName;
+
+	# Helper function for iterating records. 
+	RecIterName := x -> List(RecNames(x), y -> [y, x.(y)]);
+
+	group_type := LocalActionDiagramGroupType(lad);
+
+	# These types are always uniscalar for finite local action diagrams . 
+	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" or group_type = "Lineal" then
+		SetLocalActionDiagramIsUnimodular(lad, true); # Uniscalar implies unimodular. 
+		return true;
+	# Focal is never uniscalar. 
+	elif group_type = "Focal" then
+		return false;
+	elif group_type = "General" then
+		# Get the unique maximum scopo.
+		scopos := LocalActionDiagramScopos(lad);
+		max_scopo := Position(List(scopos, Length), Maximum(List(scopos, Length)));
+		max_scopo := scopos[max_scopo];
+		max_scopo_with_rev := Concatenation(max_scopo, List(max_scopo, x -> x^LocalActionDiagramReverseMap(lad)));
+
+
+
+		# Get every vertex in the scopo (origin vertices of arcs in scopo).
+		# These are the vertices not in the cotree.
+		v_in_scopo := [];
+		for arc_id in max_scopo do
+			Add(v_in_scopo, LocalActionDiagramArcs(lad).(arc_id).origin);
+		od;
+
+
+		arc_list := LocalActionDiagramArcs(lad);
+		arc_label_rec := LocalActionDiagramArcLabels(lad);
+
+		for vertex_id in LocalActionDiagramVertices(lad) do
+			v_label := LocalActionDiagramVertexLabels(lad).(vertex_id);
+			# Vertex in the cotree. Need to check if the vertex label
+			# is semi-regular when restricted to the cotree. 
+			if not vertex_id in v_in_scopo then
+				remove_domain := [];
+				for arc in RecIterName(arc_list) do
+					if arc[2].origin = vertex_id and arc[1] in max_scopo_with_rev then
+						remove_domain := Concatenation(remove_domain, arc_label_rec.(arc[1]));
+					fi;
+				od;
+				if not IsSemiRegular(v_label, Difference(PermGroupDomain(v_label), remove_domain)) then
+					return false;
+				fi;
+			fi;
+		od;
+		
+		# General type is discrete if above loop finished. 
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	else
+		Error("Something really bad happend with the group type check.");
+	fi;
+end);
