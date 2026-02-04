@@ -42,9 +42,13 @@ function(graph, vert_labels, arc_labels)
 		Add(arc_label_combined.(arc[2].origin), arc_labels.(arc[1]));
 	od;
 
+
 	for idx in Set(RecNames(vert_labels)) do
 		if Set(orbits.(idx)) <> Set(arc_label_combined.(idx)) then
 			ErrorNoReturn("Must have an arc label for each orbit of the vertex labels.");
+		fi;
+		if not IsDuplicateFree(arc_label_combined.(idx)) then
+			ErrorNoReturn("Must have exactly one arc label for each orbit of a vertex label.");
 		fi;
 	od;
 end);
@@ -456,7 +460,7 @@ function(lad)
 
 end);
 
-InstallMethod(LocalActionDiagramIsUniscalar, "Check if corresponding group is discrete.", [IsLocalActionDiagram], 
+InstallMethod(LocalActionDiagramIsUniscalar, "Check if corresponding group is uniscalar.", [IsLocalActionDiagram], 
 function(lad)
 	local group_type, v_label, max_cotree, max_scopo, scopos, arc_id, v_in_scopo, vertex_id, scopo, arc_list, arc_label_rec, arc, remove_domain, max_scopo_with_rev, RecIterName;
 
@@ -515,4 +519,108 @@ function(lad)
 	else
 		Error("Something really bad happend with the group type check.");
 	fi;
+end);
+
+InstallMethod(LocalActionDiagramIsUnimodular, "Check if corresponding group is unimodular.", [IsLocalActionDiagram], 
+function(lad)
+	local spanning_tree, sp_arc_ids, cycle_arcs, cycle_basis, cycle_arc, is_unimodular, cycle, arc_id, prod, prod_rev, i, CycleFinder;
+
+	# Find spanning tree by breadth first search to reduce the size of 
+	# each cycle in the basis. 
+	spanning_tree := RSGraphSpanningTree(LocalActionDiagramRSGraph(lad), "bfs");
+
+	sp_arc_ids := RSGraphArcIDs(spanning_tree);
+
+	# Get each arc not in the spanning tree. 
+	cycle_arcs := Difference(LocalActionDiagramArcIDs(lad), sp_arc_ids);
+
+	# Cycle finding function. 
+	CycleFinder := function(added_arc_id)
+		local cycle, arc_list, visited_verts, dfs, rev_map, arc_id, dead_end, found_cycle, current_vertex, start_vertex, visited_arcs, neighbours;
+
+		arc_list := RSGraphArcs(spanning_tree);
+		rev_map := LocalActionDiagramReverseMap(lad);
+		cycle := [added_arc_id];
+		visited_arcs := [added_arc_id, added_arc_id^rev_map];
+		# This arc isn't in the spanning tree so we need to check it 
+		# from the whole local action diagram. 
+		start_vertex := LocalActionDiagramArcs(lad).(added_arc_id).origin;
+		current_vertex := LocalActionDiagramArcs(lad).(added_arc_id).terminus;
+
+		# The added arc is a loop. 
+		if start_vertex = current_vertex then
+			if added_arc_id^rev_map <> added_arc_id then
+				return [added_arc_id, added_arc_id^rev_map];
+			else
+				return fail;
+			fi;
+		fi;
+
+		found_cycle := false;
+
+		while true do
+			neighbours := RSGraphOutArcs(spanning_tree).(current_vertex);
+			dead_end := true;
+			for arc_id in neighbours do
+				# Haven't searched on this arc yet. 
+				if not arc_id in visited_arcs then
+					Add(visited_arcs, arc_id);
+					Add(visited_arcs, arc_id^rev_map);
+					current_vertex := arc_list.(arc_id).terminus;
+					Add(cycle, arc_id);
+					dead_end := false;
+					if current_vertex = start_vertex then
+						found_cycle := true;
+					fi;
+					break;
+				fi;
+			od;
+
+			if found_cycle = true then
+				break;
+			fi;
+
+			if dead_end = true then
+				Remove(cycle);
+				current_vertex := arc_list.(Last(cycle)).terminus;
+			fi;
+		od;
+
+		return cycle;
+
+	end;
+
+	cycle_basis := [];
+	#checked_arcs := [];
+
+	for cycle_arc in cycle_arcs do
+		cycle := CycleFinder(cycle_arc);
+		if cycle <> fail then
+			Add(cycle_basis, cycle);
+		fi;
+	od;
+
+
+	is_unimodular := true;
+
+	for cycle in cycle_basis do
+		i := 1;
+		prod := 1;
+		prod_rev := 1;
+		for arc_id in cycle do
+			if i mod 2 = 1 then
+				prod := prod * Size(LocalActionDiagramArcLabels(lad).(arc_id));
+				i := i + 1;
+			else
+				prod_rev := prod_rev * Size(LocalActionDiagramArcLabels(lad).(arc_id));
+				i := i + 1;
+			fi;
+		od;
+		if prod <> prod_rev then
+			is_unimodular := false;
+			break;
+		fi;
+	od;
+
+	return is_unimodular;
 end);

@@ -682,7 +682,25 @@ graph -> RSGraphSpanningTree(graph, "bfs"));
 
 InstallMethod(RSGraphSpanningTree, "for and RSGraph", [IsRSGraph, IsString],
 function(graph, type)
-	local arc_ids;
+	local arc_ids, vertex_ids, arc_records, id, subgraph_data;
+
+	# Deal with the one vertex case separately. 
+	if RSGraphNumberVertices(graph) = 1 then
+		vertex_ids := RSGraphVertices(graph);
+		arc_records := rec();
+
+		subgraph_data := rec();
+
+		subgraph_data.vertices := vertex_ids;
+		subgraph_data.arc_ids := [];
+
+		subgraph_data.arcs := arc_records;
+		subgraph_data.reverse_map := RSGraphReverseMap(graph);
+
+		LAD_RSGraphConsCheck@(subgraph_data.arcs, subgraph_data.reverse_map, subgraph_data.vertices, subgraph_data.arc_ids);
+
+		return RSGraphConsNC(IsRSGraph, subgraph_data);
+	fi;
 
 	if type = "dfs" then
 		arc_ids := LAD_DFS_Tree@(graph);
