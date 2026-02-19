@@ -771,5 +771,84 @@ function(graph)
 
 end);
 
+# Converts an RSGraph with *N* vertices and *M* edges to have
+# vertex ids [1..N] and arc ids [1..M]. 
+InstallMethod(RSGraphToStandardForm, "for an RSGraph", [IsRSGraph],
+function(graph)
+	local new_vertex_ids, vertex_id_map, new_arc_ids, arc_id_map, arc_id_list, new_arcs, arc, new_arc, new_rev_map, MappingPerm, new_graph, checked_ids;
+
+	arc_id_list := RSGraphArcIDs(graph);
+	new_vertex_ids := [1..RSGraphNumberVertices(graph)];
+	new_arc_ids := [1..RSGraphNumberArcs(graph)];
+
+
+	# Returns the product of cycles in the form (original[i], new[i]).
+	MappingPerm := function(original, new)
+		local tuple_list, idx, map;
+		
+		tuple_list := [];
+		# Create a list of DirectProductElements of the form [original[i], new[i]]. 
+		for idx in [1..Size(original)] do
+			Add(tuple_list, DirectProductElement([original[idx], new[idx]]));
+		od;
+
+		return GeneralMappingByElements(Domain(original), Domain(new), tuple_list);
+	end;
+
+	# These map the original vertex/arc id to one in the standard range. 
+	# Can't use the built in MappingPermListList as it's not guaranteed 
+	# to also work in the other direction. 
+	vertex_id_map := MappingPerm(RSGraphVertices(graph), new_vertex_ids);
+	arc_id_map := MappingPerm(RSGraphArcIDs(graph), new_arc_ids);
+
+
+	new_arcs := rec();
+	new_rev_map := ();
+	checked_ids := [];
+
+	for arc in RSGraphArcIterator(graph) do
+		new_arc := rec();
+		new_arc.origin := arc[2].origin^vertex_id_map;
+		new_arc.terminus := arc[2].terminus^vertex_id_map;
+		new_arc.inverse := arc[2].inverse^arc_id_map;
+
+		new_arcs.(arc[1]^arc_id_map) := new_arc;
+
+		# Construct the new reverse map. 
+		# The checked_ids check ensures we only multiply 
+		# by each cycle once. 
+		if not arc[1] in checked_ids then
+			new_rev_map := new_rev_map*CycleFromList([arc[1]^arc_id_map, arc[2].inverse^arc_id_map]);
+			Add(checked_ids, arc[1]);
+			Add(checked_ids, arc[2].inverse);
+		fi;
+	od;
+
+
+	new_graph := rec();
+
+	new_graph.vertices := new_vertex_ids;
+	new_graph.arc_ids := new_arc_ids;
+
+	new_graph.arcs := new_arcs;
+	new_graph.reverse_map := new_rev_map;
+
+	LAD_RSGraphConsCheck@(new_graph.arcs, new_graph.reverse_map, new_graph.vertices, new_graph.arc_ids);
+
+	return RSGraphConsNC(IsRSGraph, new_graph);
+end);
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -43,6 +43,8 @@ DeclareOperation("RSGraphArcIterator", [IsRSGraph]);
 DeclareOperation("RSGraphSubgraph", [IsRSGraph, IsList]);
 DeclareOperation("RSGraphSubgraphNC", [IsRSGraph, IsList]);
 
+DeclareOperation("RSGraphToStandardForm", [IsRSGraph]);
+
 # Optional argument for bfs/dfs switch. 
 DeclareOperation("RSGraphSpanningTree", [IsRSGraph]);
 DeclareOperation("RSGraphSpanningTree", [IsRSGraph, IsString]);
