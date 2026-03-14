@@ -775,15 +775,13 @@ end);
 # vertex ids [1..N] and arc ids [1..M]. 
 InstallMethod(RSGraphToStandardForm, "for an RSGraph", [IsRSGraph],
 function(graph)
-	local new_vertex_ids, vertex_id_map, new_arc_ids, arc_id_map, arc_id_list, new_arcs, arc, new_arc, new_rev_map, MappingPerm, new_graph, checked_ids;
+	local new_vertex_ids, vertex_id_map, new_arc_ids, arc_id_map, new_arcs, arc, new_arc, new_rev_map, MappingCreator, new_graph, checked_ids, arcs, ret, cycle;
 
-	arc_id_list := RSGraphArcIDs(graph);
 	new_vertex_ids := [1..RSGraphNumberVertices(graph)];
-	new_arc_ids := [1..RSGraphNumberArcs(graph)];
 
 
-	# Returns the product of cycles in the form (original[i], new[i]).
-	MappingPerm := function(original, new)
+	# Returns the function mapping original[i] to new[i]. 
+	MappingCreator := function(original, new)
 		local tuple_list, idx, map;
 		
 		tuple_list := [];
@@ -798,8 +796,25 @@ function(graph)
 	# These map the original vertex/arc id to one in the standard range. 
 	# Can't use the built in MappingPermListList as it's not guaranteed 
 	# to also work in the other direction. 
-	vertex_id_map := MappingPerm(RSGraphVertices(graph), new_vertex_ids);
-	arc_id_map := MappingPerm(RSGraphArcIDs(graph), new_arc_ids);
+	vertex_id_map := MappingCreator(RSGraphVertices(graph), new_vertex_ids);
+
+	arcs := [];
+
+	# List of the form [[id, [origin, terminus]], ...] where origin and 
+	# terminus are in terms of the new vertex ids. 
+	for arc in RSGraphArcIterator(graph) do
+		Add(arcs, [arc[1], [arc[2].origin^vertex_id_map, arc[2].terminus^vertex_id_map]]);
+	od;
+
+	# Sort the arc list in lexicographical order --- i.e. [1, 1], [1, 2], [2, 1], [2, 2], etc. 
+	SortBy(arcs, x -> x[2]);
+
+	new_arc_ids := [1..RSGraphNumberArcs(graph)];
+
+	# Map from the old arc ids to the standard range. The arc ids have
+	# been sorted so this will be in lexicographical order. 
+	arc_id_map := MappingCreator(List(arcs, x -> x[1]), new_arc_ids);
+
 
 
 	new_arcs := rec();
@@ -818,7 +833,13 @@ function(graph)
 		# The checked_ids check ensures we only multiply 
 		# by each cycle once. 
 		if not arc[1] in checked_ids then
-			new_rev_map := new_rev_map*CycleFromList([arc[1]^arc_id_map, arc[2].inverse^arc_id_map]);
+			# If it's a self-reverse loop then CycleFromList will fail. 
+			if arc[1] = arc[2].inverse then
+				cycle := ();
+			else
+				cycle := CycleFromList([arc[1]^arc_id_map, arc[2].inverse^arc_id_map]);
+			fi;
+			new_rev_map := new_rev_map*cycle;
 			Add(checked_ids, arc[1]);
 			Add(checked_ids, arc[2].inverse);
 		fi;
@@ -835,7 +856,12 @@ function(graph)
 
 	LAD_RSGraphConsCheck@(new_graph.arcs, new_graph.reverse_map, new_graph.vertices, new_graph.arc_ids);
 
-	return RSGraphConsNC(IsRSGraph, new_graph);
+	ret := rec();
+	ret.graph := RSGraphConsNC(IsRSGraph, new_graph);
+	ret.vertex_id_map := vertex_id_map;
+	ret.arc_id_map := arc_id_map;
+
+	return ret;
 end);
 
 

@@ -28,6 +28,17 @@ Persons := [
     Place := "Newcastle",
     Institution := "The University of Newcastle, Australia",
   ),
+  rec(
+    FirstNames := "Stephan",
+    LastName := "Toriner",
+    WWWHome := "https://newcastle.edu.au",
+    Email := "stephan.tornier@newcastle.edu.au",
+    IsAuthor := true,
+    IsMaintainer := false,
+    PostalAddress := "No",
+    Place := "Newcastle",
+    Institution := "The University of Newcastle, Australia",
+  ),
 ],
 
 #SourceRepository := rec( Type := "TODO", URL := "URL" ),
@@ -63,7 +74,8 @@ PackageDoc := rec(
 
 Dependencies := rec(
   GAP := ">= 4.11",
-  NeededOtherPackages := [ ["Digraphs", "1.5.3"], ["datastructures", "0.2.7"] ],
+  #NeededOtherPackages := [ ["Digraphs", "1.5.3"], ["datastructures", "0.2.7"] ],
+  NeededOtherPackages := [],
   SuggestedOtherPackages := [ ],
   ExternalConditions := [ ],
 ),
@@ -72,6 +84,22 @@ Extensions := [
 	rec (
 		needed := [ ["ugaly", "4.1.3"] ],
 		filename := "gap/ugaly_extension_read.g",
+	),
+	rec (
+		needed := [ ["digraphs", "1.13.1"] ],
+		filename := "gap/DigraphsConversion.gd",
+	),
+	rec (
+		needed := [ ["digraphs", "1.13.1"] ],
+		filename := "gap/DigraphsConversion.gi",
+	),
+	rec (
+		needed := [ ["digraphs", "1.13.1"] ],
+		filename := "gap/Isomorphism.gd",
+	),
+	rec (
+		needed := [ ["digraphs", "1.13.1"] ],
+		filename := "gap/Isomorphism.gi",
 	),
 ],
 

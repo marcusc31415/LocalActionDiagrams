@@ -1,1 +1,3 @@
-DeclareOperation("AutomorphismGroup", [IsRSGraph]);
+DeclareAttribute("AutomorphismGroup", IsRSGraph);
+
+DeclareOperation("IsomorphismRSGraphs", [IsRSGraph, IsRSGraph]);

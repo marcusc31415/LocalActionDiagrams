@@ -10,4 +10,3 @@ ReadPackage( "LocalActionDiagrams", "gap/PermGroupDomain.gd");
 
 ReadPackage( "LocalActionDiagrams", "gap/LocalActionDiagram.gd");
 
-ReadPackage( "LocalActionDiagrams", "gap/io.gd");

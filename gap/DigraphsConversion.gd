@@ -1,2 +1,2 @@
-DeclareOperation("RSGraphFromDigraph", [IsDigraph]);
-DeclareOperation("RSGraphToDigraph", [IsDigraph]);
+DeclareOperation("RSGraphFromDigraph", [IsDigraph, IsPerm]);
+DeclareOperation("RSGraphToDigraph", [IsRSGraph]);
