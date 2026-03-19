@@ -97,7 +97,7 @@ end);
 # Then find the one compatible with the isomorphism and reverse map. 
 InstallMethod(IsomorphismRSGraphs, "Isormorphiism between two RSGraphs", [IsRSGraph, IsRSGraph],
 function(graph1, graph2)
-	local digraph_rec1, digraph_rec2, digraph1, digraph2, base_iso, MapPerm, iso, aut, proj_1, proj_2, aut_grp, aut_vertex, aut_arc, vert_iso, arc_iso, edge_gp, edge, mults, start_counter, counter, current_item, digraph1_edges, perm;
+	local digraph_rec1, digraph_rec2, digraph1, digraph2, base_iso, MapPerm, iso, aut, proj_1, proj_2, aut_grp, aut_vertex, aut_arc, vert_iso, arc_iso, edge_gp, edge, mults, start_counter, counter, current_item, digraph1_edges, perm, mapped_arcs, arcs_with_id;
 
 	# Take the permutation *perm* on set [1..N] (= Range(map1) = Range(map2))
 	# and make it the same map from Source(map1) to Source(map2). 
@@ -132,14 +132,31 @@ function(graph1, graph2)
 	# If it's not a multigraph then there's no compatibility condition
 	# with the reverse map to check. 
 	if not IsList(base_iso) then
-		return MapPerm(base_iso, digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
+		vert_iso := MapPerm(base_iso, digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
+		# If they are both permutations then return them as permutations. 
+		if Source(vert_iso) = Range(vert_iso) then
+			vert_iso := MappingPermListList(List(Source(vert_iso)), List(Source(vert_iso), x -> x^vert_iso));
+		fi;
+		return vert_iso;
 	fi;
+
+	# If it is a multigraph then the arc isomorphism from Digraphs 
+	# may not be correct for our graphs. The vertex isomorphism 
+	# will be correct. We need to calculate a correct "base" arc
+	# isomorphism. 
+	mapped_arcs := List(DigraphEdges(digraph1), x -> [x[1]^base_iso[1], x[2]^base_iso[1]]);
+	base_iso[2] := SortingPerm(mapped_arcs);
 
 	# Check if the base isomorphism is compatible with the reverse mappings (only needed for
 	# multigraphs). 
 	if base_iso[2]*digraph_rec1.reverse_map = digraph_rec2.reverse_map*base_iso[2] then
 		vert_iso := MapPerm(base_iso[1], digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
 		arc_iso := MapPerm(base_iso[2], digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
+		# If they are both permutations then return them as permutations. 
+		if Source(vert_iso) = Range(vert_iso) and Source(arc_iso) = Range(arc_iso) then
+			vert_iso := MappingPermListList(List(Source(vert_iso)), List(Source(vert_iso), x -> x^vert_iso));
+			arc_iso := MappingPermListList(List(Source(arc_iso)), List(Source(arc_iso), x -> x^arc_iso));
+		fi;
 		return [vert_iso, arc_iso];
 	fi;
 
@@ -169,6 +186,12 @@ function(graph1, graph2)
 		if iso*digraph_rec1.reverse_map = digraph_rec2.reverse_map*iso then
 			vert_iso := MapPerm(base_iso[1], digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
 			arc_iso := MapPerm(iso, digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
+
+			# If they are both permutations then return them as permutations. 
+			if Source(vert_iso) = Range(vert_iso) and Source(arc_iso) = Range(arc_iso) then
+				vert_iso := MappingPermListList(List(Source(vert_iso)), List(Source(vert_iso), x -> x^vert_iso));
+				arc_iso := MappingPermListList(List(Source(arc_iso)), List(Source(arc_iso), x -> x^arc_iso));
+			fi;
 			return [vert_iso, arc_iso];
 		fi;
 	od; 
