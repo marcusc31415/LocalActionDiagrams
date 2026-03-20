@@ -88,6 +88,7 @@ function(graph)
 
 	arc_gen_list := Concatenation(arc_gen_list, List(GeneratorsOfGroup(aut_grp_arcs), x -> DirectProductElement([(), x])));
 
+
 	rs_aut_grp := Centraliser(GroupByGenerators(arc_gen_list), DirectProductElement([(), digraph_rec.reverse_map]));
 
 	return MapGroup(rs_aut_grp, digraph_rec.vertex_id_map, digraph_rec.arc_id_map);
@@ -95,7 +96,7 @@ end);
 
 # Use the "flatten edges" Digrpahs function to get all possible edge permutations. 
 # Then find the one compatible with the isomorphism and reverse map. 
-InstallMethod(IsomorphismRSGraphs, "Isormorphiism between two RSGraphs", [IsRSGraph, IsRSGraph],
+InstallMethod(IsomorphismRSGraphs, "Isormorphism between two RSGraphs", [IsRSGraph, IsRSGraph],
 function(graph1, graph2)
 	local digraph_rec1, digraph_rec2, digraph1, digraph2, base_iso, MapPerm, iso, aut, proj_1, proj_2, aut_grp, aut_vertex, aut_arc, vert_iso, arc_iso, edge_gp, edge, mults, start_counter, counter, current_item, digraph1_edges, perm, mapped_arcs, arcs_with_id;
 
@@ -149,7 +150,7 @@ function(graph1, graph2)
 
 	# Check if the base isomorphism is compatible with the reverse mappings (only needed for
 	# multigraphs). 
-	if base_iso[2]*digraph_rec1.reverse_map = digraph_rec2.reverse_map*base_iso[2] then
+	if base_iso[2]*digraph_rec2.reverse_map = digraph_rec1.reverse_map*base_iso[2] then
 		vert_iso := MapPerm(base_iso[1], digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
 		arc_iso := MapPerm(base_iso[2], digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
 		# If they are both permutations then return them as permutations. 
@@ -183,6 +184,8 @@ function(graph1, graph2)
 	for perm in edge_gp do
 		iso := perm*base_iso[2];
 
+		Print(base_iso);
+
 		if iso*digraph_rec1.reverse_map = digraph_rec2.reverse_map*iso then
 			vert_iso := MapPerm(base_iso[1], digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
 			arc_iso := MapPerm(iso, digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
@@ -196,35 +199,59 @@ function(graph1, graph2)
 		fi;
 	od; 
 
-	## If it's not then we need to find a compatible one. 
-	#aut_grp := AutomorphismGroup(digraph1); 
-	#proj_1 := Projection(aut, 1);
-	#proj_2 := Projection(aut, 2);
-
-	#for aut in aut_grp do
-	#	aut_vertex := Image(proj_1, aut);
-	#	aut_arc := Image(proj_2, aut);
-
-	#	# Get a new isomorphism by first applying the automorphism
-	#	# to digraph1 then the base isomorphism. 
-	#	iso := [aut_vertex*base_iso[1], aut_arc*base_iso[2]];
-
-	#	if iso[2]*digraph_rec1.reverse_map = digraph_rec2.reverse_map*iso[2] then
-	#		vert_iso := MapPerm(iso[1], digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
-	#		arc_iso := MapPerm(iso[2], digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
-	#		return [vert_iso, arc_iso];
-	#	fi;
-
-	#od;
-
 	# There's no isomorphism that respects the reverse map. 
 	return fail;
 
 end);
 
+InstallMethod(RSGraphsIsomorphismsIterator, "Iterator of all isomorphisms between two RSGraphs", [IsRSGraph, IsRSGraph],
+function(graph1, graph2)
+	local NextIterator, IsDoneIterator, ShallowCopy;
 
+	ShallowCopy := function(iter)
+		return rec(
+			graph1 := iter!.graph1,
+			graph2 := iter!.graph2,
+			iso := iter!.iso,
+			aut_iter := iter!.aut_iter);
+	end;
 
+	IsDoneIterator := function(iter)
+		return iter!.aut_iter!.IsDoneIterator(iter!.aut_iter);
+	end;
 
+	NextIterator := function(iter)
+		local aut, aut_vert_map, aut_arc_map;
+		aut := iter!.aut_iter!.NextIterator(iter!.aut_iter);
+		if IsPerm(iter!.iso[1]) and IsPerm(iter!.iso[2]) then
+			return DirectProductElement([aut[1]*iter!.iso[1], aut[2]*iter!.iso[2]]);
+		elif IsGeneralMapping(iter!.iso[1]) and IsGeneralMapping(iter!.iso[2]) then
+			aut_vert_map := GeneralMappingByElements(Source(iter!.iso[1]), Source(iter!.iso[1]), List(RSGraphVertices(iter!.graph1), x -> DirectProductElement([x, x^aut[1]])));
+			aut_arc_map := GeneralMappingByElements(Source(iter!.iso[2]), Source(iter!.iso[2]), List(RSGraphArcIDs(iter!.graph1), x -> DirectProductElement([x, x^aut[2]])));
+			return DirectProductElement([ aut_vert_map * iter!.iso[1], aut_arc_map * iter!.iso[2]]);
+		else
+			ErrorNoReturn("Problem with isomorphism function output");
+		fi;
+	end;
+
+	return IteratorByFunctions(rec(
+		NextIterator := NextIterator,
+		IsDoneIterator := IsDoneIterator,
+		ShallowCopy := ShallowCopy,
+		iso := IsomorphismRSGraphs(graph1, graph2),
+		aut_iter := Iterator(AutomorphismGroup(graph1)),
+		graph1 := graph1,
+		graph2 := graph2));
+end);
+
+InstallMethod(RSGraphsIsomorphismsIterator, "Isormorphism between two RSGraphs", [IsRSGraph, IsRSGraph, IsInt],
+function(graph1, graph2, which_graph_aut)
+	if which_graph_aut = 2 then
+		return RSGraphsIsomorphismsIterator(graph2, graph1);
+	else
+		return RSGraphsIsomorphismsIterator(graph1, graph2);
+	fi;
+end);
 
 
 
