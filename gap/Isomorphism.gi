@@ -82,6 +82,7 @@ function(graph)
 		arc_mapped := List(arc_list, x -> [x[1]^gen, x[2]^gen]); #
 		# Get the permutation that sorts the edges. 
 		# This is the automorphism on the arcs. 
+		# Can use this one as digraphs have arc labels [1..N]. 
 		sort_perm := SortingPerm(arc_mapped); 
 		Add(arc_gen_list, DirectProductElement([gen, sort_perm]));
 	od;
@@ -98,7 +99,7 @@ end);
 # Then find the one compatible with the isomorphism and reverse map. 
 InstallMethod(IsomorphismRSGraphs, "Isormorphism between two RSGraphs", [IsRSGraph, IsRSGraph],
 function(graph1, graph2)
-	local digraph_rec1, digraph_rec2, digraph1, digraph2, base_iso, MapPerm, iso, aut, proj_1, proj_2, aut_grp, aut_vertex, aut_arc, vert_iso, arc_iso, edge_gp, edge, mults, start_counter, counter, current_item, digraph1_edges, perm, mapped_arcs, arcs_with_id;
+	local digraph_rec1, digraph_rec2, digraph1, digraph2, base_iso, MapPerm, iso, aut, proj_1, proj_2, aut_grp, aut_vertex, aut_arc, vert_iso, arc_iso, edge_gp, edge, mults, start_counter, counter, current_item, digraph1_edges, perm, mapped_arcs, arcs_with_id, arc_list, arc_mapped, sort_perm;
 
 	# Take the permutation *perm* on set [1..N] (= Range(map1) = Range(map2))
 	# and make it the same map from Source(map1) to Source(map2). 
@@ -134,11 +135,19 @@ function(graph1, graph2)
 	# with the reverse map to check. 
 	if not IsList(base_iso) then
 		vert_iso := MapPerm(base_iso, digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
+		
+		# Get an arc isomorphism from the vertex isomorphism. 
+		arc_list := DigraphEdges(digraph1);
+		arc_mapped := List(arc_list, x -> [x[1]^vert_iso, x[2]^vert_iso]); #
+		sort_perm := SortingPerm(arc_mapped); # Sorting this list gives the arc isomorphism. 
+		arc_iso := MapPerm(sort_perm, digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
+
 		# If they are both permutations then return them as permutations. 
-		if Source(vert_iso) = Range(vert_iso) then
+		if Source(vert_iso) = Range(vert_iso) and Source(arc_iso) = Range(arc_iso) then
 			vert_iso := MappingPermListList(List(Source(vert_iso)), List(Source(vert_iso), x -> x^vert_iso));
+			arc_iso := MappingPermListList(List(Source(arc_iso)), List(Source(arc_iso), x -> x^arc_iso));
 		fi;
-		return vert_iso;
+		return [vert_iso, arc_iso];
 	fi;
 
 	# If it is a multigraph then the arc isomorphism from Digraphs 
@@ -146,6 +155,7 @@ function(graph1, graph2)
 	# will be correct. We need to calculate a correct "base" arc
 	# isomorphism. 
 	mapped_arcs := List(DigraphEdges(digraph1), x -> [x[1]^base_iso[1], x[2]^base_iso[1]]);
+	# Can use this one as digraphs have arc labels [1..N]. 
 	base_iso[2] := SortingPerm(mapped_arcs);
 
 	# Check if the base isomorphism is compatible with the reverse mappings (only needed for
@@ -217,7 +227,7 @@ function(graph1, graph2)
 	end;
 
 	IsDoneIterator := function(iter)
-		return iter!.aut_iter!.IsDoneIterator(iter!.aut_iter);
+		return (iter!.iso = fail) or (iter!.aut_iter!.IsDoneIterator(iter!.aut_iter));
 	end;
 
 	NextIterator := function(iter)
@@ -244,18 +254,139 @@ function(graph1, graph2)
 		graph2 := graph2));
 end);
 
-InstallMethod(RSGraphsIsomorphismsIterator, "Isormorphism between two RSGraphs", [IsRSGraph, IsRSGraph, IsInt],
-function(graph1, graph2, which_graph_aut)
-	if which_graph_aut = 2 then
-		return RSGraphsIsomorphismsIterator(graph2, graph1);
-	else
-		return RSGraphsIsomorphismsIterator(graph1, graph2);
-	fi;
+
+InstallMethod(IsomorphismLocalActionDiagrams, "Isormorphism between two LocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram],
+function(lad1, lad2)
+	local iso, lad_iso, graph1, graph2, vert_id, arc_id, bijections, out_arc_ids, labels_original, labels_mapped, labels_original_flat, labels_mapped_flat, perm, perms, labels_mapped_flat_perm, bijection, BijectionMap, ConjugateBijection, bad_iso;
+
+	# Return the general mapping which maps list1[i] to list2[i]. 
+	BijectionMap := function(list1, list2)
+		local dp_elms;
+
+		dp_elms := List([1..Size(list1)], idx -> DirectProductElement([list1[idx], list2[idx]]));
+		return GeneralMappingByElements(Domain(list1), Domain(list2), dp_elms);
+	end;
+
+	ConjugateBijection := function(map, group)
+		local generator_maps, gen, new_generator_maps, new_gens, range_list, gen_map, dp_list;
+
+		generator_maps := [];
+
+		for gen in GeneratorsOfGroup(group) do
+			dp_list := List(PermGroupDomain(group), x -> DirectProductElement([x, x^gen]));
+			gen_map := GeneralMappingByElements(Domain(PermGroupDomain(group)), Domain(PermGroupDomain(group)), dp_list);
+			Add(generator_maps, gen_map);
+		od;
+
+
+		# Conjugate by *map*. (left to right composition). 
+		new_generator_maps := List(generator_maps, x -> InverseGeneralMapping(map)*x*map);
+
+		new_gens := [];
+		for gen_map in new_generator_maps do
+			range_list := SortedList(List(Range(map)));
+			# Apply gen_map to to the (sorted) list that map can map to
+			# (i.e. the elements that the second group acts on).
+			gen := MappingPermListList(range_list, List(range_list, x -> x^gen_map));
+			Add(new_gens, gen);
+		od;
+
+
+
+		return GroupByGenerators(new_gens);
+	end;
+
+	graph1 := LocalActionDiagramRSGraph(lad1);
+	graph2 := LocalActionDiagramRSGraph(lad2);
+
+
+	for iso in RSGraphsIsomorphismsIterator(graph1, graph2) do
+		# First check the arc maps sets of the same size to each other. 
+		# If not then this isomorphism doesn't work. 
+		bad_iso := false;
+		for arc_id in LocalActionDiagramArcIDs(lad1) do
+			if Size(LocalActionDiagramArcLabels(lad1).(arc_id)) <> Size(LocalActionDiagramArcLabels(lad2).(arc_id^iso[2])) then 
+				bad_iso := true;
+				break;
+			fi;
+		od;
+
+		if bad_iso then
+			continue;
+		fi;
+
+		# Now check that the group labels are isomorphic to each other.  
+		# If not then this isomorphism doesn't work.  
+		for vert_id in LocalActionDiagramVertices(lad1) do
+			if IsomorphismGroups(LocalActionDiagramVertexLabels(lad1).(vert_id), LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1])) = fail then
+				bad_iso := true;
+				break;
+			fi;
+		od;
+
+		if bad_iso then
+			continue;
+		fi;
+
+
+		# Now search for conjugate bijections for the vertex labels. 
+		bijections := rec();
+
+		for vert_id in LocalActionDiagramVertices(lad1) do
+			out_arc_ids := LocalActionDiagramOutArcs(lad1).(vert_id);
+			labels_original := [];
+			labels_mapped := [];
+
+			# labels_original[i] must be mapped to labels_mapped[i] (from isomorphism 
+			# definition to Reid-Smith. This reduces the search space for the conjugate 
+			# bijections. 
+			for arc_id in out_arc_ids do
+				Add(labels_original, LocalActionDiagramArcLabels(lad1).(arc_id));
+				Add(labels_mapped, LocalActionDiagramArcLabels(lad2).(arc_id^iso[2]));
+			od;
+
+			# Get every permutation of labels_mapped that respects the partition. 
+			perms := DirectProduct(List(labels_mapped, x -> SymmetricGroup(Size(x))));
+
+
+			labels_original_flat := Flat(labels_original);
+			labels_mapped_flat := Flat(labels_mapped);
+
+			bijection := fail;
+			for perm in perms do
+				labels_mapped_flat_perm := Permuted(Flat(labels_mapped_flat), perm);
+
+
+				bijection := BijectionMap(labels_original_flat, labels_mapped_flat_perm);
+				
+				# If this is a conjugate bijection add it to the bijection list and
+				# break out of this loop. 
+				if ConjugateBijection(bijection, LocalActionDiagramVertexLabels(lad1).(vert_id)) = LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]) then
+					bijections.(vert_id) := bijection;
+					break;
+				fi;
+
+				bijection := fail;
+			od;
+
+			# This vertex map doesn't work so we break out of the loop and continue 
+			# to the next isomorphism. 
+			if bijection = fail then
+				bijections := fail;
+				break;
+			fi;
+		od;
+
+		# A conjugate bijection was found for each vertex under this isomorphism. 
+		# This is an RSGraph isomorphism. 
+		if bijections <> fail then
+			return [iso[1], iso[2], bijections];
+		fi;
+	od;
+
+	return fail; 
+
 end);
-
-
-
-
 
 
 

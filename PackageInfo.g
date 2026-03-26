@@ -30,7 +30,7 @@ Persons := [
   ),
   rec(
     FirstNames := "Stephan",
-    LastName := "Toriner",
+    LastName := "Tornier",
     WWWHome := "https://newcastle.edu.au",
     Email := "stephan.tornier@newcastle.edu.au",
     IsAuthor := true,
