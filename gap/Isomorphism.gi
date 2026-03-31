@@ -49,6 +49,10 @@ function(graph)
 			Add(conj_gens, DirectProductElement(new_gen));
 		od;
 
+		if Size(conj_gens) = 0 then
+			conj_gens := [DirectProductElement([(), ()])];
+		fi;
+
 		return GroupByGenerators(conj_gens);
 	end;
 
@@ -194,8 +198,6 @@ function(graph1, graph2)
 	for perm in edge_gp do
 		iso := perm*base_iso[2];
 
-		Print(base_iso);
-
 		if iso*digraph_rec1.reverse_map = digraph_rec2.reverse_map*iso then
 			vert_iso := MapPerm(base_iso[1], digraph_rec1.vertex_id_map, digraph_rec2.vertex_id_map);
 			arc_iso := MapPerm(iso, digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
@@ -257,7 +259,7 @@ end);
 
 InstallMethod(IsomorphismLocalActionDiagrams, "Isormorphism between two LocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram],
 function(lad1, lad2)
-	local iso, lad_iso, graph1, graph2, vert_id, arc_id, bijections, out_arc_ids, labels_original, labels_mapped, labels_original_flat, labels_mapped_flat, perm, perms, labels_mapped_flat_perm, bijection, BijectionMap, ConjugateBijection, bad_iso;
+	local iso, lad_iso, graph1, graph2, vert_id, arc_id, bijections, out_arc_ids, labels_original, labels_mapped, labels_original_flat, labels_mapped_flat, perm, perms, labels_mapped_flat_perm, bijection, BijectionMap, ConjugateBijection, bad_iso, G1, G2, S, norm, all_conj, found_perm, labels_bijection_mapped;
 
 	# Return the general mapping which maps list1[i] to list2[i]. 
 	BijectionMap := function(list1, list2)
@@ -344,6 +346,45 @@ function(lad1, lad2)
 				Add(labels_original, LocalActionDiagramArcLabels(lad1).(arc_id));
 				Add(labels_mapped, LocalActionDiagramArcLabels(lad2).(arc_id^iso[2]));
 			od;
+
+			#### Might be slower than the "brute force" method? ####
+
+			####G1 := LocalActionDiagramVertexLabels(lad1).(vert_id);
+			####G2 := LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]);
+			####S := SymmetricGroup(Maximum(Union(MovedPoints(G1), MovedPoints(G2))));
+
+			##### Find a permutation that conjugates G1 into G2. 
+			####bijection := RepresentativeAction(S, G1, G2);
+
+			####if bijection = fail then
+			####	bijections := fail;
+			####	break;
+			####fi;
+
+			##### Get every such permutation to find one with the right 
+			##### orbit structure. 
+			####norm := Normaliser(S, G1); 
+			####all_conj := RightCoset(norm, bijection);
+
+			####found_perm := false;
+			####for perm in all_conj do
+			####	if OnTuplesTuples(labels_original, perm) = labels_mapped then
+			####		bijection := perm;
+			####		found_perm := true;
+			####		break;
+			####	fi;
+			####od;
+
+			####if not found_perm then
+			####	bijections := fail;
+			####	break;
+			####fi;
+
+			####labels_original_flat := Flat(labels_original);
+			####labels_bijection_mapped := List(labels_original_flat, x -> x^bijection);
+	
+
+			####bijections.(vert_id) := BijectionMap(labels_original_flat, labels_bijection_mapped);
 
 			# Get every permutation of labels_mapped that respects the partition. 
 			perms := DirectProduct(List(labels_mapped, x -> SymmetricGroup(Size(x))));
