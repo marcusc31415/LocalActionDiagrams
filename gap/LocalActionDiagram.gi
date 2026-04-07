@@ -25,7 +25,8 @@ function(graph, vert_labels, arc_labels)
 	orbits := rec();
 
 	for idx in Set(RecNames(vert_labels)) do
-		orbits.(idx) := Orbits(vert_labels.(idx), PermGroupDomain(vert_labels.(idx)));
+		# Get the orbits of each vertex label (and order them). 
+		orbits.(idx) := List(Orbits(vert_labels.(idx), PermGroupDomain(vert_labels.(idx))), Set);
 	od;
 
 	arc_label_combined := rec();
@@ -36,7 +37,7 @@ function(graph, vert_labels, arc_labels)
 
 
 	for arc in RSGraphArcIterator(graph) do
-		if not arc_labels.(arc[1]) in orbits.(arc[2].origin) then
+		if not Set(arc_labels.(arc[1])) in orbits.(arc[2].origin) then
 			ErrorNoReturn("Arc labels must be orbits of the group labels");
 		fi;
 		Add(arc_label_combined.(arc[2].origin), arc_labels.(arc[1]));

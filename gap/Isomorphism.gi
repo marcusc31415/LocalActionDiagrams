@@ -193,7 +193,11 @@ function(graph1, graph2)
 		counter := counter + 1;
 	od;
 
-	edge_gp := Group(Flat(List(mults, x -> GeneratorsOfGroup(SymmetricGroup(x)))));
+	if Size(mults) = 0 then
+		edge_gp := Group(());
+	else
+		edge_gp := Group(Flat(List(mults, x -> GeneratorsOfGroup(SymmetricGroup(x)))));
+	fi;
 
 	for perm in edge_gp do
 		iso := perm*base_iso[2];
@@ -259,7 +263,7 @@ end);
 
 InstallMethod(IsomorphismLocalActionDiagrams, "Isormorphism between two LocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram],
 function(lad1, lad2)
-	local iso, lad_iso, graph1, graph2, vert_id, arc_id, bijections, out_arc_ids, labels_original, labels_mapped, labels_original_flat, labels_mapped_flat, perm, perms, labels_mapped_flat_perm, bijection, BijectionMap, ConjugateBijection, bad_iso, G1, G2, S, norm, all_conj, found_perm, labels_bijection_mapped;
+	local iso, lad_iso, graph1, graph2, vert_id, arc_id, bijections, out_arc_ids, labels_original, labels_mapped, labels_original_flat, labels_mapped_flat, perm, perms, labels_mapped_flat_perm, bijection, BijectionMap, ConjugateBijection, bad_iso, G1, G2, S, norm, all_conj, found_perm, labels_bijection_mapped, labels_bijection_flat, idx;
 
 	# Return the general mapping which maps list1[i] to list2[i]. 
 	BijectionMap := function(list1, list2)
@@ -349,73 +353,82 @@ function(lad1, lad2)
 
 			#### Might be slower than the "brute force" method? ####
 
-			####G1 := LocalActionDiagramVertexLabels(lad1).(vert_id);
-			####G2 := LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]);
-			####S := SymmetricGroup(Maximum(Union(MovedPoints(G1), MovedPoints(G2))));
+			G1 := LocalActionDiagramVertexLabels(lad1).(vert_id);
+			G2 := LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]);
+			S := SymmetricGroup(Maximum(Union(MovedPoints(G1), MovedPoints(G2))));
 
-			##### Find a permutation that conjugates G1 into G2. 
-			####bijection := RepresentativeAction(S, G1, G2);
+			# Find a permutation that conjugates G1 into G2. 
+			bijection := RepresentativeAction(S, G1, G2);
 
-			####if bijection = fail then
-			####	bijections := fail;
-			####	break;
-			####fi;
-
-			##### Get every such permutation to find one with the right 
-			##### orbit structure. 
-			####norm := Normaliser(S, G1); 
-			####all_conj := RightCoset(norm, bijection);
-
-			####found_perm := false;
-			####for perm in all_conj do
-			####	if OnTuplesTuples(labels_original, perm) = labels_mapped then
-			####		bijection := perm;
-			####		found_perm := true;
-			####		break;
-			####	fi;
-			####od;
-
-			####if not found_perm then
-			####	bijections := fail;
-			####	break;
-			####fi;
-
-			####labels_original_flat := Flat(labels_original);
-			####labels_bijection_mapped := List(labels_original_flat, x -> x^bijection);
-	
-
-			####bijections.(vert_id) := BijectionMap(labels_original_flat, labels_bijection_mapped);
-
-			# Get every permutation of labels_mapped that respects the partition. 
-			perms := DirectProduct(List(labels_mapped, x -> SymmetricGroup(Size(x))));
-
-
-			labels_original_flat := Flat(labels_original);
-			labels_mapped_flat := Flat(labels_mapped);
-
-			bijection := fail;
-			for perm in perms do
-				labels_mapped_flat_perm := Permuted(Flat(labels_mapped_flat), perm);
-
-
-				bijection := BijectionMap(labels_original_flat, labels_mapped_flat_perm);
-				
-				# If this is a conjugate bijection add it to the bijection list and
-				# break out of this loop. 
-				if ConjugateBijection(bijection, LocalActionDiagramVertexLabels(lad1).(vert_id)) = LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]) then
-					bijections.(vert_id) := bijection;
-					break;
-				fi;
-
-				bijection := fail;
-			od;
-
-			# This vertex map doesn't work so we break out of the loop and continue 
-			# to the next isomorphism. 
 			if bijection = fail then
 				bijections := fail;
 				break;
 			fi;
+
+			# The bijection found does not take into account fixed points 
+			# from PermGroupDomain (using RepresentativeAction with that 
+			# causes a significant slowdown). This corrects the fixed point
+			# mapping in the bijection by first "undoing" the movement of it
+			# and then multiplying by the transposition which is the correct
+			# movement of it. Since the orbits are disjoint this works. 
+			for idx in [1..Size(labels_original)] do
+				if Size(labels_original[idx]) = 1 then
+					bijection := bijection * (labels_original[idx][1], labels_original[idx][1]^bijection);
+					bijection := bijection * (labels_original[idx][1], labels_mapped[idx][1]);
+				fi;
+			od;
+
+			labels_original_flat := Flat(labels_original);
+			labels_mapped_flat := Flat(labels_mapped);
+			labels_bijection_flat := List(labels_original_flat, x -> x^bijection);
+
+			# If the bijection found does not map the orbits correctly then we multiply
+			# by the transpositions that swap what the bijection maps with something
+			# in the correct orbit. Because these swap orbit the product of these 
+			# transpositions commute with the bijection so this is still a conjugation
+			# of G1 into G2. 
+			if labels_bijection_flat <> labels_mapped_flat then
+				for idx in [1..Size(labels_original_flat)] do
+					if labels_bijection_flat[idx] <> labels_mapped_flat[idx] then
+						bijection := bijection * (labels_bijection_flat[idx], labels_mapped_flat[idx]);
+					fi;
+				od;
+			fi;
+
+			Assert(1, G1^bijection = G2); # Should always be true. 
+
+			bijections.(vert_id) := BijectionMap(labels_original_flat, List(labels_original_flat, x -> x^bijection));
+
+			#####  ### Get every permutation of labels_mapped that respects the partition. 
+			#####  ##perms := DirectProduct(List(labels_mapped, x -> SymmetricGroup(Size(x))));
+
+
+			#####  ##labels_original_flat := Flat(labels_original);
+			#####  ##labels_mapped_flat := Flat(labels_mapped);
+
+			#####  ##bijection := fail;
+			#####  ##for perm in perms do
+			#####  ##	labels_mapped_flat_perm := Permuted(Flat(labels_mapped_flat), perm);
+
+
+			#####  ##	bijection := BijectionMap(labels_original_flat, labels_mapped_flat_perm);
+			#####  ##	
+			#####  ##	# If this is a conjugate bijection add it to the bijection list and
+			#####  ##	# break out of this loop. 
+			#####  ##	if ConjugateBijection(bijection, LocalActionDiagramVertexLabels(lad1).(vert_id)) = LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]) then
+			#####  ##		bijections.(vert_id) := bijection;
+			#####  ##		break;
+			#####  ##	fi;
+
+			#####  ##	bijection := fail;
+			#####  ##od;
+
+			#####  ### This vertex map doesn't work so we break out of the loop and continue 
+			#####  ### to the next isomorphism. 
+			#####  ##if bijection = fail then
+			#####  ##	bijections := fail;
+			#####  ##	break;
+			#####  ##fi;
 		od;
 
 		# A conjugate bijection was found for each vertex under this isomorphism. 
@@ -429,6 +442,61 @@ function(lad1, lad2)
 
 end);
 
+InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
+function(no_vert, degree)
+	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, graph, lad, iso_lad, lad2, Order2Perm;
 
+	Order2Perm := function(domain)
+		local tr, elms, t, points, elm;
+
+		if Size(domain) in [0,1] then 
+			return [()]; 
+		fi;
+		
+		tr := List(Combinations(domain,2), c->(c[1],c[2]));	
+		elms := tr;
+		for t in Difference(tr,[()]) do
+			points := MovedPoints(t);
+			for elm in Order2Perm(Difference(domain, Union(points,[1..Minimum(points)]))) do
+				Add(elms, t*elm);
+			od;
+		od;
+		return Union(elms, [()]);
+	end;
+
+	lad_list := [];
+
+	# Get all subgroups of Sym(degree) up the conjugacy. 
+	CSubG := List(ConjugacyClassesSubgroups(SymmetricGroup(degree)), Representative);
+
+
+	for G in CSubG do
+		SetPermGroupDomain(G, [1..degree]);
+		arc_labels := List(Orbits(G, PermGroupDomain(G)), Set);
+		rev_maps := Order2Perm([1..Size(arc_labels)]);
+		
+		for rev_map in rev_maps do
+			graph := RSGraphByAdjacencyList(List(arc_labels, x -> [1, 1]), rev_map);
+
+			# Permuting of arc labels is taken care of by going through each possible
+			# reverse map. 
+			lad := LocalActionDiagramFromData(graph, [G], arc_labels);
+
+			iso_lad := false;
+			for lad2 in lad_list do
+				if IsomorphismLocalActionDiagrams(lad2, lad) <> fail then
+					iso_lad := true;
+					break;
+				fi;
+			od;
+
+			if not iso_lad then
+				Add(lad_list, lad);
+			fi;
+		od;
+	od;
+
+	return lad_list;
+end);
 
 
