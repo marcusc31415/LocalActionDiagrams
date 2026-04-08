@@ -359,7 +359,6 @@ function(lad1, lad2)
 			od;
 
 			#### Might be slower than the "brute force" method? ####
-
 			G1 := LocalActionDiagramVertexLabels(lad1).(vert_id);
 			G2 := LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]);
 
@@ -407,11 +406,12 @@ function(lad1, lad2)
 			# of G1 into G2. 
 			#
 			if labels_bijection_flat <> labels_mapped_flat then
-				for idx in [1..Size(labels_original_flat)] do
-					if labels_bijection_flat[idx] <> labels_mapped_flat[idx] then
-						bijection := bijection * (labels_bijection_flat[idx], labels_mapped_flat[idx]);
-					fi;
-				od;
+				#for idx in [1..Size(labels_original_flat)] do
+				#	if labels_bijection_flat[idx] <> labels_mapped_flat[idx] then
+				#		bijection := bijection * (labels_bijection_flat[idx], labels_mapped_flat[idx]);
+				#	fi;
+				#od;
+				bijection := bijection * MappingPermListList(labels_bijection_flat, labels_mapped_flat);
 			fi;
 
 			if G1^bijection <> G2 then
@@ -421,36 +421,36 @@ function(lad1, lad2)
 
 			bijections.(vert_id) := BijectionMap(labels_original_flat, List(labels_original_flat, x -> x^bijection));
 
-			######  # Get every permutation of labels_mapped that respects the partition. 
-			######  perms := DirectProduct(List(labels_mapped, x -> SymmetricGroup(Size(x))));
+			#####  #######  # Get every permutation of labels_mapped that respects the partition. 
+			#####  #perms := DirectProduct(List(labels_mapped, x -> SymmetricGroup(Size(x))));
 
 
-			######  labels_original_flat := Flat(labels_original);
-			######  labels_mapped_flat := Flat(labels_mapped);
+			#####  #labels_original_flat := Flat(labels_original);
+			#####  #labels_mapped_flat := Flat(labels_mapped);
 
-			######  bijection := fail;
-			######  for perm in perms do
-			######  	labels_mapped_flat_perm := Permuted(Flat(labels_mapped_flat), perm);
+			#####  #bijection := fail;
+			#####  #for perm in perms do
+			#####  #	labels_mapped_flat_perm := Permuted(Flat(labels_mapped_flat), perm);
 
 
-			######  	bijection := BijectionMap(labels_original_flat, labels_mapped_flat_perm);
-			######  	
-			######  	# If this is a conjugate bijection add it to the bijection list and
-			######  	# break out of this loop. 
-			######  	if ConjugateBijection(bijection, LocalActionDiagramVertexLabels(lad1).(vert_id)) = LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]) then
-			######  		bijections.(vert_id) := bijection;
-			######  		break;
-			######  	fi;
+			#####  #	bijection := BijectionMap(labels_original_flat, labels_mapped_flat_perm);
+			#####  #	
+			#####  #	# If this is a conjugate bijection add it to the bijection list and
+			#####  #	# break out of this loop. 
+			#####  #	if ConjugateBijection(bijection, LocalActionDiagramVertexLabels(lad1).(vert_id)) = LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]) then
+			#####  #		bijections.(vert_id) := bijection;
+			#####  #		break;
+			#####  #	fi;
 
-			######  	bijection := fail;
-			######  od;
+			#####  #	bijection := fail;
+			#####  #od;
 
-			######  # This vertex map doesn't work so we break out of the loop and continue 
-			######  # to the next isomorphism. 
-			######  if bijection = fail then
-			######  	bijections := fail;
-			######  	break;
-			######  fi;
+			#####  ## This vertex map doesn't work so we break out of the loop and continue 
+			#####  ## to the next isomorphism. 
+			#####  #if bijection = fail then
+			#####  #	bijections := fail;
+			#####  #	break;
+			#####  #fi;
 		od;
 
 		# A conjugate bijection was found for each vertex under this isomorphism. 
