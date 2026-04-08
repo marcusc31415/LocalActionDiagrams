@@ -86,19 +86,19 @@ Extensions := [
 		filename := "gap/ugaly_extension_read.g",
 	),
 	rec (
-		needed := [ ["digraphs", "1.13.1"] ],
+		needed := [ ["digraphs", "1.9.0"] ],
 		filename := "gap/DigraphsConversion.gd",
 	),
 	rec (
-		needed := [ ["digraphs", "1.13.1"] ],
+		needed := [ ["digraphs", "1.9.0"] ],
 		filename := "gap/DigraphsConversion.gi",
 	),
 	rec (
-		needed := [ ["digraphs", "1.13.1"] ],
+		needed := [ ["digraphs", "1.9.0"] ],
 		filename := "gap/Isomorphism.gd",
 	),
 	rec (
-		needed := [ ["digraphs", "1.13.1"] ],
+		needed := [ ["digraphs", "1.9.0"] ],
 		filename := "gap/Isomorphism.gi",
 	),
 ],
