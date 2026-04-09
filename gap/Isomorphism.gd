@@ -7,3 +7,5 @@ DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
 
 DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt]);
+
+DeclareOperation("AllRSGraphs", [IsInt, IsInt]);

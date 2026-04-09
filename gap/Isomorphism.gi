@@ -521,4 +521,204 @@ function(no_vert, degree)
 	return lad_list;
 end);
 
+InstallMethod(AllRSGraphs, "Enumerate RS Graphs with valency <= d and n vertices", [IsInt, IsInt],
+function(degree, no_verts)
+	local AllRSGraphsRecursive, start_graph, connected_components, start_vertex, list_of_graphs, MergeConnectedComponents, ShallowCopyLists, arc_list, list_of_rsgraphs, graph, arcs, v_adjacency, v_adjacency_idx, idx, rev_map, loop_ids, vert, arc, loop_ids_by_vertex, current_vertex, loop_perms, perm, loop_id, list_of_rsgraphs_isomorphism, graph2, iso_graphs, Order2Perm;
 
+	list_of_graphs := [];
+
+	ShallowCopyLists := x -> List(x, y -> ShallowCopy(y));
+
+	Order2Perm := function(domain)
+		local tr, elms, t, points, elm;
+
+		if Size(domain) in [0,1] then 
+			return [()]; 
+		fi;
+		
+		tr := List(Combinations(domain,2), c->(c[1],c[2]));	
+		elms := tr;
+		for t in Difference(tr,[()]) do
+			points := MovedPoints(t);
+			for elm in Order2Perm(Difference(domain, Union(points,[1..Minimum(points)]))) do
+				Add(elms, t*elm);
+			od;
+		od;
+		return Union(elms, [()]);
+	end;
+
+
+	MergeConnectedComponents := function(connected_components, vertex1, vertex2)
+		local new_connected_components, first_component_found, component, new_component;
+
+		new_connected_components := [];
+		first_component_found := false;
+
+		for component in connected_components do
+			if vertex1 in component and vertex2 in component then
+				new_connected_components := ShallowCopyLists(connected_components);
+				break;
+			elif not (vertex1 in component or vertex2 in component) then
+				Add(new_connected_components, component);
+			elif not first_component_found then
+				new_component := component;
+				first_component_found := true;
+			else
+				new_component := Union(new_component, component);
+				Add(new_connected_components, component);
+			fi;
+		od;
+		
+		return new_connected_components;
+
+	end;
+
+
+
+	AllRSGraphsRecursive := function(graph, current_vertex, connected_components)
+		local new_vertex, new_graph, new_conn_components, component;
+
+
+		if current_vertex = no_verts+1 then
+			if Size(connected_components) = 1 then
+				# Sort each of the sub-lists. 
+				for arc_list in graph do 
+					Sort(arc_list);
+				od;
+				Add(list_of_graphs, graph);
+			fi;
+			return;
+		fi;
+
+		for component in connected_components do
+			if Maximum(component) < current_vertex then
+				return;
+			fi;
+		od;
+
+
+		if Size(graph[current_vertex]) = 0 then
+			for new_vertex in [current_vertex..no_verts] do 
+				new_graph := ShallowCopyLists(graph);
+				Add(new_graph[current_vertex], new_vertex);
+				if new_vertex <> current_vertex then
+					Add(new_graph[new_vertex], current_vertex);
+				fi;
+
+				new_conn_components := MergeConnectedComponents(connected_components, current_vertex, new_vertex);
+
+				AllRSGraphsRecursive(new_graph, current_vertex, new_conn_components);
+			od;
+		elif Size(graph[current_vertex]) > degree then
+			return;
+		elif Size(graph[current_vertex]) < degree then
+			AllRSGraphsRecursive(ShallowCopyLists(graph), current_vertex+1, connected_components);
+
+			for new_vertex in [current_vertex..no_verts] do 
+				new_graph := ShallowCopyLists(graph);
+				Add(new_graph[current_vertex], new_vertex);
+				if new_vertex <> current_vertex then
+					Add(new_graph[new_vertex], current_vertex);
+				fi;
+
+				new_conn_components := MergeConnectedComponents(connected_components, current_vertex, new_vertex);
+
+				AllRSGraphsRecursive(new_graph, current_vertex, new_conn_components);
+			od;
+
+		else
+			AllRSGraphsRecursive(ShallowCopyLists(graph), current_vertex+1, connected_components);
+		fi;
+	end;
+
+
+	start_graph := List([1..no_verts], x -> []);
+	connected_components := List([1..no_verts], x -> [x]);
+	start_vertex := 1;
+
+	AllRSGraphsRecursive(start_graph, start_vertex, connected_components);
+
+	# Remove all duplicates (the sub-lists are sorted). 
+	list_of_graphs := Set(list_of_graphs);
+
+	# Construct all the RSGraphs from the list.
+	
+	list_of_rsgraphs := []; 
+
+	for graph in list_of_graphs do
+		arcs := [];
+
+		# Create an adjacency list from the list of vertex adjacencies. 
+		for idx in [1..Size(graph)] do
+			v_adjacency := graph[idx]; 
+			arcs := Concatenation(arcs, List(v_adjacency, x -> [idx, x]));
+		od;
+
+		# Reverse each arc (so [i, j] becomes [j, i]) then find the
+		# permutation that sorts the list. This is the reverse map 
+		# which doesn't touch the loops. This is because arc [j, i]
+		# is in the position of arc [i, j] from the first list and
+		# arc [i, j] is in the position of arc [j, i]. The sorting
+		# perm will move arc [j, i] to the position [i, j] is in. 
+		#
+		# We only need one not taking into account the loops because
+		# any other compatible maps on arcs between two vertices will
+		# create an isomorphic RSGraph. 
+		rev_map := SortingPerm(List(arcs, x -> Reversed(x)));
+
+		# The loops are the fixed points of the sorting. 
+		loop_ids := Difference([1..Size(arcs)], MovedPoints(rev_map));
+
+		loop_ids_by_vertex := [];
+
+		current_vertex := 0;
+
+		for loop_id in loop_ids do
+			Assert(1, arcs[loop_id][1] = arcs[loop_id][2]);
+
+			if current_vertex <> arcs[loop_id][1] then
+				Add(loop_ids_by_vertex, []);
+				current_vertex := arcs[loop_id][1];
+			fi;
+
+			Add(Last(loop_ids_by_vertex), loop_id);
+		od;
+
+		if Size(loop_ids_by_vertex) = 0 then
+			loop_perms := Group(());
+		else
+			# For each "loop_ids_by_vertex" get the list of every order 2 
+			# permutation on that set. 
+			#
+			# Take the Cartesian product of these sets obtained. Then take the
+			# product of these cycles. This will be every order 2 permutation 
+			# on the lists. 
+			loop_perms := Cartesian(List(loop_ids_by_vertex, x -> Order2Perm(x)));
+			loop_perms := List(loop_perms, x -> Product(x));
+		fi;
+
+		for perm in loop_perms do
+			Assert(1, Size(Intersection(MovedPoints(rev_map), MovedPoints(perm))) = 0);
+			Add(list_of_rsgraphs, RSGraphByAdjacencyList(arcs, rev_map*perm));
+		od;
+	od;
+
+	list_of_rsgraphs_isomorphism := [];
+	iso_graphs := false;
+
+	for graph in list_of_rsgraphs do
+		for graph2 in list_of_rsgraphs_isomorphism do
+			if IsomorphismRSGraphs(graph, graph2) <> fail then
+				iso_graphs := true;
+				break;
+			fi;
+		od;
+		if not iso_graphs then # iso_graphs = false
+			Add(list_of_rsgraphs_isomorphism, graph);
+		else # iso_graphs = true
+			iso_graphs := false;
+		fi;
+	od;
+
+	return list_of_rsgraphs_isomorphism;
+end);
