@@ -10,6 +10,12 @@ DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsGeneralMa
 
 DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 
+DeclareAttribute("RSGraphCanonicalLabellingMap", IsRSGraph);
+
+DeclareAttribute("RSGraphCanonicalCertificate", IsRSGraph);
+
+DeclareOperation("IsIsomorphicRSGraphs", [IsRSGraph, IsRSGraph]);
+
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
 
 DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt]);
