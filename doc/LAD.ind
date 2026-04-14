@@ -1,0 +1,10 @@
+\begin{theindex}
+
+  \item \texttt  {LocalActionDiagramFromData}
+    \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{3}
+  \item \texttt  {LocalActionDiagramFromDataNC}
+    \subitem for IsDigraph, IsList, IsList, IsPerm, \hyperpage{3}
+  \item \texttt  {LocalActionDiagramUniversalGroup}
+    \subitem for IsPermGroup, \hyperpage{3}
+
+\end{theindex}

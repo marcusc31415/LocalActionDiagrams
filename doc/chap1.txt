@@ -1,0 +1,31 @@
+  
+  [1X1 [33X[0;0YIntroduction[133X[101X
+  
+  [33X[0;0YA local action diagram [22X∆ = (Γ, (G(v)), (X_a))[122X consists of:[133X
+  
+  [30X    [33X[0;6Ya directed graph [22XΓ[122X,[133X
+  
+  [30X    [33X[0;6Ya closed permutation group [22XG(v)[122X for each [22Xv ∈ V(Γ)[122X, and[133X
+  
+  [30X    [33X[0;6Ya  set [22XX_a[122X for each [22Xa ∈ A(Γ)[122X such that each [22XX_a[122X is disjoint and [22XX_a[122X is
+        an orbit of the action of [22XG(o(a))[122X on [22XX_v := ⨆_a ∈ o^-1(v)X_a[122X.[133X
+  
+  [33X[0;0YThe definition of digraph used is different to that of the [5XDigraphs[105X package.
+  For our purposes, a digraph [22XΓ[122X consists of:[133X
+  
+  [30X    [33X[0;6Ya vertex set [22XV[122X,[133X
+  
+  [30X    [33X[0;6Yan arc set [22XA[122X,[133X
+  
+  [30X    [33X[0;6Ya map [22Xo : A -> V[122X assigning each arc to an [13Xorigin[113X vertex, and[133X
+  
+  [30X    [33X[0;6Ya  bijection  [22Xr  :  A  -> A[122X (denoted by [22Xa ↦ overlinea[122X) such that [22Xr^2 =
+        mathrmid[122X.[133X
+  
+  [33X[0;0YThe  bijection  [22Xr[122X  defines  a reverse arc for each arc of the graph. This is
+  more  specific  than  the  definition in the [3Xdigraphs[103X package which does not
+  require a reverse mapping.[133X
+  
+  [33X[0;0YThe  local  action  diagrams  package  provides  a category for local action
+  diagrams. It is built in the [3XIsDigraph[103X category from the [5XDigraphs[105X package.[133X
+  

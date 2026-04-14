@@ -1,4 +1,3 @@
-
 DrawLADAddToTree := function(LAD, depth, tree, lad_vertex, prev_arc_no, current_depth)
 	local tree_vertex_no, rev_arc_no, rev_arc_label, arcs_to_check, lad_next_vert, arc_label, arc_no, arc_labels;
 	Add(tree, []);
@@ -15,7 +14,7 @@ DrawLADAddToTree := function(LAD, depth, tree, lad_vertex, prev_arc_no, current_
 		for arc_label in arc_labels do
 			if not (arc_no = rev_arc_no and arc_label = rev_arc_label) then
 				Add(tree[tree_vertex_no], Size(tree)+1);
-				lad_next_vert := DigraphEdges(LAD)[arc_no][2];
+				lad_next_vert := LocalActionDiagramEdges(LAD)[arc_no][2];
 				DrawLADAddToTree(LAD, depth, tree, lad_next_vert, arc_no, current_depth+1);
 			fi;
 		od;
@@ -53,7 +52,7 @@ DrawLAD := function(LAD, depth, __start_vertex...)
 		arc_labels := LocalActionDiagramEdgeLabels(LAD)[arc_no];
 		for arc_label in arc_labels do
 			Add(tree[1], Size(tree)+1); # Connect the first vertex to the new vertex to be added. 
-			lad_next_vert := DigraphEdges(LAD)[arc_no][2];
+			lad_next_vert := LocalActionDiagramEdges(LAD)[arc_no][2];
 			DrawLADAddToTree(LAD, depth, tree, lad_next_vert, arc_no, current_depth+1);
 		od;
 	od;
@@ -91,7 +90,9 @@ function(D, vl, el, rev)
 	fi;
 
 	# Check reversal properly?
-	edges := DigraphEdges(D);
+	# Make a copy of the edges and sort them lexicographically. 
+	edges := ShallowCopy(DigraphEdges(D));
+	Sort(edges);
 	for i in [1..Length(el)] do
 		edge_origin := edges[i][1];
 		edge_end := edges[i][2];
@@ -108,13 +109,13 @@ function(D, vl, el, rev)
 
 	### Check the edge labelling is valid. ###
 
-	v_origin := List(DigraphEdges(D), x -> x[1]);
+	v_origin := List(edges, x -> x[1]);
 	v_orbits := List(vl, G -> Orbits(G, PermGroupDomain(G)));
 
 	# Check if the "out" edge labels are all the orbits of the vertex label. 
 	for vertex in [1..DigraphNrVertices(D)] do
 		label_subset := el{Positions(v_origin, vertex)};
-		if Set(label_subset) <> Set(v_orbits[vertex]) then
+		if Set(List(label_subset, x -> Set(x))) <> Set(List(v_orbits[vertex], x -> Set(x))) then
 			Error("Group at vertex ",vertex," (",vl[vertex],") doesn't have the correct orbits on outgoing edges.");
 		fi;
 	od;
@@ -139,11 +140,17 @@ end );
 # Thanks GAP for not providing Try-Catch functionality...
 InstallMethod(LocalActionDiagramFromDataNC, "No Check test label 123", [IsDigraph, IsList, IsList, IsPerm],
 function(D, vl, el, rev)
-	local lad;
+	local lad, edges;
 
 	lad := DigraphImmutableCopy(D);
+	# Make a copy of the edges and sort them lexicographically. 
+	edges := ShallowCopy(DigraphEdges(D));
+	Sort(edges);
+
 	SetFilterObj(lad, IsLocalActionDiagram);
+	Setter(LocalActionDiagramVertices)(lad, DigraphVertices(lad));
 	Setter(LocalActionDiagramVertexLabels)(lad, vl);
+	Setter(LocalActionDiagramEdges)(lad, edges);
 	Setter(LocalActionDiagramEdgeLabels)(lad, el);
 	Setter(LocalActionDiagramEdgeReversal)(lad, rev);
 
@@ -163,6 +170,7 @@ function(G)
 	return lad;
 end );
 
+
 # Check if *lad1* and *lad2* are isomorphic. 
 InstallMethod(IsomorphismLocalActionDiagrams, [IsLocalActionDiagram, IsLocalActionDiagram],
 function(lad1, lad2)
@@ -177,8 +185,8 @@ function(lad1, lad2)
 
 	lad1_v := LocalActionDiagramVertexLabels(lad1);
 	lad2_v := LocalActionDiagramVertexLabels(lad2);
-	lad1_e := DigraphEdges(lad1);
-	lad2_e := DigraphEdges(lad2);
+	lad1_e := LocalActionDiagramEdges(lad1);
+	lad2_e := LocalActionDiagramEdges(lad2);
 	lad1_el := LocalActionDiagramEdgeLabels(lad1);
 	lad2_el := LocalActionDiagramEdgeLabels(lad2);
 
@@ -253,6 +261,12 @@ InstallMethod(LocalActionDiagramGroupType, [IsLocalActionDiagram], GroupType@);
 # Is Discrete "variable". It first runs the computation and then will return the computation.
 InstallMethod(LocalActionDiagramIsDiscrete, [IsLocalActionDiagram], IsDiscrete@);
 
+# Is Uniscalar "variable". It first runs the computation and then will return the computation.
+InstallMethod(LocalActionDiagramIsUniscalar, [IsLocalActionDiagram], IsUniscalar@);
+
+# Is Unimodular "variable". It first runs the computation and then will return the computation.
+InstallMethod(LocalActionDiagramIsUnimodular, [IsLocalActionDiagram], _LAD_IsUnimodular@);
+
 # Scopo "variable". It first runs the computation and then will return the computation.
 InstallMethod(LocalActionDiagramScopos, [IsLocalActionDiagram], FindAllScopos@);
 
@@ -315,7 +329,7 @@ function(d, no_vertex_orbits)
 			# be at most the minimum number of arcs originating at the two vertices. 
 			for arcs_between in [1..Minimum(no_orbits)] do
 				D := DigraphByAdjacencyMatrix([[no_orbits[1]-arcs_between, arcs_between], [arcs_between, no_orbits[2]-arcs_between]]);
-				edges := DigraphEdges(D);
+				edges := LocalActionDiagramEdges(D);
 
 				# For all arrangements of the arc labels on the edges. 
 				for arc_label_order_one in Arrangements(arcs[1], Length(arcs[1])) do
@@ -394,6 +408,103 @@ end);
 
 InstallMethod(CotreeFromScopoNC, [IsLocalActionDiagram, IsList], CotreeFromScopo@);
 
+InstallMethod(RandomLocalActionDiagram, "test label 123", [IsPosInt, IsPosInt],
+function(no_vert, edge_label_max)
+	local graph, edge_labels, vert_labels, rev, edge, edges_to_add, sorted_edges, vert, out_edges, last, el_temp, el, pos, pos_2, vl, rand_groups, grp, gens, gen_list, new_gen_list, n, g_list, p, i, used_p;
+
+	edge_labels := [];
+	vert_labels := [];
+	edges_to_add := [];
+	# Make a random connected, symmetric digraph.
+	graph := DigraphSymmetricClosure(RandomDigraph(IsConnectedDigraph, no_vert)); 
+
+
+	# Make the digraph symmetric. 
+	#for edge in DigraphEdges(graph) do
+	#	if edge[1] <> edge[2] and not ([edge[2], edge[1]] in DigraphEdges(graph)) then
+	#		Add(edges_to_add, [edge[2], edge[1]]);
+	#	fi;
+	#od;
+	#graph := DigraphAddEdges(graph, edges_to_add);
+
+	# Create the edge and vertex labels. 
+	sorted_edges := ShallowCopy(DigraphEdges(graph));
+	Sort(sorted_edges);
+
+	for vert in [1..no_vert] do
+		# Find all the edges that start at vertex *vert*. 
+		out_edges := sorted_edges{Positions(List(sorted_edges, x -> x[1]), vert)};
+		last := 0;
+		el_temp := [];
+		# Creates random length edge labels and ensures they do not overlap. 
+		for edge in out_edges do
+			el := [1..Random(1, edge_label_max)] + last;
+			Add(el_temp, el);
+			last := Maximum(el);
+		od;
+		Append(edge_labels, el_temp);
+		# The vertex label is is the group generated by all generators of the
+		# symmetric groups on each element *el* of *el_temp*. They don't overlap
+		# and so the orbits are preserved. 
+		#gen_list := Flat(List(el_temp, x -> GeneratorsOfGroup(SymmetricGroup(x))));
+		gen_list := [];
+
+
+		for el in el_temp do
+			if Size(el) <> 1 then
+				grp := Random(AllTransitiveGroups(NrMovedPoints, Size(el)));
+				gens := GeneratorsOfGroup(grp);
+				gens := List(gens, x -> PermList(Concatenation([1..Minimum(el)-1],ListPerm(x)+Minimum(el)-1)));
+				Add(gen_list, gens);
+			fi;
+		od;
+
+		new_gen_list := [];
+
+
+		while Length(gen_list) > 0 do
+			g_list := [Random(gen_list[1])];
+			n := Random(1, Length(gen_list));
+			used_p := [1];
+			for i in [2..n] do
+				p := Random(2, n);
+				if not (p in used_p) then
+					Add(g_list, Random(gen_list[p]));
+				fi;
+				Add(used_p, p);
+			od;
+			Add(new_gen_list, Product(g_list));
+			gen_list := List(gen_list, x -> Difference(x, g_list));
+			gen_list := Difference(gen_list, [[]]);
+		od;
+		
+		gen_list := Flat(new_gen_list);
+
+		if Length(gen_list) = 0 then
+			gen_list := [()];
+		fi;
+		vl := Group(gen_list);
+		SetPermGroupDomain(vl, Flat(el_temp));
+		Add(vert_labels, vl);
+	od;
+
+	rev := [];
+	for pos in [1..Length(sorted_edges)] do
+		edge := sorted_edges[pos];
+		# Find first occurrence of a reverse edge not already in the list *rev*
+		# i.e. not already assigned a reverse. 
+		pos_2 := Position(sorted_edges, [edge[2], edge[1]]);
+		while pos_2 in rev do
+			pos_2 := Position(sorted_edges, [edge[2], edge[1]], pos_2);
+		od;
+		Add(rev, pos_2);
+	od;
+	rev := PermList(rev);
+
+	return LocalActionDiagramFromData(graph, vert_labels, edge_labels, rev);
+end);
+
+
 
 x := LocalActionDiagramUniversalGroup(Group((1,2),(3,4)));
 
@@ -405,3 +516,17 @@ SetPermGroupDomain(g, [1, 2]);
 SetPermGroupDomain(g2, [1, 2, 3]);
 SetPermGroupDomain(g3, [1]);
 y := LocalActionDiagramFromData(D, [g2, g3, g, g], [[1], [2], [3], [1], [1], [2], [1], [2]], (1,4)(2,5)(3,7)(6,8));
+D := DigraphByAdjacencyMatrix([[1, 1, 1, 0], [1, 0, 1, 0], [1, 1, 0, 1], [0, 0, 1, 0]]);
+g1 := Group((1,2));
+g2 := Group((1,2));
+g := Group(());
+g3 := Group(());
+g4 := Group(());
+SetPermGroupDomain(g1, [1, 2, 3, 4]);
+SetPermGroupDomain(g2, [1, 2, 3]);
+SetPermGroupDomain(g3, [1, 2, 3]);
+SetPermGroupDomain(g4, [1]);
+e_l := [[3], [1,2], [4], [1, 2], [3], [1], [2], [3], [1]];
+v_l := [g1, g2, g3, g4];
+rev := (2, 4)(3, 6)(5, 7)(8, 9);
+test := LocalActionDiagramFromData(D, v_l, e_l, rev);

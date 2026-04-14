@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_LocalActionDiagrams_automatic_generated_documentation">
+<Heading>Local Action Diagrams automatic generated documentation</Heading>
+
+<Section Label="Chapter_LocalActionDiagrams_automatic_generated_documentation_Section_LocalActionDiagrams_automatic_generated_documentation_of_methods">
+<Heading>Local Action Diagrams automatic generated documentation of methods</Heading>
+
+<ManSection>
+  <Oper Arg="arg1,arg2,arg3,arg4" Name="LocalActionDiagramFromData" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+ <Description>
+ 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram.
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Oper Arg="arg1,arg2,arg3,arg4" Name="LocalActionDiagramFromDataNC" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+ <Description>
+	Does not check that the arguments given are a valid local action diagram.
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Oper Arg="arg" Name="LocalActionDiagramUniversalGroup" Label="for IsPermGroup"/>
+ <Description>
+	Constructs a local action diagram corresponding to the Burger-Moses group U(F). 
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+</Chapter>
+

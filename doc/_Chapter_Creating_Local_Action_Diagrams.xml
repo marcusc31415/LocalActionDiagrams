@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Creating_Local_Action_Diagrams">
+<Heading>Creating Local Action Diagrams</Heading>
+
+<Section Label="Chapter_Creating_Local_Action_Diagrams_Section_Creating_Local_Action_Diagrams">
+<Heading>Creating Local Action Diagrams</Heading>
+
+<ManSection>
+  <Filt Arg="lad" Name="IsLocalActionDiagram" Label="for IsDigraph"/>
+ <Returns><K>true</K> if <A>lad</A> is of the category <C>IsLocalActionDiagram</C> and <K>false</K> otherwise.
+</Returns>
+ <Description>
+ Every local action diagram belongs to the <C>IsLocalActionDiagram</C> category. Every local action diagram is immutable. 
+ </Description>
+</ManSection>
+
+
+<ManSection Label="Creating_Local_Action_Diagrams">
+<Heading>Constructing From Data</Heading>
+  <Oper Arg="D, vertex_labels, edge_labels, rev" Name="LocalActionDiagramFromData" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+  <Oper Arg="D, vertex_labels, edge_labels, rev" Name="LocalActionDiagramFromDataNC" Label="for IsDigraph, IsList, IsList, IsPerm"/>
+ <Returns>A local action diagram.
+</Returns>
+ <Description>
+ 	Constructs a local action diagram, checking that the arguments given are a valid local action diagram. The argument <A>D</A> is a digraph and <A>rev</A> must be a compatible involution on the edges of <A>D</A>. The argument <A>vertex_labels</A> is a list of vertex labels such that <C><A>vertex_labels</A>[i]</C> is the group labelling vertex <C>i</C> of <A>D</A>. 
+<P/>
+ The argument <A>edge_labels</A> is a list of edge labels. The edges of <A>D</A> are stored in lexicographical order and <C><A>edge_labels</A>[i]</C> is the set labelling edge <C>i</C> of <A>D</A> (when sorted in lexicographical order). 
+<P/>
+	The NC variant of the operation does not check that the arguments given are a valid local action diagram.
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Oper Arg="F" Name="LocalActionDiagramUniversalGroup" Label="for IsPermGroup"/>
+ <Returns>A local action diagram.
+</Returns>
+ <Description>
+ Constructs a local action diagram corresponding to the Burger-Mozes group <M>U(<A>F</A>)</M> where <A>F</A> is a permutation group. 
+ This diagram has a single vertex labelled by the group <A>F</A> and a self-reverse loop for each orbit of the action of <A>F</A>. 
+ The argument <A>F</A> can instead by an object of the category <C>IsLocalAction</C> from the package <Package>UGALY</Package>. 
+ </Description>
+</ManSection>
+
+
+<ManSection>
+  <Oper Arg="lad" Name="LocalActionDiagramToUniversalGroup" Label="for IsLocalActionDiagram"/>
+ <Returns>A local action.
+</Returns>
+ <Description>
+ Given a local action diagram <A>lad</A> corresponding to a Burger-Mozes group this returns the corresponding group as an object of the category <C>IsLocalAction</C> from the package <Package>UGALY</Package>. The local action diagram <A>lad</A> must have a single vertex and have only self-reverse edges. It must also have at least one edge. 
+ </Description>
+</ManSection>
+
+
+</Section>
+
+
+</Chapter>
+
