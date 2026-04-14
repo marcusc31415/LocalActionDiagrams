@@ -10,7 +10,7 @@ DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsGeneralMa
 
 DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 
-DeclareAttribute("RSGraphCanonicalLabellingMap", IsRSGraph);
+DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph);
 
 DeclareAttribute("RSGraphCanonicalCertificate", IsRSGraph);
 

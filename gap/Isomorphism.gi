@@ -89,7 +89,7 @@ end);
 # Then find the one compatible with the isomorphism and reverse map. 
 InstallMethod(IsomorphismRSGraphs, "Isormorphism between two RSGraphs", [IsRSGraph, IsRSGraph],
 function(graph1, graph2)
-	local digraph_rec1, digraph_rec2, digraph1, digraph2, base_iso, MapPerm, iso, aut, proj_1, proj_2, aut_grp, aut_vertex, aut_arc, vert_iso, arc_iso, edge_gp, edge, mults, start_counter, counter, current_item, digraph1_edges, perm, mapped_arcs, arcs_with_id, arc_list, arc_mapped, sort_perm, graph1_v_ids, graph2_v_ids;
+	local digraph_rec1, digraph_rec2, digraph1, digraph2, base_iso, MapPerm, iso, aut, proj_1, proj_2, aut_grp, aut_vertex, aut_arc, vert_iso, arc_iso, edge_gp, edge, mults, start_counter, counter, current_item, digraph1_edges, perm, mapped_arcs, arcs_with_id, arc_list, arc_mapped, sort_perm, graph1_v_ids, graph2_v_ids, g1_canon_cert, g2_canon_cert, g1_canon_label, g2_canon_label;;
 
 	# Take the permutation *perm* on set [1..N] (= Range(map1) = Range(map2))
 	# and make it the same map from Source(map1) to Source(map2). 
@@ -115,103 +115,16 @@ function(graph1, graph2)
 	digraph_rec2 := RSGraphToDigraph(graph2);
 	digraph2 := digraph_rec2.digraph;
 
-	graph1_v_ids := Set(RSGraphVertices(graph1));
-	graph2_v_ids := Set(RSGraphVertices(graph2));
+	g1_canon_cert := RSGraphCanonicalCertificate(graph1);
+	g2_canon_cert := RSGraphCanonicalCertificate(graph2);
 
-	base_iso := IsomorphismDigraphs(digraph1, digraph2);
-
-	if base_iso = fail then
+	if g1_canon_cert <> g2_canon_cert then
 		return fail;
 	fi;
 
-	# If it's not a multigraph then there's no compatibility condition
-	# with the reverse map to check. 
-	if not IsList(base_iso) then
-		# Get an arc isomorphism from the vertex isomorphism. 
-		arc_list := DigraphEdges(digraph1);
-		arc_mapped := List(arc_list, x -> [x[1]^base_iso, x[2]^base_iso]); #
-		sort_perm := SortingPerm(arc_mapped); # Sorting this list gives the arc isomorphism. 
-		arc_iso := MapPerm(sort_perm, digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
+	g1_canon_label := RSGraphCanonicalLabelling(graph1);
+	g2_canon_label := RSGraphCanonicalLabelling(graph2);
 
-		# If they are both permutations then return them as permutations. 
-		if Source(arc_iso) = Range(arc_iso) and graph1_v_ids = graph2_v_ids then
-			arc_iso := MappingPermListList(List(Source(arc_iso)), List(Source(arc_iso), x -> x^arc_iso));
-		fi;
-		return arc_iso;
-	fi;
-
-	# If it is a multigraph then the arc isomorphism from Digraphs 
-	# may not be correct for our graphs. The vertex isomorphism 
-	# will be correct. We need to calculate a correct "base" arc
-	# isomorphism. 
-	mapped_arcs := List(DigraphEdges(digraph1), x -> [x[1]^base_iso[1], x[2]^base_iso[1]]);
-	# Can use this one as digraphs have arc labels [1..N]. 
-	base_iso[2] := SortingPerm(mapped_arcs);
-
-	# Check if the base isomorphism is compatible with the reverse mappings (only needed for
-	# multigraphs). 
-	if base_iso[2]*digraph_rec2.reverse_map = digraph_rec1.reverse_map*base_iso[2] then
-		arc_iso := MapPerm(base_iso[2], digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
-		# If they are both permutations then return them as permutations. 
-		if Source(arc_iso) = Range(arc_iso) and graph1_v_ids = graph2_v_ids then
-			arc_iso := MappingPermListList(List(Source(arc_iso)), List(Source(arc_iso), x -> x^arc_iso));
-		fi;
-		return arc_iso;
-	fi;
-
-	digraph1_edges := DigraphEdges(digraph1); # 
-	current_item := digraph1_edges[1]; # 
-	counter := 1; # 
-	start_counter := 1; # 
-	mults := []; # 
-
-	if Size(Set(digraph1_edges)) = 1 then
-		mults := [Size(digraph1_edges)];
-	else
-		for edge in digraph1_edges do # 
-			if edge <> current_item then
-				current_item := edge;
-				# If not only one edge. 
-				if start_counter + 1 <> counter then
-					Add(mults, [start_counter .. counter-1]);
-				fi;
-				start_counter := counter;
-			fi;
-			counter := counter + 1;
-		od;
-	fi;
-
-	# Need this to add the last loops (e.g 3 vertex digraph with
-	# arcs [..., [3,3], [3,3]].
-	if start_counter + 1 <> counter then
-		Add(mults, [start_counter .. counter-1]);
-	fi;
-
-
-	if Size(mults) = 0 then
-		edge_gp := Group(());
-	else
-		edge_gp := Group(Flat(List(mults, x -> GeneratorsOfGroup(SymmetricGroup(x)))));
-	fi;
-
-
-	for perm in edge_gp do
-		iso := perm*base_iso[2];
-
-		if iso*digraph_rec2.reverse_map = digraph_rec1.reverse_map*iso then
-			arc_iso := MapPerm(iso, digraph_rec1.arc_id_map, digraph_rec2.arc_id_map);
-
-			# If they are both permutations then return them as permutations. 
-			if Source(arc_iso) = Range(arc_iso) and graph1_v_ids = graph2_v_ids then
-				arc_iso := MappingPermListList(List(Source(arc_iso)), List(Source(arc_iso), x -> x^arc_iso));
-			fi;
-			return arc_iso;
-		fi;
-	od; 
-
-
-	# There's no isomorphism that respects the reverse map. 
-	return fail;
 
 end);
 
@@ -326,9 +239,9 @@ function(graph1, graph2)
 		graph2 := graph2));
 end);
 
-InstallMethod(RSGraphCanonicalLabellingMap, "Returns map that sends RSGraph to canonical RSGraph.", [IsRSGraph],
+InstallMethod(RSGraphCanonicalLabelling, "Returns the map that sends RSGraph to its canonical RSGraph.", [IsRSGraph],
 function(graph)
-	local digraph_rec, digraph_canon_vert, digraph_canon_arc, digraph_arcs_mapped, digraph_arcs, PermToMap, new_rev_map;
+	local digraph_rec, digraph_canon_vert, digraph_canon_arc, digraph_arcs_mapped, digraph_arcs, PermToMap, new_rev_map, canon_labelling, adj_mat, v_labels_mapped, vert_perm, perm_mat, canon_adj_mat, canon_cert, arc_id_rec, arc_id, idx_x, idx_y, idx, arc_string, moved_arcs, moved_arc_list, moved_rev_points, arc_id_list, lex_arc_id_list, current_arc_id, seen_arcs, current_self_rev_id, current_non_self_id, lex_perm, current_rev, arc_ids;
 
 	PermToMap := function(perm, domain)
 		local dp_elms;
@@ -354,6 +267,7 @@ function(graph)
 	# Have the reverse map work on the new arc mapping. 
 	new_rev_map := Inverse(digraph_canon_arc)*digraph_rec.reverse_map*digraph_canon_arc;
 
+
 	# Make the mappings from the RSGraph to the "standard range" [1..N]. 
 	digraph_canon_vert := digraph_rec.vertex_id_map*PermToMap(digraph_canon_vert, Range(digraph_rec.vertex_id_map));
 	digraph_canon_arc := digraph_rec.arc_id_map*PermToMap(digraph_canon_arc, Range(digraph_rec.arc_id_map));
@@ -363,21 +277,20 @@ function(graph)
 		digraph_canon_arc := MappingPermListList(List(Source(digraph_canon_arc)), List(Source(digraph_canon_arc), x -> x^digraph_canon_arc));
 	fi;
 
-	return [digraph_canon_vert, digraph_canon_arc, new_rev_map];
-end);
-
-InstallMethod(RSGraphCanonicalCertificate, "two graphs have the same certificate if and only if they are isomorphic", [IsRSGraph],
-function(graph)
-	local canon_labelling, canon_cert, adj_mat, perm_mat, standard_form, out_arcs, idx, v_out_arcs, moved_arcs, v_loops, arc_id, canon_adj_mat, idx_x, idx_y, arc_id_rec, arc_string;
-
-	canon_labelling := RSGraphCanonicalLabellingMap(graph);
+	canon_labelling := [digraph_canon_vert, digraph_canon_arc, new_rev_map];
 
 
-	####
-	#    Need to make this perm_mat calculation work with general mappings :(
-	####
+	# Calculate the canonical certificate. 
 	adj_mat := RSGraphAdjacencyMatrix(graph);
-	perm_mat := PermutationMat(canon_labelling[1], Size(adj_mat), 1);
+
+	if not IsPerm(canon_labelling[1]) then
+		v_labels_mapped := List(RSGraphVertices(graph), x -> x^canon_labelling[1]);
+		vert_perm := SortingPerm(v_labels_mapped);
+	else
+		vert_perm := canon_labelling[1];
+	fi;
+
+	perm_mat := PermutationMat(vert_perm, Size(adj_mat), 1);
 	canon_adj_mat := Inverse(perm_mat)*adj_mat*perm_mat;
 
 	canon_cert := String(canon_adj_mat);
@@ -396,18 +309,89 @@ function(graph)
 		od;
 	od;
 
-	# For each vertex. 
+	moved_arc_list := List([1..Size(adj_mat)], x -> 0);
+	moved_rev_points := MovedPoints(canon_labelling[3]);
+
+	# For each vertex find the number of non-self-reverse loops.  
 	for idx in [1..Size(adj_mat)] do
 		arc_string := StringFormatted("{1},{2}", idx, idx);
-		moved_arcs := Intersection(MovedPoints(canon_labelling[3]), arc_id_rec.(arc_string));
+		moved_arcs := Intersection(moved_rev_points, arc_id_rec.(arc_string));
+		moved_arc_list[idx] := moved_arcs;
 		canon_cert := Concatenation(canon_cert, StringFormatted("{1};", Size(moved_arcs)));
 	od;
 
-	#if canon_cert = "[ [ 0, 1, 1 ], [ 1, 2, 0 ], [ 1, 0, 2 ] ]0;0;2;" then
-	#	Error("IFEJIEJ");
-	#fi;
+	# Calculate the "lexicographically standard" arc map. 
+	arc_id_list := [1..RSGraphNumberArcs(graph)];
+	lex_arc_id_list := List(arc_id_list, x -> 0);
 
-	return canon_cert;
+	current_arc_id := 1;
+	seen_arcs := [];
+	for idx_x in [1..Size(canon_adj_mat)] do
+		for idx_y in [1..Size(canon_adj_mat)] do
+			arc_string := StringFormatted("{1},{2}", idx_x, idx_y);
+			arc_ids := arc_id_rec.(arc_string);
+			# If there are arcs between the two vertices. 
+			if Size(arc_id_rec.(arc_string)) > 0 then 
+				if idx_x = idx_y then
+					# If it's a loop. 
+					moved_arcs := moved_arc_list[idx_x];
+					current_self_rev_id := current_arc_id+Size(moved_arcs);
+					current_non_self_id := current_arc_id;
+
+					for arc_id in arc_ids do
+						if arc_id in moved_arcs and not arc_id in seen_arcs then
+							# If it's not self reverse then make it and its reverse
+							# the next at the "start" of the loop arc ids. Add both
+							# to the seen arcs list to stop this from happening when
+							# the reverse is reached. 
+							lex_arc_id_list[current_non_self_id] := arc_id;
+							lex_arc_id_list[current_non_self_id+1] := arc_id^canon_labelling[3];
+							current_non_self_id := current_non_self_id + 2;
+							Add(seen_arcs, arc_id);
+							Add(seen_arcs, arc_id^canon_labelling[3]);
+							current_arc_id := current_arc_id + 1;
+						elif not arc_id in seen_arcs then
+							# Otherwise add it to the "middle to end" of the loop. 
+							lex_arc_id_list[current_self_rev_id] := arc_id;
+							current_self_rev_id := current_self_rev_id + 1;
+							Add(seen_arcs, arc_id);
+							current_arc_id := current_arc_id + 1;
+						else
+							current_arc_id := current_arc_id + 1;
+						fi;
+					od;
+
+				else
+					current_rev := Minimum(arc_id_rec.(Reversed(arc_string)));
+					for arc_id in arc_ids do
+						if not arc_id in seen_arcs then
+							lex_arc_id_list[current_arc_id] := arc_id;
+							lex_arc_id_list[current_rev] := arc_id^canon_labelling[3];
+							Add(seen_arcs, arc_id);
+							Add(seen_arcs, arc_id^canon_labelling[3]);
+						fi;
+						current_rev := current_rev + 1;
+						current_arc_id := current_arc_id+1;
+					od;
+				fi;
+			fi;
+		od;
+	od;
+
+	lex_perm := MappingPermListList(lex_arc_id_list, arc_id_list);
+
+	canon_labelling := Concatenation(canon_labelling, [lex_perm, canon_cert]);
+
+	return canon_labelling;
+end);
+
+InstallMethod(RSGraphCanonicalCertificate, "two graphs have the same certificate if and only if they are isomorphic", [IsRSGraph],
+function(graph)
+	local canon_labelling, canon_cert, adj_mat, perm_mat, standard_form, out_arcs, idx, v_out_arcs, moved_arcs, v_loops, arc_id, canon_adj_mat, idx_x, idx_y, arc_id_rec, arc_string, vert_perm, v_labels_mapped;
+
+	canon_labelling := RSGraphCanonicalLabelling(graph);
+
+	return canon_labelling[5];
 end);
 
 
@@ -857,9 +841,6 @@ function(degree, no_verts)
 	for graph in list_of_rsgraphs do
 		for graph2 in list_of_rsgraphs_isomorphism do
 			#if IsomorphismRSGraphs(graph, graph2) <> fail then
-			#	if RSGraphCanonicalCertificate(graph) <> RSGraphCanonicalCertificate(graph2) then
-			#		Error("NO!!!!");
-			#	fi;
 			#	iso_graphs := true;
 			#	break;
 			#elif RSGraphCanonicalCertificate(graph) = RSGraphCanonicalCertificate(graph2) then
@@ -867,11 +848,9 @@ function(degree, no_verts)
 			#fi;
 			if RSGraphCanonicalCertificate(graph) = RSGraphCanonicalCertificate(graph2) then
 				iso_graphs := true;
-				if RSGraphCanonicalLabellingMap(graph)[3] <> RSGraphCanonicalLabellingMap(graph2) then
-					Error("OFNEOEOFEJFE");
-				fi;
 				break;
 			fi;
+
 		od;
 		if not iso_graphs then # iso_graphs = false
 			Add(list_of_rsgraphs_isomorphism, graph);
