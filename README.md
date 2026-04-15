@@ -10,4 +10,4 @@ Currently the package supports finding local action diagrams isomorphisms throug
 
 ## References
 
-<a id="1">[1]</a> C.  D.  Reid  and  S.  M.  Smith, _Groups  acting  on  trees  with  tits’  independence  property  (p)_, 2020. DOI:10.48550/ARXIV.2002.11766. [Online]. Available:c https://arxiv.org/abs/2002.1176
+<a id="1">[1]</a> C.  D.  Reid  and  S.  M.  Smith, _Groups  acting  on  trees  with  tits’  independence  property  (p)_, 2020. DOI:10.48550/ARXIV.2002.11766. [Online]. Available:c https://arxiv.org/abs/2002.11766
