@@ -556,58 +556,117 @@ function(lad1, lad2)
 end);
 
 InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
-function(no_vert, degree)
-	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, graph, lad, iso_lad, lad2, Order2Perm;
+function(degree, no_verts)
+	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab;
 
-	Order2Perm := function(domain)
-		local tr, elms, t, points, elm;
-
-		if Size(domain) in [0,1] then 
-			return [()]; 
-		fi;
-		
-		tr := List(Combinations(domain,2), c->(c[1],c[2]));	
-		elms := tr;
-		for t in Difference(tr,[()]) do
-			points := MovedPoints(t);
-			for elm in Order2Perm(Difference(domain, Union(points,[1..Minimum(points)]))) do
-				Add(elms, t*elm);
-			od;
-		od;
-		return Union(elms, [()]);
-	end;
-
-	lad_list := [];
+	full_lad_list := [];
 
 	# Get all subgroups of Sym(degree) up the conjugacy. 
 	CSubG := List(ConjugacyClassesSubgroups(SymmetricGroup(degree)), Representative);
 
+	# Put the groups in this record indexed by the number of orbits. 
+	subg_orbits := rec();
+	for idx in [1..degree] do
+		subg_orbits.(idx) := [];
+	od;
 
-	for G in CSubG do
-		SetPermGroupDomain(G, [1..degree]);
-		arc_labels := List(Orbits(G, PermGroupDomain(G)), Set);
-		rev_maps := Order2Perm([1..Size(arc_labels)]);
-		
-		for rev_map in rev_maps do
-			graph := RSGraphByAdjacencyList(List(arc_labels, x -> [1, 1]), rev_map);
+	for SubG in CSubG do
+		orb := Orbits(SubG, [1..degree]);
+		SetPermGroupDomain(SubG, [1..degree]);
+		Add(subg_orbits.(Size(orb)), [SubG, orb]);
+	od;
 
-			# Permuting of arc labels is taken care of by going through each possible
-			# reverse map. 
-			lad := LocalActionDiagramFromData(graph, [G], arc_labels);
+	rs_graphs := AllRSGraphs(degree, no_verts);
+
+	for graph in rs_graphs do
+		rev := RSGraphReverseMap(graph);
+		# Get the number of arcs originating at each vertex. 
+		no_out_arcs := [];
+		for vert in RSGraphVertices(graph) do
+			Add(no_out_arcs, Size(RSGraphOutArcs(graph).(vert)));
+		od;
+
+		# Each element of all_labels is a valid labelling of the local 
+		# action diagram. 
+		# Each element is a list where the first element is the vertex
+		# label and the second element is the arc labels at that vertex. 
+		#
+		# Need the if statement for when there is only one vertex. 
+		if Size(no_out_arcs) <> 1 then
+			all_labels := Cartesian(List(no_out_arcs, x -> subg_orbits.(x)));
+		else
+			all_labels := Cartesian([subg_orbits.(no_out_arcs[1])]);
+		fi;
+
+		for labels in all_labels do
+			lad_list := [];
+			vert_labels := List(labels, x -> x[1]);
+			base_arc_labels := List(labels, x -> x[2]);
+			temp_list := [];
+			for lab in base_arc_labels do
+				temp_list := Concatenation(temp_list, lab);
+			od;
+			base_arc_labels := temp_list;
+
+			# Reduce every permutation of the arc labels to just one from
+			# each of these orbits. The orbits correspond to local action
+			# diagram isomorphisms that are just an isomorphism of the
+			# RSGraph. 
+			#
+			# It's not the whole symmetric group. Make it one for each
+			# of the arcs ("mults" thing). 
+			all_arc_perms := SymmetricGroup(RSGraphNumberArcs(graph));
+			arc_perms := Centraliser(all_arc_perms, rev);
+			arc_perms := OrbitsDomain(arc_perms, all_arc_perms, OnRight);
+			arc_perms := List(arc_perms, x -> x[1]);
 
 			iso_lad := false;
-			for lad2 in lad_list do
-				if IsomorphismLocalActionDiagrams(lad2, lad) <> fail then
-					iso_lad := true;
-					break;
+			for arc_perm in arc_perms do
+				arc_labels := Permuted(base_arc_labels, arc_perm);
+				lad := LocalActionDiagramFromData(graph, vert_labels, arc_labels);
+				for lad2 in lad_list do
+					if IsomorphismLocalActionDiagrams(lad, lad2) <> fail then
+						iso_lad := true;
+						break;
+					fi;
+				od;
+				if iso_lad = false then
+					Add(lad_list, lad);
+				else
+					iso_lad := false;
 				fi;
 			od;
-
-			if not iso_lad then
-				Add(lad_list, lad);
-			fi;
+			full_lad_list := Concatenation(full_lad_list, lad_list);
 		od;
 	od;
+
+	return full_lad_list;
+
+	#for G in CSubG do
+	#	SetPermGroupDomain(G, [1..degree]);
+	#	arc_labels := List(Orbits(G, PermGroupDomain(G)), Set);
+	#	rev_maps := Order2Perm([1..Size(arc_labels)]);
+	#	
+	#	for rev_map in rev_maps do
+	#		graph := RSGraphByAdjacencyList(List(arc_labels, x -> [1, 1]), rev_map);
+
+	#		# Permuting of arc labels is taken care of by going through each possible
+	#		# reverse map. 
+	#		lad := LocalActionDiagramFromData(graph, [G], arc_labels);
+
+	#		iso_lad := false;
+	#		for lad2 in lad_list do
+	#			if IsomorphismLocalActionDiagrams(lad2, lad) <> fail then
+	#				iso_lad := true;
+	#				break;
+	#			fi;
+	#		od;
+
+	#		if not iso_lad then
+	#			Add(lad_list, lad);
+	#		fi;
+	#	od;
+	#od;
 
 	return lad_list;
 end);
@@ -676,10 +735,6 @@ function(degree, no_verts)
 				for arc_list in graph do 
 					Sort(arc_list);
 				od;
-
-				if String(graph) = "[ [ 1, 2, 2 ], [ 1, 1 ], [ 3 ] ]" then
-					Error("HUH?");
-				fi;
 				Add(list_of_graphs, graph);
 			fi;
 			return;

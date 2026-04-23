@@ -45,7 +45,7 @@ function(graph, vert_labels, arc_labels)
 
 
 	for idx in Set(RecNames(vert_labels)) do
-		if Set(orbits.(idx)) <> Set(arc_label_combined.(idx)) then
+		if Set(List(orbits.(idx), x -> Set(x))) <> Set(List(arc_label_combined.(idx), x -> Set(x))) then
 			ErrorNoReturn("Must have an arc label for each orbit of the vertex labels.");
 		fi;
 		if not IsDuplicateFree(arc_label_combined.(idx)) then
