@@ -360,7 +360,7 @@ end);
 
 InstallMethod(IsomorphismLocalActionDiagrams, "Isormorphism between two LocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram],
 function(lad1, lad2)
-	local iso, lad_iso, graph1, graph2, vert_id, arc_id, bijections, out_arc_ids, labels_original, labels_mapped, labels_original_flat, labels_mapped_flat, perm, perms, labels_mapped_flat_perm, bijection, BijectionMap, ConjugateBijection, bad_iso, G1, G2, S, norm, all_conj, found_perm, labels_bijection_mapped, labels_bijection_flat, idx;
+	local iso, lad_iso, graph1, graph2, vert_id, arc_id, bijections, out_arc_ids, labels_original, labels_mapped, labels_original_flat, labels_mapped_flat, perm, perms, labels_mapped_flat_perm, bijection, BijectionMap, ConjugateBijection, bad_iso, G1, G2, S, norm, all_conj, found_perm, labels_bijection_mapped, labels_bijection_flat, idx, count, new_count, mults, gens;
 
 	# Return the general mapping which maps list1[i] to list2[i]. 
 	BijectionMap := function(list1, list2)
@@ -450,98 +450,120 @@ function(lad1, lad2)
 			od;
 
 			#### Might be slower than the "brute force" method? ####
-			G1 := LocalActionDiagramVertexLabels(lad1).(vert_id);
-			G2 := LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]);
+			## #G1 := LocalActionDiagramVertexLabels(lad1).(vert_id);
+			## #G2 := LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]);
 
-			if G1 = Group(()) and G2 = Group(()) then
-				bijection := ();
+			## #if G1 = Group(()) and G2 = Group(()) then
+			## #	bijection := ();
+			## #else
+			## #	S := SymmetricGroup(Maximum(Union(MovedPoints(G1), MovedPoints(G2))));
+
+			## #	# Find a permutation that conjugates G1 into G2. 
+			## #	bijection := RepresentativeAction(S, G1, G2);
+			## #fi;
+
+			## #if bijection = fail then
+			## #	bijections := fail;
+			## #	break;
+			## #fi;
+
+
+			## ## The bijection found does not take into account fixed points 
+			## ## from PermGroupDomain (using RepresentativeAction with that 
+			## ## causes a significant slowdown). This corrects the fixed point
+			## ## mapping in the bijection by first "undoing" the movement of it
+			## ## and then multiplying by the transposition which is the correct
+			## ## movement of it. Since the orbits are disjoint this works. 
+			## #for idx in [1..Size(labels_original)] do
+			## #	if Size(labels_original[idx]) = 1 then
+			## #		if labels_original[idx][1] <> labels_original[idx][1]^bijection then
+			## #			bijection := bijection * (labels_original[idx][1], labels_original[idx][1]^bijection);
+			## #		fi;
+
+			## #		if labels_original[idx][1] <> labels_mapped[idx][1] then
+			## #			bijection := bijection * (labels_original[idx][1], labels_mapped[idx][1]);
+			## #		fi;
+			## #	fi;
+			## #od;
+
+			## #labels_original_flat := Flat(labels_original);
+			## #labels_mapped_flat := Flat(labels_mapped);
+			## #labels_bijection_flat := List(labels_original_flat, x -> x^bijection);
+
+			## ## If the bijection found does not map the orbits correctly then we multiply
+			## ## by the transpositions that swap what the bijection maps with something
+			## ## in the correct orbit. Because these swap orbit the product of these 
+			## ## transpositions commute with the bijection so this is still a conjugation
+			## ## of G1 into G2. 
+			## ##
+			## #if labels_bijection_flat <> labels_mapped_flat then
+			## #	#for idx in [1..Size(labels_original_flat)] do
+			## #	#	if labels_bijection_flat[idx] <> labels_mapped_flat[idx] then
+			## #	#		bijection := bijection * (labels_bijection_flat[idx], labels_mapped_flat[idx]);
+			## #	#	fi;
+			## #	#od;
+			## #	bijection := bijection * MappingPermListList(labels_bijection_flat, labels_mapped_flat);
+			## #fi;
+
+			## #if G1^bijection <> G2 then
+			## #	bijections := fail;
+			## #	break;
+			## #fi;
+
+			## #bijections.(vert_id) := BijectionMap(labels_original_flat, List(labels_original_flat, x -> x^bijection));
+
+			# Get every permutation of labels_mapped that respects the partition. 
+			mults := List(labels_mapped, x -> Size(x));
+			count := 1;
+			new_count := 1;
+
+			# If there are *n* elments in the label then make the list [count..count+n-1].
+			# The generators of the symmetric group on that list will give all permutations
+			# of that list. 
+			for idx in [1..Size(mults)] do
+				new_count := count+mults[idx];
+				mults[idx] := [count..count+mults[idx]-1];
+				count := new_count;
+			od;
+
+			# Get the permutation group consisting of all permutations on the mapped labels. 
+			gens := Flat(List(List(mults, x -> SymmetricGroup(x)), GeneratorsOfGroup));
+
+			if Size(gens) = 0 then
+				perms := Group(());
 			else
-				S := SymmetricGroup(Maximum(Union(MovedPoints(G1), MovedPoints(G2))));
-
-				# Find a permutation that conjugates G1 into G2. 
-				bijection := RepresentativeAction(S, G1, G2);
+				perms := Group(gens);
 			fi;
 
+
+
+			labels_original_flat := Flat(labels_original);
+			labels_mapped_flat := Flat(labels_mapped);
+
+			bijection := fail;
+			for perm in perms do
+				labels_mapped_flat_perm := Permuted(Flat(labels_mapped_flat), perm);
+
+
+				bijection := BijectionMap(labels_original_flat, labels_mapped_flat_perm);
+				
+				#if iso[2] = (1,2) then Error("huH"); fi; 
+				# If this is a conjugate bijection add it to the bijection list and
+				# break out of this loop. 
+				if ConjugateBijection(bijection, LocalActionDiagramVertexLabels(lad1).(vert_id)) = LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]) then
+					bijections.(vert_id) := bijection;
+					break;
+				fi;
+
+				bijection := fail;
+			od;
+
+			# This vertex map doesn't work so we break out of the loop and continue 
+			# to the next isomorphism. 
 			if bijection = fail then
 				bijections := fail;
 				break;
 			fi;
-
-
-			# The bijection found does not take into account fixed points 
-			# from PermGroupDomain (using RepresentativeAction with that 
-			# causes a significant slowdown). This corrects the fixed point
-			# mapping in the bijection by first "undoing" the movement of it
-			# and then multiplying by the transposition which is the correct
-			# movement of it. Since the orbits are disjoint this works. 
-			for idx in [1..Size(labels_original)] do
-				if Size(labels_original[idx]) = 1 then
-					if labels_original[idx][1] <> labels_original[idx][1]^bijection then
-						bijection := bijection * (labels_original[idx][1], labels_original[idx][1]^bijection);
-					fi;
-
-					if labels_original[idx][1] <> labels_mapped[idx][1] then
-						bijection := bijection * (labels_original[idx][1], labels_mapped[idx][1]);
-					fi;
-				fi;
-			od;
-
-			labels_original_flat := Flat(labels_original);
-			labels_mapped_flat := Flat(labels_mapped);
-			labels_bijection_flat := List(labels_original_flat, x -> x^bijection);
-
-			# If the bijection found does not map the orbits correctly then we multiply
-			# by the transpositions that swap what the bijection maps with something
-			# in the correct orbit. Because these swap orbit the product of these 
-			# transpositions commute with the bijection so this is still a conjugation
-			# of G1 into G2. 
-			#
-			if labels_bijection_flat <> labels_mapped_flat then
-				#for idx in [1..Size(labels_original_flat)] do
-				#	if labels_bijection_flat[idx] <> labels_mapped_flat[idx] then
-				#		bijection := bijection * (labels_bijection_flat[idx], labels_mapped_flat[idx]);
-				#	fi;
-				#od;
-				bijection := bijection * MappingPermListList(labels_bijection_flat, labels_mapped_flat);
-			fi;
-
-			if G1^bijection <> G2 then
-				bijections := fail;
-				break;
-			fi;
-
-			bijections.(vert_id) := BijectionMap(labels_original_flat, List(labels_original_flat, x -> x^bijection));
-
-			#####  #######  # Get every permutation of labels_mapped that respects the partition. 
-			#####  #perms := DirectProduct(List(labels_mapped, x -> SymmetricGroup(Size(x))));
-
-
-			#####  #labels_original_flat := Flat(labels_original);
-			#####  #labels_mapped_flat := Flat(labels_mapped);
-
-			#####  #bijection := fail;
-			#####  #for perm in perms do
-			#####  #	labels_mapped_flat_perm := Permuted(Flat(labels_mapped_flat), perm);
-
-
-			#####  #	bijection := BijectionMap(labels_original_flat, labels_mapped_flat_perm);
-			#####  #	
-			#####  #	# If this is a conjugate bijection add it to the bijection list and
-			#####  #	# break out of this loop. 
-			#####  #	if ConjugateBijection(bijection, LocalActionDiagramVertexLabels(lad1).(vert_id)) = LocalActionDiagramVertexLabels(lad2).(vert_id^iso[1]) then
-			#####  #		bijections.(vert_id) := bijection;
-			#####  #		break;
-			#####  #	fi;
-
-			#####  #	bijection := fail;
-			#####  #od;
-
-			#####  ## This vertex map doesn't work so we break out of the loop and continue 
-			#####  ## to the next isomorphism. 
-			#####  #if bijection = fail then
-			#####  #	bijections := fail;
-			#####  #	break;
-			#####  #fi;
 		od;
 
 		# A conjugate bijection was found for each vertex under this isomorphism. 
