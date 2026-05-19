@@ -1,5 +1,7 @@
 DeclareAttribute("AutomorphismGroup", IsRSGraph);
 
+DeclareAttribute("LAD_RSGraphNonReverseAutomorphisms@", IsRSGraph);
+
 DeclareOperation("IsomorphismRSGraphs", [IsRSGraph, IsRSGraph]);
 
 DeclareOperation("RSGraphVertexAutomorphism", [IsRSGraph, IsPerm]);

@@ -61,6 +61,7 @@ function(graph)
 		aut_grp_arcs := Group(());
 	fi;
 
+
 	# For each generator of *aut_grp_verts* get an associated mapping
 	# on the arcs. 
 	arc_gen_list := [];
@@ -75,10 +76,12 @@ function(graph)
 		# Can use this one as digraphs have arc labels [1..N]. 
 		sort_perm := SortingPerm(arc_mapped); 
 		Add(arc_gen_list, sort_perm);
+
 	od;
 
 	arc_gen_list := Concatenation(arc_gen_list, GeneratorsOfGroup(aut_grp_arcs));
 
+	SetLAD_RSGraphNonReverseAutomorphisms@(graph, MapGroup(GroupByGenerators(arc_gen_list), digraph_rec.vertex_id_map, digraph_rec.arc_id_map));
 
 	rs_aut_grp := Centraliser(GroupByGenerators(arc_gen_list), digraph_rec.reverse_map);
 
@@ -299,15 +302,63 @@ function(graph)
 	perm_mat := PermutationMat(vert_perm, Size(adj_mat), 1);
 	canon_adj_mat := Inverse(perm_mat)*adj_mat*perm_mat;
 
-	canon_cert := String(canon_adj_mat);
-
-	arc_id_rec := rec();
-	arc_id := 0;
 	moved_rev_points := MovedPoints(new_rev_map);
 
-	# Calculate the "lexicographically standard" arc map. 
-	standard_rev_map := ();
+	# Find the number of non-self-reverse loops at each vertex.
+	all_moved_arcs := [];
+	arc_id := 0;
+	for idx_x in [1..Size(canon_adj_mat)] do
+		for idx_y in [1..Size(canon_adj_mat)] do
+			if idx_x = idx_y then
+				arc_id_list := List([1..canon_adj_mat[idx_x][idx_y]], x -> arc_id + x);
+				moved_arcs := Intersection(moved_rev_points, arc_id_list);
+				Add(all_moved_arcs, Size(moved_arcs));
+			fi;
 
+			arc_id := arc_id + canon_adj_mat[idx_x][idx_y];
+		od;
+	od;
+
+	aut_g := AutomorphismGroup(graph);
+	aut_g := LAD_RSGraphNonReverseAutomorphisms@(graph);
+
+	# Now find the automorphism that puts the "largest" vertices
+	# (in terms of moved arcs) first. 
+	current_max := ShallowCopy(all_moved_arcs);
+	current_v_perm := ();
+	current_a_perm := ();
+
+	for g_arc in aut_g do
+		g_vert := RSGraphVertexAutomorphism(graph, g_arc);
+
+		permed_arcs := Permuted(all_moved_arcs, Inverse(vert_perm)*g_vert*vert_perm);
+
+
+		if permed_arcs > current_max then
+			current_max := ShallowCopy(permed_arcs);
+			current_v_perm := g_vert;
+			current_a_perm := g_arc;
+		fi;
+	od;
+
+	vert_perm := current_v_perm * vert_perm;
+
+	digraph_canon_arc := current_a_perm * digraph_canon_arc;
+
+
+	new_rev_map := Inverse(digraph_canon_arc)*digraph_rec.reverse_map*digraph_canon_arc;
+
+	moved_rev_points := MovedPoints(new_rev_map);
+
+	perm_mat := PermutationMat(vert_perm, Size(adj_mat), 1);
+	canon_adj_mat := Inverse(perm_mat)*adj_mat*perm_mat;
+
+
+	# Calculate the "lexicographically standard" arc map. 
+	canon_cert := String(canon_adj_mat);
+	arc_id_rec := rec();
+	arc_id := 0;
+	standard_rev_map := ();
 	for idx_x in [1..Size(canon_adj_mat)] do
 		for idx_y in [1..Size(canon_adj_mat)] do
 			# There are no arcs between the two vertices. 
@@ -579,7 +630,7 @@ end);
 
 InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
 function(degree, no_verts)
-	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab;
+	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id;
 
 	full_lad_list := [];
 
@@ -620,8 +671,9 @@ function(degree, no_verts)
 			all_labels := Cartesian([subg_orbits.(no_out_arcs[1])]);
 		fi;
 
+		lad_list := [];
 		for labels in all_labels do
-			lad_list := [];
+
 			vert_labels := List(labels, x -> x[1]);
 			base_arc_labels := List(labels, x -> x[2]);
 			temp_list := [];
@@ -637,10 +689,23 @@ function(degree, no_verts)
 			#
 			# It's not the whole symmetric group. Make it one for each
 			# of the arcs ("mults" thing). 
-			all_arc_perms := SymmetricGroup(RSGraphNumberArcs(graph));
+			all_arc_perms_gens := [];
+			
+			for v_id in RSGraphVertices(graph) do
+				gens := GeneratorsOfGroup(SymmetricGroup(RSGraphOutArcs(graph).(v_id)));
+				all_arc_perms_gens := Union(all_arc_perms_gens, gens);
+			od;
+
+			if Size(all_arc_perms_gens) = 0 then
+				all_arc_perms := Group(());
+			else
+				all_arc_perms := Group(all_arc_perms_gens);
+			fi;
+
 			arc_perms := Centraliser(all_arc_perms, rev);
 			arc_perms := OrbitsDomain(arc_perms, all_arc_perms, OnRight);
 			arc_perms := List(arc_perms, x -> x[1]);
+
 
 			iso_lad := false;
 			for arc_perm in arc_perms do
@@ -652,14 +717,16 @@ function(degree, no_verts)
 						break;
 					fi;
 				od;
+
 				if iso_lad = false then
 					Add(lad_list, lad);
 				else
 					iso_lad := false;
 				fi;
 			od;
-			full_lad_list := Concatenation(full_lad_list, lad_list);
+			
 		od;
+		full_lad_list := Concatenation(full_lad_list, lad_list);
 	od;
 
 	return full_lad_list;
