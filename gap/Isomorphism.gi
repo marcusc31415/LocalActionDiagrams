@@ -251,7 +251,7 @@ end);
 
 InstallMethod(RSGraphCanonicalLabelling, "Returns the map that sends RSGraph to its canonical RSGraph.", [IsRSGraph],
 function(graph)
-	local PermToMap, digraph_rec, digraph_canon_vert, digraph_arcs, digraph_arcs_mapped, digraph_canon_arc, new_rev_map, adj_mat, v_labels_mapped, vert_perm, perm_mat, canon_adj_mat, canon_cert, arc_id_rec, arc_id, moved_rev_points, standard_rev_map, idx_x, idx_y, arc_string, moved_arcs, idx, prev_arcs, current_arcs, lex_perm;
+	local PermToMap, digraph_rec, digraph_canon_vert, digraph_arcs, digraph_arcs_mapped, digraph_canon_arc, new_rev_map, adj_mat, v_labels_mapped, vert_perm, perm_mat, canon_adj_mat, canon_cert, arc_id_rec, arc_id, moved_rev_points, standard_rev_map, idx_x, idx_y, arc_string, moved_arcs, idx, prev_arcs, current_arcs, lex_perm, all_moved_arcs, arc_id_list, aut_g, current_max, current_v_perm, current_a_perm, g_arc, g_vert, permed_arcs;
 
 	PermToMap := function(perm, domain)
 		local dp_elms;
