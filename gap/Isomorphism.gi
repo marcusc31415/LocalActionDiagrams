@@ -251,7 +251,7 @@ end);
 
 InstallMethod(RSGraphCanonicalLabelling, "Returns the map that sends RSGraph to its canonical RSGraph.", [IsRSGraph],
 function(graph)
-	local PermToMap, digraph_rec, digraph_canon_vert, digraph_arcs, digraph_arcs_mapped, digraph_canon_arc, new_rev_map, adj_mat, v_labels_mapped, vert_perm, perm_mat, canon_adj_mat, canon_cert, arc_id_rec, arc_id, moved_rev_points, standard_rev_map, idx_x, idx_y, arc_string, moved_arcs, idx, prev_arcs, current_arcs, lex_perm, all_moved_arcs, arc_id_list, aut_g, current_max, current_v_perm, current_a_perm, g_arc, g_vert, permed_arcs;
+	local PermToMap, digraph_rec, digraph_canon_vert, digraph_arcs, digraph_arcs_mapped, digraph_canon_arc, new_rev_map, adj_mat, v_labels_mapped, vert_perm, perm_mat, canon_adj_mat, canon_cert, arc_id_rec, arc_id, moved_rev_points, standard_rev_map, idx_x, idx_y, arc_string, moved_arcs, idx, prev_arcs, current_arcs, lex_perm, all_moved_arcs, arc_id_list, aut_g, current_max, current_v_perm, current_a_perm, g_arc, g_vert, permed_arcs, max;
 
 	PermToMap := function(perm, domain)
 		local dp_elms;
@@ -325,21 +325,27 @@ function(graph)
 	# Now find the automorphism that puts the "largest" vertices
 	# (in terms of moved arcs) first. 
 	current_max := ShallowCopy(all_moved_arcs);
+	max := SortedList(current_max, {x, y} -> x > y);
 	current_v_perm := ();
 	current_a_perm := ();
 
-	for g_arc in aut_g do
-		g_vert := RSGraphVertexAutomorphism(graph, g_arc);
+	if current_max <> max then 
+		for g_arc in aut_g do
+			g_vert := RSGraphVertexAutomorphism(graph, g_arc);
 
-		permed_arcs := Permuted(all_moved_arcs, Inverse(vert_perm)*g_vert*vert_perm);
+			permed_arcs := Permuted(all_moved_arcs, Inverse(vert_perm)*g_vert*vert_perm);
 
 
-		if permed_arcs > current_max then
-			current_max := ShallowCopy(permed_arcs);
-			current_v_perm := g_vert;
-			current_a_perm := g_arc;
-		fi;
-	od;
+			if permed_arcs > current_max then
+				current_max := ShallowCopy(permed_arcs);
+				current_v_perm := g_vert;
+				current_a_perm := g_arc;
+				if current_max = max then
+					break;
+				fi;
+			fi;
+		od;
+	fi;
 
 	vert_perm := current_v_perm * vert_perm;
 
@@ -630,7 +636,7 @@ end);
 
 InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
 function(degree, no_verts)
-	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id;
+	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N;
 
 	full_lad_list := [];
 
@@ -703,27 +709,45 @@ function(degree, no_verts)
 			fi;
 
 			arc_perms := Centraliser(all_arc_perms, rev);
-			arc_perms := OrbitsDomain(arc_perms, all_arc_perms, OnRight);
-			arc_perms := List(arc_perms, x -> x[1]);
+			arc_perms_orbits := OrbitsDomain(arc_perms, all_arc_perms, OnRight);
 
+			# Get the arc labellings associated with the permutations. Keep them
+			# separated by orbits. 
+			arc_labels_orbits := List(arc_perms_orbits, x -> Set(List(x, perm -> List(Permuted(base_arc_labels, perm), Set))));
+			
+			OnSetsTuplesSets := function(e, g) return Set(e, function(i) return OnTuplesSets(i, g); end); end;
 
-			iso_lad := false;
-			for arc_perm in arc_perms do
-				arc_labels := Permuted(base_arc_labels, arc_perm);
-				lad := LocalActionDiagramFromData(graph, vert_labels, arc_labels);
-				for lad2 in lad_list do
-					if IsomorphismLocalActionDiagrams(lad, lad2) <> fail then
-						iso_lad := true;
-						break;
-					fi;
-				od;
+			N := Normaliser(SymmetricGroup(degree), vert_labels[1]);
 
-				if iso_lad = false then
-					Add(lad_list, lad);
-				else
-					iso_lad := false;
-				fi;
+			lad_orbits := OrbitsDomain(N, arc_labels_orbits, OnSetsTuplesSets);
+
+			for arc_labels in lad_orbits do
+				lad := LocalActionDiagramFromData(graph, vert_labels, arc_labels[1][1]);
+				Add(lad_list, lad);
 			od;
+
+
+
+			#arc_perms := OrbitsDomain(arc_perms, all_arc_perms, OnRight);
+			#arc_perms := List(arc_perms, x -> x[1]);
+
+			#iso_lad := false;
+			#for arc_perm in arc_perms do
+			#	arc_labels := Permuted(base_arc_labels, arc_perm);
+			#	lad := LocalActionDiagramFromData(graph, vert_labels, arc_labels);
+			#	for lad2 in lad_list do
+			#		if IsomorphismLocalActionDiagrams(lad, lad2) <> fail then
+			#			iso_lad := true;
+			#			break;
+			#		fi;
+			#	od;
+
+			#	if iso_lad = false then
+			#		Add(lad_list, lad);
+			#	else
+			#		iso_lad := false;
+			#	fi;
+			#od;
 			
 		od;
 		full_lad_list := Concatenation(full_lad_list, lad_list);
