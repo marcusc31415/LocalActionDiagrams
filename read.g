@@ -10,4 +10,4 @@ ReadPackage( "LocalActionDiagrams", "gap/PermGroupDomain.gi");
 
 ReadPackage( "LocalActionDiagrams", "gap/LocalActionDiagram.gi");
 
-
+ReadPackage( "LocalActionDiagrams", "gap/TikZ.gi");

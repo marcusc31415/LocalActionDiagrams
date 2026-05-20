@@ -1,0 +1,1 @@
+DeclareOperation("GenerateTikZCode", [IsLocalActionDiagram]);
