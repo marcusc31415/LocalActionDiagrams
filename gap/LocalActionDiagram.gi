@@ -25,7 +25,8 @@ function(graph, vert_labels, arc_labels)
 	orbits := rec();
 
 	for idx in Set(RecNames(vert_labels)) do
-		orbits.(idx) := Orbits(vert_labels.(idx), PermGroupDomain(vert_labels.(idx)));
+		# Get the orbits of each vertex label (and order them). 
+		orbits.(idx) := List(Orbits(vert_labels.(idx), PermGroupDomain(vert_labels.(idx))), Set);
 	od;
 
 	arc_label_combined := rec();
@@ -36,15 +37,19 @@ function(graph, vert_labels, arc_labels)
 
 
 	for arc in RSGraphArcIterator(graph) do
-		if not arc_labels.(arc[1]) in orbits.(arc[2].origin) then
+		if not Set(arc_labels.(arc[1])) in orbits.(arc[2].origin) then
 			ErrorNoReturn("Arc labels must be orbits of the group labels");
 		fi;
 		Add(arc_label_combined.(arc[2].origin), arc_labels.(arc[1]));
 	od;
 
+
 	for idx in Set(RecNames(vert_labels)) do
-		if Set(orbits.(idx)) <> Set(arc_label_combined.(idx)) then
+		if Set(List(orbits.(idx), x -> Set(x))) <> Set(List(arc_label_combined.(idx), x -> Set(x))) then
 			ErrorNoReturn("Must have an arc label for each orbit of the vertex labels.");
+		fi;
+		if not IsDuplicateFree(arc_label_combined.(idx)) then
+			ErrorNoReturn("Must have exactly one arc label for each orbit of a vertex label.");
 		fi;
 	od;
 end);
@@ -301,4 +306,322 @@ function(lad)
 
 
 	return Set(List(scopo_list, x -> Set(x)));
+end);
+
+InstallMethod(LocalActionDiagramGroupType, "Type of the corresponding group", [IsLocalActionDiagram], 
+function(lad)
+	local scopos, CotreeFromScopo, cotrees, cotree, labels, start_vertex, orientation, rev_orientation, current_vertex, out_arc_ids, arc_id, idx;
+
+	CotreeFromScopo := function(scopo)
+		local exclude_edges;
+		exclude_edges := Concatenation(scopo, List(scopo, x -> x^LocalActionDiagramReverseMap(lad)));
+		return RSGraphSubgraph(LocalActionDiagramRSGraph(lad), Difference(LocalActionDiagramArcIDs(lad), exclude_edges));
+	end;
+
+	scopos := LocalActionDiagramScopos(lad);
+
+	cotrees := List(scopos, x -> CotreeFromScopo(x));
+
+	for cotree in cotrees do
+		# Single vertex cotree with no arcs. 
+		if RSGraphNumberVertices(cotree) = 1 and RSGraphNumberArcs(cotree) = 0 then
+			return "Fixed Vertex";
+		fi;
+
+		# Single vertex cotree with one (self-reverse) arc. 
+		if RSGraphNumberVertices(cotree) = 1 and RSGraphNumberArcs(cotree) = 1 then
+			# The arc is labelled by a set of size 1. 
+			if Size(LocalActionDiagramArcLabels(lad).(RSGraphArcIDs(cotree)[1])) = 1 then
+				return "Edge Inversion";
+			fi;
+		fi;
+
+		# This cotree corresponds to a "full scopo" (an arc from every
+		# edge of the local action diagram belonging to the scopo). 
+		# There's nothing to consider with this cotree. 
+		if RSGraphNumberVertices(cotree) = 0 then
+			continue;
+		fi;
+
+		# Check for a cycle graph cotree. 
+		if RSGraphIsCycle(cotree) then
+			labels := List(RSGraphArcIDs(cotree), x -> LocalActionDiagramArcLabels(lad).(x));
+			# Every arc label in the cycle has a size of one. 
+			if ForAll(labels, x -> Size(x) = 1) then
+				return "Lineal";
+			fi;
+
+			# Get cyclic orientation. 
+			start_vertex := RSGraphVertices(cotree)[1];
+			current_vertex := RSGraphVertices(cotree)[1];
+			orientation := [];
+			rev_orientation := [];
+			# The cotree is a cycle so this is the number of times
+			# needed to iterate to walk the cyclic path. 
+			for idx in [1..RSGraphNumberVertices(cotree)] do
+				out_arc_ids := RSGraphOutArcs(cotree).(current_vertex);
+				if out_arc_ids[1] in rev_orientation then
+					arc_id := out_arc_ids[2];
+				else
+					arc_id := out_arc_ids[1];
+				fi;
+				Add(orientation, arc_id);
+				Add(rev_orientation, arc_id^LocalActionDiagramReverseMap(lad));
+				current_vertex := RSGraphArcs(cotree).(arc_id).terminus;
+			od;
+
+			# Will be true if it's a cyclic orientation. 
+			Assert(1, current_vertex = start_vertex);
+			Assert(1, Size(orientation) = RSGraphNumberVertices(cotree));
+			Assert(1, Size(rev_orientation) = RSGraphNumberVertices(cotree));
+
+			labels := List(orientation, x -> LocalActionDiagramArcLabels(lad).(x));
+			# Every label in this orientation has a size of 1. 
+			if ForAll(labels, x -> Size(x) = 1) then
+				return "Focal";
+			fi;
+
+			labels := List(rev_orientation, x -> LocalActionDiagramArcLabels(lad).(x));
+			# Every label in this orientation has a size of 1. 
+			if ForAll(labels, x -> Size(x) = 1) then
+				return "Focal";
+			fi;
+
+		fi;
+	od;
+	return "General";
+
+	# TODO: Use the scopo to get the cyclic orientation instead of calculating it.
+end);
+
+InstallMethod(LocalActionDiagramIsDiscrete, "Check if corresponding group is discrete.", [IsLocalActionDiagram], 
+function(lad)
+	local group_type, v_label, RecIter, scopos, max_scopo, v_in_scopo, arc_id, vertex_id;
+
+	# Helper function for iterating records. 
+	RecIter := x -> List(RecNames(x), y -> x.(y));
+
+	group_type := LocalActionDiagramGroupType(lad);
+
+	# Fixed Vertex and Edge Inversion are always discrete. 
+	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" then
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	# Focal is never discrete. 
+	elif group_type = "Focal" then
+		return false;
+	elif group_type = "Lineal" then
+		# Discrete iff each vertex label is trivial. 
+		for v_label in RecIter(LocalActionDiagramVertexLabels(lad)) do
+			if v_label <> Group(()) then
+				return false;
+			fi;
+		od;
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	elif group_type = "General" then
+		# Get the unique maximal scopo. 
+		scopos := LocalActionDiagramScopos(lad);
+		max_scopo := Position(List(scopos, Length), Maximum(List(scopos, Length)));
+		max_scopo := scopos[max_scopo];
+
+		# Get every vertex in the scopo (origin vertices of edges in scopo).
+		# These are the vertices not in the cotree.
+		v_in_scopo := [];
+		for arc_id in max_scopo do
+			Add(v_in_scopo, LocalActionDiagramArcs(lad).(arc_id).origin);
+		od;
+
+		for vertex_id in LocalActionDiagramVertices(lad) do
+			v_label := LocalActionDiagramVertexLabels(lad).(vertex_id);
+			# Vertex label not in cotree and not trivial.
+			if vertex_id in v_in_scopo then
+				if v_label <> Group(()) then
+					return false;
+				fi;
+			# Vertex label in cotree and not semi-regular. 
+			elif not vertex_id in v_in_scopo then
+				if not IsSemiRegular(v_label, PermGroupDomain(v_label)) then
+					return false;
+				fi;
+			else
+				Error("Something wrong with general type discrete check. Vertex not in scopo and not in cotree...");
+			fi;
+		od;
+		
+		# General type is discrete if above loop finished. 
+		SetLocalActionDiagramIsUniscalar(lad, true);
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	else
+		Error("Something really bad happend with the group type check.");
+	fi;
+
+end);
+
+InstallMethod(LocalActionDiagramIsUniscalar, "Check if corresponding group is uniscalar.", [IsLocalActionDiagram], 
+function(lad)
+	local group_type, v_label, max_cotree, max_scopo, scopos, arc_id, v_in_scopo, vertex_id, scopo, arc_list, arc_label_rec, arc, remove_domain, max_scopo_with_rev, RecIterName;
+
+	# Helper function for iterating records. 
+	RecIterName := x -> List(RecNames(x), y -> [y, x.(y)]);
+
+	group_type := LocalActionDiagramGroupType(lad);
+
+	# These types are always uniscalar for finite local action diagrams . 
+	if group_type = "Fixed Vertex" or group_type = "Edge Inversion" or group_type = "Lineal" then
+		SetLocalActionDiagramIsUnimodular(lad, true); # Uniscalar implies unimodular. 
+		return true;
+	# Focal is never uniscalar. 
+	elif group_type = "Focal" then
+		return false;
+	elif group_type = "General" then
+		# Get the unique maximum scopo.
+		scopos := LocalActionDiagramScopos(lad);
+		max_scopo := Position(List(scopos, Length), Maximum(List(scopos, Length)));
+		max_scopo := scopos[max_scopo];
+		max_scopo_with_rev := Concatenation(max_scopo, List(max_scopo, x -> x^LocalActionDiagramReverseMap(lad)));
+
+
+
+		# Get every vertex in the scopo (origin vertices of arcs in scopo).
+		# These are the vertices not in the cotree.
+		v_in_scopo := [];
+		for arc_id in max_scopo do
+			Add(v_in_scopo, LocalActionDiagramArcs(lad).(arc_id).origin);
+		od;
+
+
+		arc_list := LocalActionDiagramArcs(lad);
+		arc_label_rec := LocalActionDiagramArcLabels(lad);
+
+		for vertex_id in LocalActionDiagramVertices(lad) do
+			v_label := LocalActionDiagramVertexLabels(lad).(vertex_id);
+			# Vertex in the cotree. Need to check if the vertex label
+			# is semi-regular when restricted to the cotree. 
+			if not vertex_id in v_in_scopo then
+				remove_domain := [];
+				for arc in RecIterName(arc_list) do
+					if arc[2].origin = vertex_id and arc[1] in max_scopo_with_rev then
+						remove_domain := Concatenation(remove_domain, arc_label_rec.(arc[1]));
+					fi;
+				od;
+				if not IsSemiRegular(v_label, Difference(PermGroupDomain(v_label), remove_domain)) then
+					return false;
+				fi;
+			fi;
+		od;
+		
+		# General type is discrete if above loop finished. 
+		SetLocalActionDiagramIsUnimodular(lad, true);
+		return true;
+	else
+		Error("Something really bad happend with the group type check.");
+	fi;
+end);
+
+InstallMethod(LocalActionDiagramIsUnimodular, "Check if corresponding group is unimodular.", [IsLocalActionDiagram], 
+function(lad)
+	local spanning_tree, sp_arc_ids, cycle_arcs, cycle_basis, cycle_arc, is_unimodular, cycle, arc_id, prod, prod_rev, i, CycleFinder;
+
+	# Find spanning tree by breadth first search to reduce the size of 
+	# each cycle in the basis. 
+	spanning_tree := RSGraphSpanningTree(LocalActionDiagramRSGraph(lad), "bfs");
+
+	sp_arc_ids := RSGraphArcIDs(spanning_tree);
+
+	# Get each arc not in the spanning tree. 
+	cycle_arcs := Difference(LocalActionDiagramArcIDs(lad), sp_arc_ids);
+
+	# Cycle finding function. 
+	CycleFinder := function(added_arc_id)
+		local cycle, arc_list, visited_verts, dfs, rev_map, arc_id, dead_end, found_cycle, current_vertex, start_vertex, visited_arcs, neighbours;
+
+		arc_list := RSGraphArcs(spanning_tree);
+		rev_map := LocalActionDiagramReverseMap(lad);
+		cycle := [added_arc_id];
+		visited_arcs := [added_arc_id, added_arc_id^rev_map];
+		# This arc isn't in the spanning tree so we need to check it 
+		# from the whole local action diagram. 
+		start_vertex := LocalActionDiagramArcs(lad).(added_arc_id).origin;
+		current_vertex := LocalActionDiagramArcs(lad).(added_arc_id).terminus;
+
+		# The added arc is a loop. 
+		if start_vertex = current_vertex then
+			if added_arc_id^rev_map <> added_arc_id then
+				return [added_arc_id, added_arc_id^rev_map];
+			else
+				return fail;
+			fi;
+		fi;
+
+		found_cycle := false;
+
+		while true do
+			neighbours := RSGraphOutArcs(spanning_tree).(current_vertex);
+			dead_end := true;
+			for arc_id in neighbours do
+				# Haven't searched on this arc yet. 
+				if not arc_id in visited_arcs then
+					Add(visited_arcs, arc_id);
+					Add(visited_arcs, arc_id^rev_map);
+					current_vertex := arc_list.(arc_id).terminus;
+					Add(cycle, arc_id);
+					dead_end := false;
+					if current_vertex = start_vertex then
+						found_cycle := true;
+					fi;
+					break;
+				fi;
+			od;
+
+			if found_cycle = true then
+				break;
+			fi;
+
+			if dead_end = true then
+				Remove(cycle);
+				current_vertex := arc_list.(Last(cycle)).terminus;
+			fi;
+		od;
+
+		return cycle;
+
+	end;
+
+	cycle_basis := [];
+	#checked_arcs := [];
+
+	for cycle_arc in cycle_arcs do
+		cycle := CycleFinder(cycle_arc);
+		if cycle <> fail then
+			Add(cycle_basis, cycle);
+		fi;
+	od;
+
+
+	is_unimodular := true;
+
+	for cycle in cycle_basis do
+		i := 1;
+		prod := 1;
+		prod_rev := 1;
+		for arc_id in cycle do
+			if i mod 2 = 1 then
+				prod := prod * Size(LocalActionDiagramArcLabels(lad).(arc_id));
+				i := i + 1;
+			else
+				prod_rev := prod_rev * Size(LocalActionDiagramArcLabels(lad).(arc_id));
+				i := i + 1;
+			fi;
+		od;
+		if prod <> prod_rev then
+			is_unimodular := false;
+			break;
+		fi;
+	od;
+
+	return is_unimodular;
 end);

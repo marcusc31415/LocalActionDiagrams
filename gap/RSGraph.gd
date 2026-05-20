@@ -32,6 +32,7 @@ DeclareAttribute("RSGraphOutNeighbours", IsRSGraph);
 DeclareAttribute("RSGraphInNeighbours", IsRSGraph);
 DeclareAttribute("RSGraphOutArcs", IsRSGraph);
 DeclareAttribute("RSGraphInArcs", IsRSGraph);
+DeclareProperty("RSGraphIsCycle", IsRSGraph);
 
 # Input/Output Format
 DeclareOperation("RSGraphFromMG5String", [IsString]);
@@ -41,6 +42,8 @@ DeclareOperation("RSGraphArcIterator", [IsRSGraph]);
 
 DeclareOperation("RSGraphSubgraph", [IsRSGraph, IsList]);
 DeclareOperation("RSGraphSubgraphNC", [IsRSGraph, IsList]);
+
+DeclareOperation("RSGraphToStandardForm", [IsRSGraph]);
 
 # Optional argument for bfs/dfs switch. 
 DeclareOperation("RSGraphSpanningTree", [IsRSGraph]);

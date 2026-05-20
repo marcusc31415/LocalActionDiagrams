@@ -83,7 +83,9 @@ function(_arc_list, rev_map, vertex_ids, arc_ids)
 		od;
 	end;
 
-	dfs(vertex_ids[1]);
+	if not IsEmpty(vertex_ids) then
+		dfs(vertex_ids[1]);
+	fi;
 
 
 	if Length(visited_verts) <> Length(vertex_ids) then
@@ -680,7 +682,25 @@ graph -> RSGraphSpanningTree(graph, "bfs"));
 
 InstallMethod(RSGraphSpanningTree, "for and RSGraph", [IsRSGraph, IsString],
 function(graph, type)
-	local arc_ids;
+	local arc_ids, vertex_ids, arc_records, id, subgraph_data;
+
+	# Deal with the one vertex case separately. 
+	if RSGraphNumberVertices(graph) = 1 then
+		vertex_ids := RSGraphVertices(graph);
+		arc_records := rec();
+
+		subgraph_data := rec();
+
+		subgraph_data.vertices := vertex_ids;
+		subgraph_data.arc_ids := [];
+
+		subgraph_data.arcs := arc_records;
+		subgraph_data.reverse_map := RSGraphReverseMap(graph);
+
+		LAD_RSGraphConsCheck@(subgraph_data.arcs, subgraph_data.reverse_map, subgraph_data.vertices, subgraph_data.arc_ids);
+
+		return RSGraphConsNC(IsRSGraph, subgraph_data);
+	fi;
 
 	if type = "dfs" then
 		arc_ids := LAD_DFS_Tree@(graph);
@@ -690,6 +710,170 @@ function(graph, type)
 
 	return RSGraphSubgraph(graph, arc_ids);
 end);
+
+InstallMethod(RSGraphIsCycle, "for an RSGraph", [IsRSGraph],
+function(graph)
+
+	# Need to check if the graph is a cycle graph in the sense of
+	# Reid-Smith. 
+	# Check the 1 and 2 cycle cases separately. 
+	# Then check if number of arcs = 2*number vertices.
+	# The follow the path to see if it's a cycle. 
+	
+	local arc1, out_arcs, current_vertex, start_vertex, iter, RecIter;
+	
+	# 0 vertex case.
+	if RSGraphNumberVertices(graph) = 0 then
+		return false;
+	fi;
+
+	# 1 vertex case. 
+	if RSGraphNumberVertices(graph) = 1 then
+		if RSGraphNumberArcs(graph) = 2 then
+			arc1 := RSGraphArcs(graph).(RSGraphArcIDs(graph)[1]);
+			if arc1.inverse = RSGraphArcIDs(graph)[2] then
+				return true;
+			else
+				return false;
+			fi;
+		else
+			return false;
+		fi;
+	fi;
+		
+	# Must have 2*NumberVertices arcs for it to be a cycle graph. 
+	if RSGraphNumberArcs(graph) <> 2*RSGraphNumberVertices(graph) then
+		return false;
+	fi;
+
+	# Record iteration function. 
+	RecIter := x -> List(RecNames(x), y -> x.(y));
+
+	# Check if each vertex has exactly two arcs originating at it. 
+	for out_arcs in RecIter(RSGraphOutArcs(graph)) do
+		if Size(out_arcs) <> 2 then
+			return false;
+		fi;
+	od;
+
+	# Check there are no self-reverse loops. 
+	# The Filtered list on the left is the number of arcs that are 
+	# fixed by the reverse map (i.e. self-reverse arcs). If it is 
+	# not of length 0 then there is a self-reverse arc. 
+	if Size(Filtered(RSGraphArcIDs(graph), x -> x = x^RSGraphReverseMap(graph))) <> 0 then
+		return false;
+	fi;
+
+	# The graph has two arcs originating at each vertex and there are
+	# no self-reverse arcs. The only way this can happen is if the graph
+	# is a cycle graph. 
+	return true;
+
+end);
+
+# Converts an RSGraph with *N* vertices and *M* edges to have
+# vertex ids [1..N] and arc ids [1..M]. 
+InstallMethod(RSGraphToStandardForm, "for an RSGraph", [IsRSGraph],
+function(graph)
+	local new_vertex_ids, vertex_id_map, new_arc_ids, arc_id_map, new_arcs, arc, new_arc, new_rev_map, MappingCreator, new_graph, checked_ids, arcs, ret, cycle;
+
+	new_vertex_ids := [1..RSGraphNumberVertices(graph)];
+
+
+	# Returns the function mapping original[i] to new[i]. 
+	MappingCreator := function(original, new)
+		local tuple_list, idx, map;
+		
+		tuple_list := [];
+		# Create a list of DirectProductElements of the form [original[i], new[i]]. 
+		for idx in [1..Size(original)] do
+			Add(tuple_list, DirectProductElement([original[idx], new[idx]]));
+		od;
+
+		return GeneralMappingByElements(Domain(original), Domain(new), tuple_list);
+	end;
+
+	# These map the original vertex/arc id to one in the standard range. 
+	# Can't use the built in MappingPermListList as it's not guaranteed 
+	# to also work in the other direction. 
+	vertex_id_map := MappingCreator(RSGraphVertices(graph), new_vertex_ids);
+
+	arcs := [];
+
+	# List of the form [[id, [origin, terminus]], ...] where origin and 
+	# terminus are in terms of the new vertex ids. 
+	for arc in RSGraphArcIterator(graph) do
+		Add(arcs, [arc[1], [arc[2].origin^vertex_id_map, arc[2].terminus^vertex_id_map]]);
+	od;
+
+	# Sort the arc list in lexicographical order --- i.e. [1, 1], [1, 2], [2, 1], [2, 2], etc. 
+	SortBy(arcs, x -> x[2]);
+
+	new_arc_ids := [1..RSGraphNumberArcs(graph)];
+
+	# Map from the old arc ids to the standard range. The arc ids have
+	# been sorted so this will be in lexicographical order. 
+	arc_id_map := MappingCreator(List(arcs, x -> x[1]), new_arc_ids);
+
+
+
+	new_arcs := rec();
+	new_rev_map := ();
+	checked_ids := [];
+
+	for arc in RSGraphArcIterator(graph) do
+		new_arc := rec();
+		new_arc.origin := arc[2].origin^vertex_id_map;
+		new_arc.terminus := arc[2].terminus^vertex_id_map;
+		new_arc.inverse := arc[2].inverse^arc_id_map;
+
+		new_arcs.(arc[1]^arc_id_map) := new_arc;
+
+		# Construct the new reverse map. 
+		# The checked_ids check ensures we only multiply 
+		# by each cycle once. 
+		if not arc[1] in checked_ids then
+			# If it's a self-reverse loop then CycleFromList will fail. 
+			if arc[1] = arc[2].inverse then
+				cycle := ();
+			else
+				cycle := CycleFromList([arc[1]^arc_id_map, arc[2].inverse^arc_id_map]);
+			fi;
+			new_rev_map := new_rev_map*cycle;
+			Add(checked_ids, arc[1]);
+			Add(checked_ids, arc[2].inverse);
+		fi;
+	od;
+
+
+	new_graph := rec();
+
+	new_graph.vertices := new_vertex_ids;
+	new_graph.arc_ids := new_arc_ids;
+
+	new_graph.arcs := new_arcs;
+	new_graph.reverse_map := new_rev_map;
+
+	LAD_RSGraphConsCheck@(new_graph.arcs, new_graph.reverse_map, new_graph.vertices, new_graph.arc_ids);
+
+	ret := rec();
+	ret.graph := RSGraphConsNC(IsRSGraph, new_graph);
+	ret.vertex_id_map := vertex_id_map;
+	ret.arc_id_map := arc_id_map;
+
+	return ret;
+end);
+
+
+
+
+
+
+
+
+
+
+
 
 
 
