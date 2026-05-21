@@ -636,7 +636,7 @@ end);
 
 InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
 function(degree, no_verts)
-	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N;
+	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N, shift_bij, current_arc_labels, idx_y, new_arc_labels, orbit_shift_bij, gen_list, v_group, N_v, reduced_lad_list, iso_found;
 
 	full_lad_list := [];
 
@@ -680,8 +680,29 @@ function(degree, no_verts)
 		lad_list := [];
 		for labels in all_labels do
 
-			vert_labels := List(labels, x -> x[1]);
+			vert_labels := List(labels, x -> ShallowCopy(x[1]));
 			base_arc_labels := List(labels, x -> x[2]);
+
+			# Shift the elements the groups act on so that they
+			# are disjoint. This makes the normaliser stuff
+			# later in the code far simpler. 
+			for idx in [1..Size(base_arc_labels)] do
+				shift_bij := MappingPermListList([1..degree], [(idx-1)*degree+1..(idx)*degree]);
+				# Get the arc labels for this vertex. 
+				current_arc_labels := List(base_arc_labels[idx], ShallowCopy); 
+				new_arc_labels := List(base_arc_labels[idx], ShallowCopy); 
+				for idx_y in [1..Size(new_arc_labels)] do
+					new_arc_labels[idx_y] := List(new_arc_labels[idx_y], x -> x^shift_bij);
+				od;
+				
+				orbit_shift_bij := MappingPermListList(Flat(current_arc_labels), Flat(new_arc_labels));
+
+				base_arc_labels[idx] := new_arc_labels;
+				vert_labels[idx] := vert_labels[idx]^orbit_shift_bij;
+				SetPermGroupDomain(vert_labels[idx], [(idx-1)*degree+1..idx*degree]);
+			od;
+
+
 			temp_list := [];
 			for lab in base_arc_labels do
 				temp_list := Concatenation(temp_list, lab);
@@ -717,7 +738,17 @@ function(degree, no_verts)
 			
 			OnSetsTuplesSets := function(e, g) return Set(e, function(i) return OnTuplesSets(i, g); end); end;
 
-			N := Normaliser(SymmetricGroup(degree), vert_labels[1]);
+			gen_list := [];
+			for v_group in vert_labels do 
+				N_v := Normaliser(SymmetricGroup(PermGroupDomain(v_group)), v_group);
+				gen_list := Concatenation(gen_list, GeneratorsOfGroup(N_v));
+			od;
+
+			if Size(gen_list) = 0 then
+				N := Group(());
+			else
+				N := Group(gen_list);
+			fi;
 
 			lad_orbits := OrbitsDomain(N, arc_labels_orbits, OnSetsTuplesSets);
 
@@ -750,8 +781,28 @@ function(degree, no_verts)
 			#od;
 			
 		od;
-		full_lad_list := Concatenation(full_lad_list, lad_list);
+
+		reduced_lad_list := [];
+		iso_found := false;
+
+		for lad in lad_list do
+			for lad2 in reduced_lad_list do
+				if IsomorphismLocalActionDiagrams(lad, lad2) <> fail then
+					iso_found := true;
+					break;
+				fi;
+			od;
+
+			if iso_found = true then
+				iso_found := false;
+			else
+				Add(reduced_lad_list, lad);
+			fi;
+		od;
+
+		full_lad_list := Concatenation(full_lad_list, reduced_lad_list);
 	od;
+
 
 	return full_lad_list;
 
