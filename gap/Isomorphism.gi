@@ -319,17 +319,21 @@ function(graph)
 		od;
 	od;
 
-	aut_g := AutomorphismGroup(graph);
-	aut_g := LAD_RSGraphNonReverseAutomorphisms@(graph);
-
-	# Now find the automorphism that puts the "largest" vertices
-	# (in terms of moved arcs) first. 
 	current_max := ShallowCopy(all_moved_arcs);
 	max := SortedList(current_max, {x, y} -> x > y);
-	current_v_perm := ();
-	current_a_perm := ();
 
+	# If the current arrangement of the graph is not already in the 
+	# "maximal loop position" then find a mapping that puts it in
+	# this position. Otherwise don't do this to save time. 
 	if current_max <> max then 
+		aut_g := AutomorphismGroup(graph);
+		aut_g := LAD_RSGraphNonReverseAutomorphisms@(graph);
+
+		# Now find the automorphism that puts the "largest" vertices
+		# (in terms of moved arcs) first. 
+		current_v_perm := ();
+		current_a_perm := ();
+
 		for g_arc in aut_g do
 			g_vert := RSGraphVertexAutomorphism(graph, g_arc);
 
@@ -345,19 +349,19 @@ function(graph)
 				fi;
 			fi;
 		od;
+		vert_perm := current_v_perm * vert_perm;
+
+		digraph_canon_arc := current_a_perm * digraph_canon_arc;
+
+
+		new_rev_map := Inverse(digraph_canon_arc)*digraph_rec.reverse_map*digraph_canon_arc;
+
+		moved_rev_points := MovedPoints(new_rev_map);
+
+		perm_mat := PermutationMat(vert_perm, Size(adj_mat), 1);
+		canon_adj_mat := Inverse(perm_mat)*adj_mat*perm_mat;
 	fi;
 
-	vert_perm := current_v_perm * vert_perm;
-
-	digraph_canon_arc := current_a_perm * digraph_canon_arc;
-
-
-	new_rev_map := Inverse(digraph_canon_arc)*digraph_rec.reverse_map*digraph_canon_arc;
-
-	moved_rev_points := MovedPoints(new_rev_map);
-
-	perm_mat := PermutationMat(vert_perm, Size(adj_mat), 1);
-	canon_adj_mat := Inverse(perm_mat)*adj_mat*perm_mat;
 
 
 	# Calculate the "lexicographically standard" arc map. 
@@ -636,7 +640,7 @@ end);
 
 InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
 function(degree, no_verts)
-	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N, shift_bij, current_arc_labels, idx_y, new_arc_labels, orbit_shift_bij, gen_list, v_group, N_v, reduced_lad_list, iso_found;
+	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N, shift_bij, current_arc_labels, idx_y, new_arc_labels, orbit_shift_bij, gen_list, v_group, N_v, reduced_lad_list, iso_found, vert_labels_orbit_rec, arc_labels_flat, v_label, rearanged_vert_labels, positions, new_domain;
 
 	full_lad_list := [];
 
@@ -677,17 +681,43 @@ function(degree, no_verts)
 			all_labels := Cartesian([subg_orbits.(no_out_arcs[1])]);
 		fi;
 
+		# Reduce labels that are the same up to a graph isomorphism. Do
+		# this by finding the orbits of *all_labels* under permutation
+		# by the vertex automorphism group.  
+		aut_v_gen := [];
+
+		for gen in GeneratorsOfGroup(AutomorphismGroup(graph)) do
+			Add(aut_v_gen, RSGraphVertexAutomorphism(graph, gen));
+		od;
+
+		if Size(aut_v_gen) = 0 then
+			aut_v := Group(());
+		else
+			aut_v := Group(aut_v_gen);
+		fi;
+
+		OnList := function(l, g) return Permuted(l, g); end;
+
+		all_labels_orbs := OrbitsDomain(aut_v, all_labels, OnList);
+
+		all_labels := List(all_labels_orbs, x -> x[1]);
+
 		lad_list := [];
+
+
 		for labels in all_labels do
 
 			vert_labels := List(labels, x -> ShallowCopy(x[1]));
 			base_arc_labels := List(labels, x -> x[2]);
 
+			vert_labels_orbit_rec := rec();
+
 			# Shift the elements the groups act on so that they
 			# are disjoint. This makes the normaliser stuff
 			# later in the code far simpler. 
 			for idx in [1..Size(base_arc_labels)] do
-				shift_bij := MappingPermListList([1..degree], [(idx-1)*degree+1..(idx)*degree]);
+				new_domain := [(idx-1)*degree+1..(idx)*degree];
+				shift_bij := MappingPermListList([1..degree], new_domain);
 				# Get the arc labels for this vertex. 
 				current_arc_labels := List(base_arc_labels[idx], ShallowCopy); 
 				new_arc_labels := List(base_arc_labels[idx], ShallowCopy); 
@@ -700,6 +730,8 @@ function(degree, no_verts)
 				base_arc_labels[idx] := new_arc_labels;
 				vert_labels[idx] := vert_labels[idx]^orbit_shift_bij;
 				SetPermGroupDomain(vert_labels[idx], [(idx-1)*degree+1..idx*degree]);
+
+				vert_labels_orbit_rec.(String(new_domain[1])) := vert_labels[idx];
 			od;
 
 
@@ -723,13 +755,17 @@ function(degree, no_verts)
 				all_arc_perms_gens := Union(all_arc_perms_gens, gens);
 			od;
 
+			# This takes into account the arc mappings from automorphisms that move the vertices.  
+			all_arc_perms_gens := Union(all_arc_perms_gens, GeneratorsOfGroup(AutomorphismGroup(graph)));
+
 			if Size(all_arc_perms_gens) = 0 then
 				all_arc_perms := Group(());
 			else
 				all_arc_perms := Group(all_arc_perms_gens);
 			fi;
 
-			arc_perms := Centraliser(all_arc_perms, rev);
+			#arc_perms := Centraliser(all_arc_perms, rev);
+			arc_perms := AutomorphismGroup(graph);
 			arc_perms_orbits := OrbitsDomain(arc_perms, all_arc_perms, OnRight);
 
 			# Get the arc labellings associated with the permutations. Keep them
@@ -744,17 +780,69 @@ function(degree, no_verts)
 				gen_list := Concatenation(gen_list, GeneratorsOfGroup(N_v));
 			od;
 
+			# Now need to add to the normaliser (all possible bijections) the 
+			# bijections between vertices that can map to each other. 
+
+
+			#v_orbits := OrbitsDomain(aut_v, [1..Size(vert_labels)], OnPoints);
+
+			#for v_orbit in v_orbits do
+			#	base_v := v_orbit[1];
+
+			#	for v in v_orbit{[2..Size(v_orbit)]} do
+			#		Add(gen_list, MappingPermListList(PermGroupDomain(vert_labels[base_v]), PermGroupDomain(vert_labels[v])));
+			#	od;
+			#od;
+
+
+			####################################################
+			# Find bug in this or isomorphism code. 
+			# With this enabled there is one less in (3, 4). 
+			# Find out why!!!
+			# ##################################################
+			if debug then
+			for gen in GeneratorsOfGroup(aut_v) do
+				gen_group_bij := ();
+
+				checked_verts := [];
+
+				for vert in [1..Size(vert_labels)] do
+					if not vert in checked_verts then
+						gen_group_bij := gen_group_bij * MappingPermListList(PermGroupDomain(vert_labels[vert]), PermGroupDomain(vert_labels[vert^gen]));
+						Add(checked_verts, vert);
+						Add(checked_verts, vert^gen);
+					fi;
+				od;
+
+				Add(gen_list, gen_group_bij);
+			od;
+			fi;
+
 			if Size(gen_list) = 0 then
 				N := Group(());
 			else
 				N := Group(gen_list);
 			fi;
 
+
 			lad_orbits := OrbitsDomain(N, arc_labels_orbits, OnSetsTuplesSets);
 
 			for arc_labels in lad_orbits do
-				lad := LocalActionDiagramFromData(graph, vert_labels, arc_labels[1][1]);
+
+
+				arc_labels_flat := Flat(arc_labels[1][1]);
+
+				rearanged_vert_labels := [];
+
+				for idx in [1..Size(vert_labels)] do
+					positions := [(idx-1)*degree+1..(idx)*degree];
+					v_label := vert_labels_orbit_rec.(String(Minimum(arc_labels_flat{positions})));
+					Add(rearanged_vert_labels, v_label);
+				od;
+
+				lad := LocalActionDiagramFromData(graph, rearanged_vert_labels, arc_labels[1][1]);
 				Add(lad_list, lad);
+
 			od;
 
 
@@ -801,6 +889,7 @@ function(degree, no_verts)
 		od;
 
 		full_lad_list := Concatenation(full_lad_list, reduced_lad_list);
+		#full_lad_list := Concatenation(full_lad_list, lad_list);
 	od;
 
 
