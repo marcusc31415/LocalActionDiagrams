@@ -801,20 +801,32 @@ function(degree, no_verts)
 			# Find out why!!!
 			# ##################################################
 			if debug then
+
 			for gen in GeneratorsOfGroup(aut_v) do
+				bad_gen := false;
 				gen_group_bij := ();
 
 				checked_verts := [];
 
 				for vert in [1..Size(vert_labels)] do
+					# Need to make sure the groups conjugate? 
 					if not vert in checked_verts then
 						gen_group_bij := gen_group_bij * MappingPermListList(PermGroupDomain(vert_labels[vert]), PermGroupDomain(vert_labels[vert^gen]));
 						Add(checked_verts, vert);
 						Add(checked_verts, vert^gen);
 					fi;
+
+					if vert_labels[vert]^gen_group_bij <> vert_labels[vert^gen] then
+						bad_gen := true;
+						break;
+					fi;
 				od;
 
-				Add(gen_list, gen_group_bij);
+				if bad_gen = false then
+					Add(gen_list, gen_group_bij);
+				else
+					bad_gen := false;
+				fi;
 			od;
 			fi;
 
@@ -870,6 +882,7 @@ function(degree, no_verts)
 			
 		od;
 
+		if debug_2 then
 		reduced_lad_list := [];
 		iso_found := false;
 
@@ -889,7 +902,9 @@ function(degree, no_verts)
 		od;
 
 		full_lad_list := Concatenation(full_lad_list, reduced_lad_list);
-		#full_lad_list := Concatenation(full_lad_list, lad_list);
+	else
+		full_lad_list := Concatenation(full_lad_list, lad_list);
+	fi;
 	od;
 
 
@@ -1126,3 +1141,6 @@ function(degree, no_verts)
 
 	return list_of_rsgraphs_isomorphism;
 end);
+
+
+
