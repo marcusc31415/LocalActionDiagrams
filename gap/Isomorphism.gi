@@ -640,7 +640,7 @@ end);
 
 InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
 function(degree, no_verts)
-	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N, shift_bij, current_arc_labels, idx_y, new_arc_labels, orbit_shift_bij, gen_list, v_group, N_v, reduced_lad_list, iso_found, vert_labels_orbit_rec, arc_labels_flat, v_label, rearanged_vert_labels, positions, new_domain;
+	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N, shift_bij, current_arc_labels, idx_y, new_arc_labels, orbit_shift_bij, gen_list, v_group, N_v, reduced_lad_list, iso_found, vert_labels_orbit_rec, arc_labels_flat, v_label, rearanged_vert_labels, positions, new_domain, aut_v_gen, gen, aut_v, OnList, all_labels_orbs, bad_gen, gen_group_bij, checked_verts;
 
 	full_lad_list := [];
 
@@ -800,7 +800,6 @@ function(degree, no_verts)
 			# With this enabled there is one less in (3, 4). 
 			# Find out why!!!
 			# ##################################################
-			if debug then
 
 			for gen in GeneratorsOfGroup(aut_v) do
 				bad_gen := false;
@@ -828,7 +827,6 @@ function(degree, no_verts)
 					bad_gen := false;
 				fi;
 			od;
-			fi;
 
 			if Size(gen_list) = 0 then
 				N := Group(());
@@ -882,29 +880,7 @@ function(degree, no_verts)
 			
 		od;
 
-		if debug_2 then
-		reduced_lad_list := [];
-		iso_found := false;
-
-		for lad in lad_list do
-			for lad2 in reduced_lad_list do
-				if IsomorphismLocalActionDiagrams(lad, lad2) <> fail then
-					iso_found := true;
-					break;
-				fi;
-			od;
-
-			if iso_found = true then
-				iso_found := false;
-			else
-				Add(reduced_lad_list, lad);
-			fi;
-		od;
-
-		full_lad_list := Concatenation(full_lad_list, reduced_lad_list);
-	else
 		full_lad_list := Concatenation(full_lad_list, lad_list);
-	fi;
 	od;
 
 

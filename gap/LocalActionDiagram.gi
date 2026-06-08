@@ -583,7 +583,12 @@ function(lad)
 
 			if dead_end = true then
 				Remove(cycle);
-				current_vertex := arc_list.(Last(cycle)).terminus;
+
+				if Last(cycle) <> added_arc_id then
+					current_vertex := arc_list.(Last(cycle)).terminus;
+				else
+					current_vertex := LocalActionDiagramArcs(lad).(Last(cycle)).terminus;
+				fi;
 			fi;
 		od;
 
