@@ -1,0 +1,1 @@
+InstallMethod(PermGroupDomain, [IsPermGroup], MovedPoints);
