@@ -1,3 +1,9 @@
+# This is loaded before the extension isomorphism files.
+# The library can still be used if the isomorphism functions
+# aren't available. If the isomorphism files are loaded
+# then they set this variable to true. 
+BindGlobal("LAD_IsomorphismAvailable@", false);
+
 # Category
 DeclareCategory("IsRSGraph", IsObject);
 
@@ -49,3 +55,7 @@ DeclareOperation("RSGraphToStandardForm", [IsRSGraph]);
 DeclareOperation("RSGraphSpanningTree", [IsRSGraph]);
 DeclareOperation("RSGraphSpanningTree", [IsRSGraph, IsString]);
 
+DeclareAttribute("AutomorphismGroup", IsRSGraph);
+DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph);
+
+DeclareOperation("LAD_Internal_AllRSGraphs@", [IsInt, IsInt]);

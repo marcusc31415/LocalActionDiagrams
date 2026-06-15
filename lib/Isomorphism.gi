@@ -1,6 +1,16 @@
+MakeReadWriteGlobal("LAD_IsomorphismAvailable@");
+LAD_IsomorphismAvailable@ := true;
+MakeReadOnlyGlobal("LAD_IsomorphismAvailable@");
+
+###
+# Make a new filter for IsObject to be able to use RedispatchOnCondition thing. 
+# Or have the method installed previously call a global function and have this
+# extension overwrite the global function.  
+###
+
 # Fix it so it's in terms of the RSGraph IDs. Right now it's in terms of
 # the digraph IDs. 
-InstallMethod(AutomorphismGroup, "Automorphism Group of RSGraph", [IsRSGraph],
+InstallMethod(AutomorphismGroup, "Automorphism Group of RSGraph", [IsRSGraph], SUM_FLAGS + 100,
 function(graph)
 	local digraph_rec, digraph, aut_grp, proj_1, proj_2, aut_grp_verts, img_arc_grp, aut_grp_arcs, MapGroup, arc_gen_list, gen, arc_list, arc_mapped, sort_perm, rs_aut_grp;
 
@@ -638,7 +648,7 @@ function(lad1, lad2)
 
 end);
 
-InstallMethod(AllLocalActionDiagrams, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
+InstallMethod(LAD_Internal_AllLocalActionDiagrams@, "enumerates local action diagrams up to isomorphism", [IsInt, IsInt],
 function(degree, no_verts)
 	local lad_list, CSubG, rev_maps, G, arc_labels, rev_map, lad, iso_lad, lad2, Order2Perm, full_lad_list, subg_orbits, idx, SubG, orb, rs_graphs, graph, rev, no_out_arcs, vert, all_labels, labels, vert_labels, base_arc_labels, all_arc_perms, arc_perms, arc_perm, temp_list, lab, all_arc_perms_gens, gens, v_id, arc_perms_orbits, arc_labels_orbits, OnSetsTuplesSets, lad_orbits, N, shift_bij, current_arc_labels, idx_y, new_arc_labels, orbit_shift_bij, gen_list, v_group, N_v, reduced_lad_list, iso_found, vert_labels_orbit_rec, arc_labels_flat, v_label, rearanged_vert_labels, positions, new_domain, aut_v_gen, gen, aut_v, OnList, all_labels_orbs, bad_gen, gen_group_bij, checked_verts;
 
@@ -659,7 +669,13 @@ function(degree, no_verts)
 		Add(subg_orbits.(Size(orb)), [SubG, orb]);
 	od;
 
+	# Suppress the information messages if this function
+	# needs to call the enumeration algorithm. Call the 
+	# AllRSGraphs function to use pre-computed data
+	# this data is already known. 
+	SetInfoLevel(InfoWarning, 0);
 	rs_graphs := AllRSGraphs(degree, no_verts);
+	SetInfoLevel(InfoWarning, 1);
 
 	for graph in rs_graphs do
 		rev := RSGraphReverseMap(graph);
@@ -915,7 +931,7 @@ function(degree, no_verts)
 	return lad_list;
 end);
 
-InstallMethod(AllRSGraphs, "Enumerate RS Graphs with valency <= d and n vertices", [IsInt, IsInt],
+InstallMethod(LAD_Internal_AllRSGraphs@, "Enumerate RS Graphs with valency <= d and n vertices", [IsInt, IsInt],
 function(degree, no_verts)
 	local AllRSGraphsRecursive, start_graph, connected_components, start_vertex, list_of_graphs, MergeConnectedComponents, ShallowCopyLists, arc_list, list_of_rsgraphs, graph, arcs, v_adjacency, v_adjacency_idx, idx, rev_map, loop_ids, vert, arc, loop_ids_by_vertex, current_vertex, loop_perms, perm, loop_id, list_of_rsgraphs_isomorphism, graph2, iso_graphs, Order2Perm;
 

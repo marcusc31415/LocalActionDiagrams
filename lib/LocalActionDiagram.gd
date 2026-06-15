@@ -26,6 +26,7 @@ DeclareAttribute("LocalActionDiagramOutNeighbours", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramInNeighbours", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramOutArcs", IsLocalActionDiagram);
 DeclareAttribute("LocalActionDiagramInArcs", IsLocalActionDiagram);
+DeclareAttribute("LocalActionDiagramGroupName", IsLocalActionDiagram, "mutable");
 
 # Attributes needing some calculation
 DeclareAttribute("LocalActionDiagramScopos", IsLocalActionDiagram);
@@ -39,4 +40,4 @@ DeclareProperty("LocalActionDiagramIsUnimodular", IsLocalActionDiagram);
 # Maybe functions like LocalActionDiagramVertexLabel(id) (return the vert label)
 # --- Stop the need for accessing it via record notation? 
 
-# 
+DeclareOperation("LAD_Internal_AllLocalActionDiagrams@", [IsInt, IsInt]); 

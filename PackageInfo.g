@@ -83,23 +83,27 @@ Dependencies := rec(
 Extensions := [
 	rec (
 		needed := [ ["ugaly", "4.1.3"] ],
-		filename := "gap/ugaly_extension_read.g",
+		filename := "lib/UgalyExtension.gd",
+	),
+	rec (
+		needed := [ ["ugaly", "4.1.3"] ],
+		filename := "lib/UgalyExtension.gi",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/DigraphsConversion.gd",
+		filename := "lib/DigraphsConversion.gd",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/DigraphsConversion.gi",
+		filename := "lib/DigraphsConversion.gi",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/Isomorphism.gd",
+		filename := "lib/Isomorphism.gd",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/Isomorphism.gi",
+		filename := "lib/Isomorphism.gi",
 	),
 ],
 

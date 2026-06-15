@@ -130,22 +130,37 @@ end);
 
 InstallMethod(LocalActionDiagramFromUniversalGroup, "Construct Local Action Diagram Corresponding To Universal Group U(F)", [IsPermGroup],
 function(perm_group)
-	local orbits, graph;
+	local orbits, graph, lad;
 
 	orbits := Orbits(perm_group, PermGroupDomain(perm_group));
 	graph := RSGraphByAdjacencyMatrix([[Length(orbits)]], ());
 
-	return LocalActionDiagramFromDataNC(graph, [perm_group], orbits);
+	lad := LocalActionDiagramFromDataNC(graph, [perm_group], orbits);
+
+	if "Name" in KnownAttributesOfObject(perm_group) then
+		SetLocalActionDiagramGroupName(lad, StringFormatted("U({1})", Name(perm_group)));
+	else
+		SetLocalActionDiagramGroupName(lad, StringFormatted("U({1})", String(perm_group)));
+	fi;
+
+	return lad;
 
 end);
 
+
 # Visualising Local Action Diagrams
+InstallMethod(LocalActionDiagramGroupName, "for a local action diagram", [IsLocalActionDiagram], x -> "");
+
 InstallMethod(ViewString, "for a local action diagram", [IsLocalActionDiagram],
 function(lad)
 	local graph;
 
-	graph := LocalActionDiagramRSGraph(lad);
-	return StringFormatted("<LocalActionDiagram with {1} vertices and {2} arcs>", RSGraphNumberVertices(graph), RSGraphNumberArcs(graph));
+	if LocalActionDiagramGroupName(lad) <> "" then
+		return StringFormatted("<{1} (as a Local Action Diagram)>", LocalActionDiagramGroupName(lad));
+	else
+		graph := LocalActionDiagramRSGraph(lad);
+		return StringFormatted("<LocalActionDiagram with {1} vertices and {2} arcs>", RSGraphNumberVertices(graph), RSGraphNumberArcs(graph));
+	fi;
 end);
 
 InstallMethod(PrintString, "for a local action diagram", [IsLocalActionDiagram], String);
@@ -631,4 +646,7 @@ function(lad)
 	return is_unimodular;
 end);
 
-
+InstallMethod(LAD_Internal_AllLocalActionDiagrams@, "For a degree and number of vertices.", [IsInt, IsInt],
+function(degree, no_verts)
+	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
+end);

@@ -864,9 +864,20 @@ function(graph)
 	return ret;
 end);
 
+InstallMethod(AutomorphismGroup, "For an RS Graph", [IsRSGraph],
+function(graph)
+	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
+end);
 
+InstallMethod(RSGraphCanonicalLabelling, "For an RS Graph", [IsRSGraph],
+function(graph)
+	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
+end);
 
-
+InstallMethod(LAD_Internal_AllRSGraphs@, "For degree and number of vertices. ", [IsInt, IsInt],
+function(degree, no_verts)
+	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
+end);
 
 
 

@@ -1,4 +1,4 @@
-DeclareAttribute("AutomorphismGroup", IsRSGraph);
+#DeclareAttribute("AutomorphismGroup", IsRSGraph);
 
 DeclareAttribute("LAD_RSGraphNonReverseAutomorphisms@", IsRSGraph);
 
@@ -12,7 +12,7 @@ DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsGeneralMa
 
 DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 
-DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph);
+#DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph);
 
 DeclareAttribute("RSGraphCanonicalCertificate", IsRSGraph);
 
@@ -20,6 +20,6 @@ DeclareOperation("IsIsomorphicRSGraphs", [IsRSGraph, IsRSGraph]);
 
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
 
-DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt]);
+#DeclareOperation("LAD_Internal_AllLocalActionDiagrams@", [IsInt, IsInt]);
 
-DeclareOperation("AllRSGraphs", [IsInt, IsInt]);
+#DeclareOperation("LAD_Internal_AllRSGraphs@", [IsInt, IsInt]);
