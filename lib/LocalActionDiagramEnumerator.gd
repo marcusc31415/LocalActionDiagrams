@@ -8,7 +8,9 @@ for LAD_filename@ in DirectoryContents(DirectoriesPackageLibrary("localactiondia
 	if LAD_filename@ = "." or LAD_filename@ = ".." then
 		continue;
 	fi;
-	Add(LAD_AvailableData@, [Int(LAD_filename@{[1]}), Int(LAD_filename@{[3]})]);
+
+	LAD_filename_split@ := SplitString(LAD_filename@, "_");
+	Add(LAD_AvailableData@, [Int(LAD_filename_split@[1]), Int(LAD_filename_split@[2])]);
 od;
 
 LAD_AvailableData@ := Set(LAD_AvailableData@);
@@ -18,6 +20,7 @@ LAD_AvailableData@ := Set(LAD_AvailableData@);
 MakeImmutable(LAD_AvailableData@);
 MakeConstantGlobal("LAD_AvailableData@");
 Unbind(LAD_filename@);
+Unbind(LAD_filename_split@);
 
 BindGlobal("LAD_RSGraphsRecord@", rec());
 BindGlobal("LAD_LocalActionDiagramsRecord@", rec());
@@ -30,3 +33,6 @@ DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt]);
 
 DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt, IsInt]);
 
+DeclareOperation("NumberRSGraphs", [IsInt, IsInt]);
+
+DeclareOperation("NumberLocalActionDiagrams", [IsInt, IsInt]);

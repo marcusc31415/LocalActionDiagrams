@@ -2,10 +2,11 @@ BindGlobal("LAD_ReadLibraryData@",
 function(degree, no_verts)
 	local file_data, filename, file_path, file, data;
 
-	filename := StringFormatted("{1}_{2}_library.pickle", degree, no_verts);
+	filename := StringFormatted("{1}_{2}_library.pickle.gz", degree, no_verts);
+	Info(InfoPerformance, 1, "Reading library data from disk.");
 	file_path := Filename(DirectoriesPackageLibrary("localactiondiagrams", "data")[1], filename);
 
-	file := IO_File(file_path);
+	file := IO_FilteredFile([["gzip", ["-dc"]]], file_path, "r");
 
 	if file = fail then
 		ErrorNoReturn(StringFormatted("Error reading file {1}.", filename));
@@ -16,6 +17,8 @@ function(degree, no_verts)
 	if data = IO_Error then
 		ErrorNoReturn(StringFormatted("Error unpickling file {1}.", filename));
 	fi;
+
+	Info(InfoPerformance, 1, "Finished reading library data from disk.");
 
 	return data;
 
@@ -168,5 +171,15 @@ function(degree, no_verts, lad_number)
 	fi; 
 
 	return lad_list[lad_number];
+end);
+
+InstallMethod(NumberRSGraphs, "Returns the nubmer of RSGraphs with specified degree and vertex count.", [IsInt, IsInt],
+function(degree, no_verts)
+	return Size(AllRSGraphs(degree, no_verts));
+end);
+
+InstallMethod(NumberLocalActionDiagrams, "Returns the nubmer of local action diagrams with specified degree and vertex count.", [IsInt, IsInt],
+function(degree, no_verts)
+	return Size(AllLocalActionDiagrams(degree, no_verts));
 end);
 
