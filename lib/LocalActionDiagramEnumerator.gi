@@ -1,27 +1,67 @@
 BindGlobal("LAD_ReadLibraryData@",
 function(degree, no_verts)
-	local file_data, filename, file_path, file, data;
+	local file_data, filename, file_path, file, data, string_list;
 
-	filename := StringFormatted("{1}_{2}_library.pickle.gz", degree, no_verts);
+	filename := StringFormatted("{1}_{2}_library.txt.gz", degree, no_verts);
 	Info(InfoPerformance, 1, "Reading library data from disk.");
 	file_path := Filename(DirectoriesPackageLibrary("localactiondiagrams", "data")[1], filename);
 
-	file := IO_FilteredFile([["gzip", ["-dc"]]], file_path, "r");
+	#file := IO_FilteredFile([["gzip", ["-dc"]]], file_path, "r");
+	file := IO_CompressedFile(file_path, "r");
 
 	if file = fail then
 		ErrorNoReturn(StringFormatted("Error reading file {1}.", filename));
 	fi;
 
-	data := IO_Unpickle(file);
+	data := IO_ReadUntilEOF(file);
 
-	if data = IO_Error then
-		ErrorNoReturn(StringFormatted("Error unpickling file {1}.", filename));
+	if data = fail then
+		ErrorNoReturn(StringFormatted("Error reading file {1}.", filename));
 	fi;
+
+	IO_Close(file);
+
+	string_list := SplitString(data, "\n");
 
 	Info(InfoPerformance, 1, "Finished reading library data from disk.");
 
-	return data;
+	return string_list;
 
+end);
+
+BindGlobal("LAD_LibraryDataToMemory@",
+function(degree, no_verts)
+	local lad_list, data_list, rs_graph_list, rec_string, rs_graphs, seen_data, graph, graph_data;
+
+	rec_string := StringFormatted("{1},{2}", degree, no_verts);
+
+	data_list := LAD_ReadLibraryData@(degree, no_verts);
+
+	# List of [lad, graph] pairs. 
+	data_list := List(data_list, x -> LocalActionDiagramFromWritableString(x, true));
+
+	rs_graph_list := List(data_list, x -> x[2]);
+	lad_list := List(data_list, x -> x[1]);
+
+	# Reduce the graph data up to isomorphism. Since graphs
+	# are in canonical form we can check this with
+	# equality. 
+	rs_graphs := [];
+	seen_data := [];
+
+	for graph in rs_graph_list do
+		graph_data := RSGraphAdjacencyMatrix(graph);
+
+		if graph_data in seen_data then
+			continue;
+		fi;
+
+		Add(seen_data, graph_data);
+		Add(rs_graphs, graph);
+	od;
+
+	LAD_RSGraphsRecord@.(rec_string) := rs_graphs;
+	LAD_LocalActionDiagramsRecord@.(rec_string) := lad_list;
 end);
 
 
@@ -55,35 +95,8 @@ function(degree, no_verts)
 	elif rec_string in RecNames(LAD_RSGraphsRecord@) then
 		rs_graphs := LAD_RSGraphsRecord@.(rec_string);
 	else
-		file_data := LAD_ReadLibraryData@(degree, no_verts);
-
-		rs_graph_data_pairs := file_data.("graphs");
-		aut_groups := file_data.("graph_automorphism_group");
-		canon_labellings := file_data.("graph_canonical_labelling");
-
-		# Reduce the data up to isomorphism. Since graphs
-		# are in canonical form we can check this with
-		# equality. 
-		rs_graphs := [];
-		seen_data := [];
-
-		for idx in [1..Size(rs_graph_data_pairs)] do
-			graph_data := rs_graph_data_pairs[idx];
-
-			if graph_data in seen_data then
-				continue;
-			fi;
-
-			Add(seen_data, graph_data);
-
-			graph := RSGraphByAdjacencyMatrix(graph_data[1], graph_data[2]);
-			SetAutomorphismGroup(graph, aut_groups[idx]);
-			SetRSGraphCanonicalLabelling(graph, canon_labellings[idx]);
-
-			Add(rs_graphs, graph);
-		od;
-
-		LAD_RSGraphsRecord@.(rec_string) := rs_graphs;
+		LAD_LibraryDataToMemory@(degree, no_verts);
+		rs_graphs := LAD_RSGraphsRecord@.(rec_string);
 	fi;
 
 	return rs_graphs;
@@ -132,29 +145,8 @@ function(degree, no_verts)
 	elif rec_string in RecNames(LAD_LocalActionDiagramsRecord@) then
 		lad_list := LAD_LocalActionDiagramsRecord@.(rec_string);
 	else
-		file_data := LAD_ReadLibraryData@(degree, no_verts);
-		lad_list := [];
-
-		for idx_x in [1..file_data.("number_lads")] do
-			graph := RSGraphByAdjacencyMatrix(file_data.("graphs")[idx_x][1], file_data.("graphs")[idx_x][2]);
-			for v_id in RecNames(file_data.("vertex_labels")[idx_x]) do
-				SetPermGroupDomain(file_data.("vertex_labels")[idx_x].(Int(v_id)), file_data.("perm_group_domains")[idx_x].(Int(v_id)));
-			od;
-			vertex_labels := file_data.("vertex_labels")[idx_x];
-			arc_labels := file_data.("arc_labels")[idx_x];
-
-			lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);
-
-			SetLocalActionDiagramScopos(lad, file_data.("scopos")[idx_x]);
-			SetLocalActionDiagramGroupType(lad, file_data.("group_type")[idx_x]);
-			SetLocalActionDiagramIsDiscrete(lad, file_data.("is_discrete")[idx_x]);
-			SetLocalActionDiagramIsUniscalar(lad, file_data.("is_uniscalar")[idx_x]);
-			SetLocalActionDiagramIsUnimodular(lad, file_data.("is_unimodular")[idx_x]);
-
-			Add(lad_list, lad);
-		od;
-
-		LAD_LocalActionDiagramsRecord@.(rec_string) := lad_list;
+		LAD_LibraryDataToMemory@(degree, no_verts);
+		lad_list := LAD_LocalActionDiagramsRecord@.(rec_string);
 	fi;
 
 	return lad_list;

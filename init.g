@@ -10,5 +10,7 @@ ReadPackage( "LocalActionDiagrams", "lib/PermGroupDomain.gd");
 
 ReadPackage( "LocalActionDiagrams", "lib/LocalActionDiagram.gd");
 
+ReadPackage( "LocalActionDiagrams", "lib/IO.gd");
+
 ReadPackage( "LocalActionDiagrams", "lib/LocalActionDiagramEnumerator.gd");
 

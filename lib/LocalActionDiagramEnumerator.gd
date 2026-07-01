@@ -36,3 +36,5 @@ DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt, IsInt]);
 DeclareOperation("NumberRSGraphs", [IsInt, IsInt]);
 
 DeclareOperation("NumberLocalActionDiagrams", [IsInt, IsInt]);
+
+DeclareOperation("IO_Pickle", [IsFile, IsLocalActionDiagram]);

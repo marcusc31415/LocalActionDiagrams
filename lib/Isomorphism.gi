@@ -383,6 +383,9 @@ function(graph)
 		for idx_y in [1..Size(canon_adj_mat)] do
 			# There are no arcs between the two vertices. 
 			if canon_adj_mat[idx_x][idx_y] = 0 then
+				if idx_x = idx_y then # Indicate that there's zero non self-reverse loops.
+					canon_cert := Concatenation(canon_cert, "0;");
+				fi;
 				continue;
 			fi;
 
