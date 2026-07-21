@@ -38,7 +38,12 @@ DeclareAttribute("RSGraphOutNeighbours", IsRSGraph);
 DeclareAttribute("RSGraphInNeighbours", IsRSGraph);
 DeclareAttribute("RSGraphOutArcs", IsRSGraph);
 DeclareAttribute("RSGraphInArcs", IsRSGraph);
+DeclareAttribute("RSGraphBipartition", IsRSGraph);
+DeclareAttribute("RSGraphMaximumDegree", IsRSGraph);
 DeclareProperty("RSGraphIsCycle", IsRSGraph);
+DeclareProperty("RSGraphIsBipartite", IsRSGraph);
+DeclareProperty("RSGraphHasParallelArcs", IsRSGraph);
+DeclareAttribute("RSGraphMaximumDegree", IsRSGraph);
 
 # Input/Output Format
 DeclareOperation("RSGraphFromMG5String", [IsString]);
@@ -58,4 +63,4 @@ DeclareOperation("RSGraphSpanningTree", [IsRSGraph, IsString]);
 DeclareAttribute("AutomorphismGroup", IsRSGraph);
 DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph);
 
-DeclareOperation("LAD_Internal_AllRSGraphs@", [IsInt, IsInt]);
+DeclareOperation("LAD_Internal_RSGraphsEnumerate@", [IsInt, IsInt]);

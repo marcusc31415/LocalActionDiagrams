@@ -10,12 +10,14 @@ function(_, graph_data)
 	Assert(1, IsBound(graph_data.arcs));
 	Assert(1, IsBound(graph_data.arc_ids));
 	Assert(1, IsBound(graph_data.reverse_map));
+	Assert(1, IsBound(graph_data.has_parallel));
 
 	return ObjectifyWithAttributes(rec(), RSGraphType, 
 		RSGraphVertices, graph_data.vertices,
 		RSGraphArcs, graph_data.arcs,
 		RSGraphArcIDs, graph_data.arc_ids,
-		RSGraphReverseMap, graph_data.reverse_map
+		RSGraphReverseMap, graph_data.reverse_map,
+		RSGraphHasParallelArcs, graph_data.has_parallel
 	);
 end);
 
@@ -149,14 +151,18 @@ end);
 
 InstallMethod(RSGraphByAdjacencyListNC, [IsList, IsPerm, IsList],
 function(arc_list, rev_map, vertex_ids)
-	local graph_data, arc_records, arc, idx, print_string, vert;
+	local graph_data, arc_records, arc, idx, print_string, vert, arc_directions, has_parallel, arc_dir;
 
 	graph_data := rec();
+
+	arc_directions := [];
 
 	graph_data.vertices := vertex_ids;
 	graph_data.arc_ids := [1..Size(arc_list)];
 
 	arc_records := rec();
+
+	has_parallel := false;
 
 	for idx in graph_data.arc_ids do
 		arc := rec();
@@ -165,10 +171,19 @@ function(arc_list, rev_map, vertex_ids)
 		arc.inverse := idx^rev_map;
 		
 		arc_records.(idx) := arc;
+
+		arc_dir := [arc.origin, arc.terminus];
+
+		if not has_parallel and arc_dir in arc_directions then 
+			has_parallel := true;
+		else
+			Add(arc_directions, arc_dir);
+		fi;
 	od;
 
 	graph_data.arcs := arc_records;
 	graph_data.reverse_map := rev_map;
+	graph_data.has_parallel := has_parallel;
 	
 	return RSGraphConsNC(IsRSGraph, graph_data);
 end);
@@ -560,15 +575,28 @@ end);
 
 BindGlobal("LAD_Subgraph_Cons@", 
 function(graph, arc_ids)
-	local vertex_ids, arc_records, subgraph_data, id;
+	local vertex_ids, arc_records, subgraph_data, id, has_parallel, arc_directions, arc_dir;
 
 	vertex_ids := [];
 	arc_records := rec();
+
+	has_parallel := false;
+
+	arc_directions := [];
 
 	for id in arc_ids do
 		arc_records.(id) := RSGraphArcs(graph).(id);
 		AddSet(vertex_ids, arc_records.(id).origin);
 		AddSet(vertex_ids, arc_records.(id).terminus);
+	od;
+
+	for id in arc_ids do
+		arc_dir := [arc_records.(id).origin, arc_records.(id).terminus];
+		if not has_parallel and arc_dir in arc_directions then
+			has_parallel := true;
+		else
+			Add(arc_directions, arc_dir);
+		fi;
 	od;
 
 	subgraph_data := rec();
@@ -578,6 +606,7 @@ function(graph, arc_ids)
 
 	subgraph_data.arcs := arc_records;
 	subgraph_data.reverse_map := RSGraphReverseMap(graph);
+	subgraph_data.has_parallel := has_parallel;
 
 	return subgraph_data;
 end);
@@ -853,6 +882,7 @@ function(graph)
 
 	new_graph.arcs := new_arcs;
 	new_graph.reverse_map := new_rev_map;
+	new_graph.has_parallel := RSGraphHasParallelArcs(graph);
 
 	LAD_RSGraphConsCheck@(new_graph.arcs, new_graph.reverse_map, new_graph.vertices, new_graph.arc_ids);
 
@@ -874,15 +904,82 @@ function(graph)
 	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
 end);
 
-InstallMethod(LAD_Internal_AllRSGraphs@, "For degree and number of vertices. ", [IsInt, IsInt],
+InstallMethod(LAD_Internal_RSGraphsEnumerate@, "For degree and number of vertices. ", [IsInt, IsInt],
 function(degree, no_verts)
 	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
 end);
 
+InstallMethod(RSGraphBipartition, "Find a bipartition of the graph (if it exists).", [IsRSGraph],
+function(graph)
+	local vertex_queue, colours, current_vert, vert_id, neighbour_vert, vert_sets;
 
+	# Single vertex with no arcs or empty graph edge cases. 
+	if RSGraphNumberArcs(graph) = 0 then
+		return fail;
+	fi;
 
+	# Parallel arcs are not allowed for the bipartition. 
+	if RSGraphHasParallelArcs(graph) then
+		return fail;
+	fi;
 
+	# Use BFS search. 
+	# No need to worry about loops because then a vertex 
+	# will neighbour itself (same colour). 
+	colours := rec();
+	for vert_id in RSGraphVertices(graph) do
+		colours.(vert_id) := -1;
+	od;
 
+	vert_sets := [[], []]; # [colour 0, colour 1]
+
+	for vert_id in RSGraphVertices(graph) do
+		if colours.(vert_id) = -1 then
+			colours.(vert_id) := 0;
+
+			Add(vert_sets[1], vert_id);
+
+			vertex_queue := [vert_id];
+
+			while Size(vertex_queue) > 0 do
+				current_vert := Remove(vertex_queue, 1);
+
+				for neighbour_vert in RSGraphOutNeighbours(graph).(current_vert) do
+					if colours.(neighbour_vert) = -1 then
+						colours.(neighbour_vert) := 1 - colours.(current_vert);
+						Add(vertex_queue, neighbour_vert);
+
+						if colours.(neighbour_vert) = 0 then
+							Add(vert_sets[1], neighbour_vert);
+						else
+							Add(vert_sets[2], neighbour_vert);
+						fi;
+					elif colours.(neighbour_vert) = colours.(current_vert) then
+						return fail;
+					fi;
+				od;
+			od;
+		fi;
+	od;
+
+	return vert_sets;
+
+end);
+
+InstallMethod(RSGraphIsBipartite, "Check if the graph is a bipartite graph.", [IsRSGraph], graph -> RSGraphBipartition <> fail);
+
+InstallMethod(RSGraphMaximumDegree, "Maximum degree of any vertex.", [IsRSGraph], 
+function(graph)
+	local degree_list, v_id;
+
+	degree_list := [];
+
+	for v_id in RSGraphVertices(graph) do
+		Add(degree_list, Size(RSGraphOutArcs(graph).(v_id)));
+	od;
+
+	return Maximum(degree_list);
+end);
 
 
 

@@ -128,7 +128,7 @@ function(graph, vert_labels, arc_labels)
 	return LocalActionDiagramConsNC(IsLocalActionDiagram, lad_data);
 end);
 
-InstallMethod(LocalActionDiagramFromUniversalGroup, "Construct Local Action Diagram Corresponding To Universal Group U(F)", [IsPermGroup],
+InstallMethod(LocalActionDiagramFromBurgerMozesUniversalGroup, "Construct Local Action Diagram Corresponding To Universal Group U(F)", [IsPermGroup],
 function(perm_group)
 	local orbits, graph, lad;
 
@@ -646,7 +646,157 @@ function(lad)
 	return is_unimodular;
 end);
 
-InstallMethod(LAD_Internal_AllLocalActionDiagrams@, "For a degree and number of vertices.", [IsInt, IsInt],
+InstallMethod(LAD_Internal_LocalActionDiagramsEnumerate@, "For a degree and number of vertices.", [IsInt, IsInt],
 function(degree, no_verts)
 	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
+end);
+
+InstallMethod(LocalActionDiagramIsBurgerMozesUniversalGroup, "Check if it corresponds to a Burger-Mozes group.", [IsLocalActionDiagram],
+function(lad)
+	local rev_map, vert_label, vertex_ids;
+
+	vertex_ids := LocalActionDiagramVertices(lad);
+
+	if Size(vertex_ids) <> 1 then
+		return false;
+	elif LocalActionDiagramReverseMap(lad) <> () then
+		return false;
+	else
+		# Name the local action diagram in the Burger-Mozes notation. 
+		vert_label := LocalActionDiagramVertexLabels(lad).(vertex_ids[1]);
+
+		if "Name" in KnownAttributesOfObject(vert_label) then
+			SetLocalActionDiagramGroupName(lad, StringFormatted("U({1})", Name(vert_label)));
+		else
+			SetLocalActionDiagramGroupName(lad, StringFormatted("U({1})", String(vert_label)));
+		fi;
+
+		return true;
+	fi;
+end);
+
+InstallMethod(LocalActionDiagramRegularTree, "Returns of the Local Action Diagram acts on a d-regular tree.", [IsLocalActionDiagram], 
+function(lad)
+	local size_list, v_id;
+
+	size_list := [];
+
+	for v_id in LocalActionDiagramVertices(lad) do
+		Add(size_list, Size(PermGroupDomain(LocalActionDiagramVertexLabels(lad).(v_id))));
+	od;
+
+	if Size(Set(size_list)) = 1 then
+		return size_list[1];
+	else
+		return fail;
+	fi;
+end);
+
+InstallMethod(LocalActionDiagramIsSmithUniversalGroup, "Local Action Diagram correspodns to a Smith Universal Group", [IsLocalActionDiagram],
+function(lad)
+	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
+end);
+
+
+
+InstallMethod(LocalActionDiagramNumberVertices, "Number of vertices.", [IsLocalActionDiagram], lad -> RSGraphNumberVertices(LocalActionDiagramRSGraph(lad)));
+
+
+InstallMethod(LocalActionDiagramNumberArcs, "Number of arcs.", [IsLocalActionDiagram], lad -> RSGraphNumberArcs(LocalActionDiagramRSGraph(lad)));
+
+
+InstallMethod(LocalActionDiagramIsEndStabiliser, "Number of arcs.", [IsLocalActionDiagram], 
+function(lad)
+	local group_label, group_domain;
+
+	# One vertex and two arcs. 
+	if LocalActionDiagramNumberVertices(lad) <> 1 or LocalActionDiagramNumberArcs(lad) <> 2 then
+		return false;
+	fi;
+
+	# Not self reverse loops. 
+	if LocalActionDiagramReverseMap(lad) = () then
+		return false;
+	fi;
+
+	group_label := LocalActionDiagramVertexLabels(lad).(LocalActionDiagramVertices(lad)[1]);
+	group_domain := PermGroupDomain(group_label);
+
+	# Group label must be Sym(d-1) where d is the domain size. 
+	if IsomorphismGroups(group_label, SymmetricGroup(Size(group_domain)-1)) = fail then
+		return false;
+	fi;
+
+	SetLocalActionDiagramGroupName(lad, StringFormatted("Aut(T{1})_omega", Size(group_domain)));
+
+	# The group is an end stabiliser. 
+	return true;
+
+end);
+
+
+InstallMethod(LocalActionDiagramIsFullAutomorphismGroup, "Number of arcs.", [IsLocalActionDiagram], 
+function(lad)
+	local group_label, group_domain;
+
+	# One vertex and two arcs. 
+	if LocalActionDiagramNumberVertices(lad) <> 1 or LocalActionDiagramNumberArcs(lad) <> 1 then
+		return false;
+	fi;
+
+	group_label := LocalActionDiagramVertexLabels(lad).(LocalActionDiagramVertices(lad)[1]);
+	group_domain := PermGroupDomain(group_label);
+
+	# Group label must be Sym(d) where d is the domain size. 
+	if IsomorphismGroups(group_label, SymmetricGroup(Size(group_domain))) = fail then
+		return false;
+	fi;
+
+	SetLocalActionDiagramGroupName(lad, StringFormatted("Aut(T{1})", Size(group_domain)));
+
+	# The group is an end stabiliser. 
+	return true;
+
+end);
+
+InstallMethod(LocalActionDiagramIsBipartitionPreservingGroup, "Local Action Diagram correspodns to a Smith Universal Group", [IsLocalActionDiagram],
+function(lad)
+	ErrorNoReturn("Digraphs package needs to be loaded for this function.");
+end);
+
+InstallMethod(LocalActionDiagramConstructBipartitionPreserving, "Construct from a vertex transitive diagram.", [IsLocalActionDiagram], 
+function(lad)
+	local group_labels, adj_mat, rev_map, i, graph, arc_labels, new_lad;
+
+	group_labels := List([1, 1], x -> LocalActionDiagramVertexLabels(lad).(LocalActionDiagramVertices(lad)[x]));
+
+	adj_mat := [[0, LocalActionDiagramNumberArcs(lad)], [LocalActionDiagramNumberArcs(lad), 0]];
+
+	rev_map := ();
+
+	for i in [1..LocalActionDiagramNumberArcs(lad)] do
+		rev_map := rev_map * (i, i+LocalActionDiagramNumberArcs(lad));
+	od;
+
+	graph := RSGraphByAdjacencyMatrix(adj_mat, rev_map);
+
+	arc_labels := [];
+
+	for i in [1..LocalActionDiagramNumberArcs(lad)] do
+		arc_labels[i] := LocalActionDiagramArcLabels(lad).(i);
+		arc_labels[i^rev_map] := LocalActionDiagramArcLabels(lad).(i^LocalActionDiagramReverseMap(lad));
+	od;
+
+	new_lad := LocalActionDiagramFromData(graph, group_labels, arc_labels);
+
+	# Check if it is any of these types to get a group name. 
+	LocalActionDiagramIsBurgerMozesUniversalGroup(lad);
+	LocalActionDiagramIsEndStabiliser(lad);
+	LocalActionDiagramIsFullAutomorphismGroup(lad);
+
+	if Size(LocalActionDiagramGroupName(lad)) <> 0 then
+		SetLocalActionDiagramGroupName(new_lad, StringFormatted("({1})^o", LocalActionDiagramGroupName(lad)));
+	fi;
+
+	return new_lad;
 end);

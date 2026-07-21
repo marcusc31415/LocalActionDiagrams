@@ -1,7 +1,7 @@
 # Put local functions in a read-only record here.
 # Stops bad code duplication. 
 
-BindGlobal("LAD_IOLocalFunctions",
+BindGlobal("LAD_IOLocalFunctions@",
 	rec(
 		("MapToString") := function(map)
 			local ret, i;
@@ -65,7 +65,7 @@ InstallMethod(RSGraphToWritableString, "Returns a string representing an RSGraph
 function(graph)
 	local ret_string_list, arc, arc_list, idx, canon_labelling, gen_set, MapToString, gen;
 
-	MapToString := LAD_IOLocalFunctions.MapToString;
+	MapToString := LAD_IOLocalFunctions@.MapToString;
 
 	# List the vertex ids (comma separated). 
 	ret_string_list := List(RSGraphVertices(graph), x -> StringFormatted("{1},", String(x)));
@@ -146,7 +146,7 @@ function(lad)
 
 	RecIterator := r -> List(RecNames(r), x -> [Int(x), r.(x)]);
 
-	MapToString := LAD_IOLocalFunctions.MapToString;
+	MapToString := LAD_IOLocalFunctions@.MapToString;
 
 	# Graph string.
 	graph := LocalActionDiagramRSGraph(lad);
@@ -245,9 +245,9 @@ end);
 
 InstallMethod(RSGraphFromWritableString, "Constructs an RSGraph from a string.", [IsString],
 function(string)
-	local graph_data, split_string, arc_split, StringToMap, func_args, property, gens, gen, gen_split, data, canon_labelling, canon_split, property_split, idx, arc_id, terminus, origin, rev_id;
+	local graph_data, split_string, arc_split, StringToMap, func_args, property, gens, gen, gen_split, data, canon_labelling, canon_split, property_split, idx, arc_id, terminus, origin, rev_id, arc_directions, has_parallel, arc_dir;
 
-	StringToMap := LAD_IOLocalFunctions.StringToMap;
+	StringToMap := LAD_IOLocalFunctions@.StringToMap;
 
 	graph_data := rec();
 
@@ -262,6 +262,10 @@ function(string)
 	# Arcs. 
 	graph_data.arc_rec := rec();
 	graph_data.arc_ids := [];
+
+	arc_directions := [];
+
+	has_parallel := false;
 
 	arc_split := SplitString(split_string[2], ",");
 
@@ -278,13 +282,21 @@ function(string)
 			("inverse") := rev_id
 		);
 		Add(graph_data.arc_ids, arc_id);
+
+		arc_dir := [origin, terminus];
+		if not has_parallel and arc_dir in arc_directions then
+			has_parallel := true;
+		else
+			Add(arc_directions, arc_dir);
+		fi;
 	od;
 
 	func_args := [rec(), RSGraphType,
 	              RSGraphVertices, graph_data.vertex_list,
 				  RSGraphArcIDs, graph_data.arc_ids,
 				  RSGraphArcs, graph_data.arc_rec,
-				  RSGraphReverseMap, graph_data.reverse_map];
+				  RSGraphReverseMap, graph_data.reverse_map,
+				  RSGraphHasParallelArcs, has_parallel];
 
 	# The extra properties that could be known. 
 	for idx in [4..Length(split_string)] do
@@ -312,6 +324,7 @@ function(string)
 			canon_labelling.canon_certificate := canon_split[5];
 
 			Append(func_args, [RSGraphCanonicalLabelling, canon_labelling]);
+
 		elif property = NameFunction(AutomorphismGroup) then
 
 			gens := [];
@@ -354,7 +367,7 @@ function(string, graph_ret)
 		return record;
 	end;
 
-	StringToMap := LAD_IOLocalFunctions.StringToMap;
+	StringToMap := LAD_IOLocalFunctions@.StringToMap;
 
 	first_split := SplitString(string, "/");
 
@@ -472,6 +485,9 @@ function(string, graph_ret)
 			else
 				Add(func_args, false);
 			fi;
+		elif property = NameFunction(LocalActionDiagramGroupName) then
+			Add(func_args, LocalActionDiagramGroupName);
+			Add(func_args, data);
 		else
 			Info(InfoWarning, 1, "\"", property, "\" is not a LocalActionDiagram attribute. Ignoring");
 		fi;
@@ -482,7 +498,7 @@ function(string, graph_ret)
 	if graph_ret = true then
 		return [lad, graph];
 	else
-		return graph;
+		return lad;
 	fi;
 end);
 

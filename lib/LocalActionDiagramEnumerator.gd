@@ -25,16 +25,14 @@ Unbind(LAD_filename_split@);
 BindGlobal("LAD_RSGraphsRecord@", rec());
 BindGlobal("LAD_LocalActionDiagramsRecord@", rec());
 
-DeclareOperation("AllRSGraphs", [IsInt, IsInt]);
+DeclareOperation("RSGraphFromLibrary", [IsInt, IsInt]);
 
-DeclareOperation("AllRSGraphs", [IsInt, IsInt, IsInt]);
+DeclareOperation("RSGraphFromLibrary", [IsInt, IsInt, IsInt]);
 
-DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt]);
+DeclareOperation("LocalActionDiagramFromLibrary", [IsInt, IsInt]);
 
-DeclareOperation("AllLocalActionDiagrams", [IsInt, IsInt, IsInt]);
+DeclareOperation("LocalActionDiagramFromLibrary", [IsInt, IsInt, IsInt]);
 
 DeclareOperation("NumberRSGraphs", [IsInt, IsInt]);
 
 DeclareOperation("NumberLocalActionDiagrams", [IsInt, IsInt]);
-
-DeclareOperation("IO_Pickle", [IsFile, IsLocalActionDiagram]);

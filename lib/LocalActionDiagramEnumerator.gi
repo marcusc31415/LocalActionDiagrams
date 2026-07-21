@@ -3,7 +3,7 @@ function(degree, no_verts)
 	local file_data, filename, file_path, file, data, string_list;
 
 	filename := StringFormatted("{1}_{2}_library.txt.gz", degree, no_verts);
-	Info(InfoPerformance, 1, "Reading library data from disk.");
+	#Info(InfoPerformance, 1, "Reading library data from disk.");
 	file_path := Filename(DirectoriesPackageLibrary("localactiondiagrams", "data")[1], filename);
 
 	#file := IO_FilteredFile([["gzip", ["-dc"]]], file_path, "r");
@@ -23,7 +23,7 @@ function(degree, no_verts)
 
 	string_list := SplitString(data, "\n");
 
-	Info(InfoPerformance, 1, "Finished reading library data from disk.");
+	#Info(InfoPerformance, 1, "Finished reading library data from disk.");
 
 	return string_list;
 
@@ -65,7 +65,7 @@ function(degree, no_verts)
 end);
 
 
-InstallMethod(AllRSGraphs, "Return list of RSGraphs up to isomorphism.", [IsInt, IsInt],
+InstallMethod(RSGraphFromLibrary, "Return list of RSGraphs up to isomorphism.", [IsInt, IsInt],
 function(degree, no_verts)
 	local file_data, rs_graphs, rec_string, rs_graph_data_pairs, data_pair, idx, aut_groups, canon_labellings, seen_data, graph_data, graph;
 
@@ -89,7 +89,7 @@ function(degree, no_verts)
 		Info(InfoWarning, 1, "Runing the enumeration algorithms.");
 		Info(InfoWarning, 1, "This could be slow to run.");
 
-		rs_graphs := LAD_Internal_AllRSGraphs@(degree, no_verts);
+		rs_graphs := LAD_Internal_RSGraphsEnumerate@(degree, no_verts);
 
 		LAD_RSGraphsRecord@.(rec_string) := rs_graphs;
 	elif rec_string in RecNames(LAD_RSGraphsRecord@) then
@@ -102,11 +102,11 @@ function(degree, no_verts)
 	return rs_graphs;
 end);
 
-InstallMethod(AllRSGraphs, "Return the nth RSGraph up to isomorphism.", [IsInt, IsInt, IsInt],
+InstallMethod(RSGraphFromLibrary, "Return the nth RSGraph up to isomorphism.", [IsInt, IsInt, IsInt],
 function(degree, no_verts, graph_number)
 	local rs_graphs;
 
-	rs_graphs := AllRSGraphs(degree, no_verts);
+	rs_graphs := RSGraphFromLibrary(degree, no_verts);
 
 	if graph_number < 1 or graph_number > Size(rs_graphs) then
 		ErrorNoReturn(StringFormatted("Graph number must be between 1 and {1}.", Size(rs_graphs)));
@@ -115,7 +115,7 @@ function(degree, no_verts, graph_number)
 	return rs_graphs[graph_number];
 end);
 
-InstallMethod(AllLocalActionDiagrams, "Return list of Local Action Diagrams up to isomorphism.", [IsInt, IsInt],
+InstallMethod(LocalActionDiagramFromLibrary, "Return list of Local Action Diagrams up to isomorphism.", [IsInt, IsInt],
 function(degree, no_verts)
 	local file_data, lad_list, rec_string, idx_x, idx_y, vertex_labels, arc_labels, graph, v_id, lad;
 
@@ -139,7 +139,7 @@ function(degree, no_verts)
 		Info(InfoWarning, 1, "Runing the enumeration algorithms.");
 		Info(InfoWarning, 1, "This could be slow to run.");
 
-		lad_list := LAD_Internal_AllLocalActionDiagrams@(degree, no_verts);
+		lad_list := LAD_Internal_LocalActionDiagramsEnumerate@(degree, no_verts);
 
 		LAD_LocalActionDiagramsRecord@.(rec_string) := lad_list;
 	elif rec_string in RecNames(LAD_LocalActionDiagramsRecord@) then
@@ -152,11 +152,11 @@ function(degree, no_verts)
 	return lad_list;
 end);
 
-InstallMethod(AllLocalActionDiagrams, "Return the nth Local Action Diagram up to isomorphism.", [IsInt, IsInt, IsInt],
+InstallMethod(LocalActionDiagramFromLibrary, "Return the nth Local Action Diagram up to isomorphism.", [IsInt, IsInt, IsInt],
 function(degree, no_verts, lad_number)
 	local lad_list;
 
-	lad_list := AllLocalActionDiagrams(degree, no_verts);
+	lad_list := LocalActionDiagramFromLibrary(degree, no_verts);
 
 	if lad_number < 1 or lad_number > Size(lad_list) then
 		ErrorNoReturn(StringFormatted("Local action diagram number must be between 1 and {1}.", Size(lad_list)));
@@ -167,11 +167,244 @@ end);
 
 InstallMethod(NumberRSGraphs, "Returns the nubmer of RSGraphs with specified degree and vertex count.", [IsInt, IsInt],
 function(degree, no_verts)
-	return Size(AllRSGraphs(degree, no_verts));
+	return Size(RSGraphFromLibrary(degree, no_verts));
 end);
 
 InstallMethod(NumberLocalActionDiagrams, "Returns the nubmer of local action diagrams with specified degree and vertex count.", [IsInt, IsInt],
 function(degree, no_verts)
-	return Size(AllLocalActionDiagrams(degree, no_verts));
+	return Size(LocalActionDiagramFromLibrary(degree, no_verts));
 end);
 
+# In order from least to most. Search through the smaller ones first. 
+BindGlobal("LAD_CheckOrder@", [[1, 1], [1, 2], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [3, 1], [4, 1], [3, 2], [5, 1], [3, 3], [6, 1],
+                               [4, 2], [7, 1], [3, 4], [8, 1], [5, 2], [3, 5], [9, 1], [4, 3], [10, 1], [11, 1], [12, 1], [13, 1]]);
+
+BindGlobal("LAD_DebugSearch@", false);
+
+BindGlobal("LocalActionDiagramsDebugSearch",
+function(val)
+	if val = true then
+		MakeReadWriteGlobal("LAD_DebugSearch@LocalActionDiagrams");
+		LAD_DebugSearch@ := true;
+		MakeReadOnlyGlobal("LAD_DebugSearch@LocalActionDiagrams");
+	elif val = false then
+		MakeReadWriteGlobal("LAD_DebugSearch@LocalActionDiagrams");
+		LAD_DebugSearch@ := false;
+		MakeReadOnlyGlobal("LAD_DebugSearch@LocalActionDiagrams");
+	else
+		ErrorNoReturn("Argument must be \"true\" or \"false\".");
+	fi;
+end);
+
+
+BindGlobal("AllRSGraphs", 
+function(args...)
+	local candidate_graphs, idx, new_graphs, Func, val, graph, new_args_order, easy_args, hard_args, ret, degree, no_verts, rec_string, read_from_disc, positions, unique_certs, canon_certs;
+
+	if Length(args) mod 2 <> 0 then
+		ErrorNoReturn("Arugments must be of the form [function1, output1, ...].");
+	fi;
+
+	for idx in [1..Length(args)/2] do
+		if not IsFunction(args[2*idx-1]) then
+			ErrorNoReturn(StringFormatted("Argument {1} must be a function.", idx));
+		fi;
+	od;
+
+	# Order the easy (pre-computed) functions first.
+	easy_args := [];
+	hard_args := [];
+
+	for idx in [1..Length(args)/2] do
+		if args[2*idx-1] in [RSGraphVertices, RSGraphNumberVertices, RSGraphArcs, RSGraphArcIDs, RSGraphNumberArcs, RSGraphReverseMap, RSGraphAdjacencyMatrix, \
+		                     RSGraphOutNeighbours, RSGraphInNeighbours, RSGraphOutArcs, RSGraphInArcs, RSGraphIsCycle, AutomorphismGroup, RSGraphCanonicalLabelling, \
+							 RSGraphMaximumDegree] then
+			Add(easy_args, args[2*idx-1]);
+			Add(easy_args, args[2*idx]);
+		else
+			Add(hard_args, args[2*idx-1]);
+			Add(hard_args, args[2*idx]);
+		fi;
+	od;
+
+	new_args_order := Concatenation(easy_args, hard_args);
+	
+	
+	candidate_graphs := [];
+	for idx in [1..Length(LAD_CheckOrder@)] do
+		degree := LAD_CheckOrder@[idx][1];
+		no_verts := LAD_CheckOrder@[idx][2];
+		rec_string := StringFormatted("{1},{2}", degree, no_verts);
+
+		read_from_disc := false;
+
+		if not rec_string in RecNames(LAD_RSGraphsRecord@) then
+			Info(InfoPerformance, 1, StringFormatted("Reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+			read_from_disc := true;
+		fi;
+		candidate_graphs := Concatenation(candidate_graphs, RSGraphFromLibrary(LAD_CheckOrder@[idx][1], LAD_CheckOrder@[idx][2]));
+		if read_from_disc then
+			Info(InfoPerformance, 1, StringFormatted("Finished reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+		fi;
+	od;
+
+	# Reduce candidate graphs up to isomorphism (based on the canonical certificates). 
+	canon_certs := List(candidate_graphs, graph -> RSGraphCanonicalLabelling(graph).canon_certificate);
+	unique_certs := Set(canon_certs);
+	positions := List(unique_certs, cert -> Position(canon_certs, cert)); # Get first occurrence of each certificate. 
+
+	candidate_graphs := candidate_graphs{positions}; # Reduces up to isomorphism. 
+
+	new_graphs := [];
+
+	for idx in [1..Length(new_args_order)/2] do
+		Func := new_args_order[2*idx-1];
+		val := new_args_order[2*idx];
+
+		for graph in candidate_graphs do
+			if LAD_DebugSearch@ = true then
+				BreakOnError := false;
+				SilentNonInteractiveErrors := true;
+
+				ret := CALL_WITH_CATCH(Func, [graph]);
+
+				BreakOnError := true;
+				SilentNonInteractiveErrors := false;
+			else
+				ret := [true, Func(graph)];
+			fi; 
+
+			if ret[1] = false then
+				ErrorNoReturn(StringFormatted("Error in function \"{1}\" (argument {2}).", NameFunction(Func), 2*idx-1));
+			fi;
+
+			if ret[2] = val then
+				Add(new_graphs, graph);
+			fi;
+		od;
+
+		candidate_graphs := new_graphs;
+		new_graphs := [];
+	od;
+
+	return candidate_graphs;
+end);
+
+BindGlobal("OneRSGraph", 
+function(args...)
+	local all_graphs;
+
+	all_graphs := CallFuncList(AllRSGraphs, args);
+
+	if Size(all_graphs) = 0 then
+		return fail;
+	else
+		return all_graphs[1];
+	fi;
+end);
+
+BindGlobal("AllLocalActionDiagrams", 
+function(args...)
+	local candidate_lads, idx, new_lads, Func, val, lad, new_args_order, easy_args, hard_args, ret, degree, no_verts, rec_string, read_from_disc;
+
+	if Length(args) mod 2 <> 0 then
+		ErrorNoReturn("Arugments must be of the form [function1, output1, ...].");
+	fi;
+
+	for idx in [1..Length(args)/2] do
+		if not IsFunction(args[2*idx-1]) then
+			ErrorNoReturn(StringFormatted("Argument {1} must be a function.", idx));
+		fi;
+	od;
+
+	# Order the easy (pre-computed) functions first.
+	easy_args := [];
+	hard_args := [];
+
+	# Force discrete before uniscalar before unimodular? 
+	for idx in [1..Length(args)/2] do
+		if args[2*idx-1] in [LocalActionDiagramArcLabels, LocalActionDiagramArcs, LocalActionDiagramGroupName, LocalActionDiagramGroupType, LocalActionDiagramInArcs, \
+		                     LocalActionDiagramInNeighbours, LocalActionDiagramOutArcs, LocalActionDiagramOutNeighbours, LocalActionDiagramIsDiscrete, \
+							 LocalActionDiagramIsUnimodular, LocalActionDiagramIsUniscalar, LocalActionDiagramRSGraph, LocalActionDiagramReverseMap, \
+							 LocalActionDiagramScopos, LocalActionDiagramVertexLabels, LocalActionDiagramVertices, LocalActionDiagramRegularTree, \
+							 LocalActionDiagramNumberVertices, LocalActionDiagramNumberArcs] then
+			Add(easy_args, args[2*idx-1]);
+			Add(easy_args, args[2*idx]);
+		else
+			Add(hard_args, args[2*idx-1]);
+			Add(hard_args, args[2*idx]);
+		fi;
+	od;
+
+	new_args_order := Concatenation(easy_args, hard_args);
+	
+	candidate_lads := [];
+	for idx in [1..Length(LAD_CheckOrder@)] do
+		degree := LAD_CheckOrder@[idx][1];
+		no_verts := LAD_CheckOrder@[idx][2];
+		rec_string := StringFormatted("{1},{2}", degree, no_verts);
+
+		read_from_disc := false;
+
+		if not rec_string in RecNames(LAD_RSGraphsRecord@) then
+			Info(InfoPerformance, 1, StringFormatted("Reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+			read_from_disc := true;
+		fi;
+		candidate_lads := Concatenation(candidate_lads, LocalActionDiagramFromLibrary(LAD_CheckOrder@[idx][1], LAD_CheckOrder@[idx][2]));
+		if read_from_disc then
+			Info(InfoPerformance, 1, StringFormatted("Finished reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+		fi;
+	od;
+
+	new_lads := [];
+
+	for idx in [1..Length(new_args_order)/2] do
+		Func := new_args_order[2*idx-1];
+		val := new_args_order[2*idx];
+
+		for lad in candidate_lads do
+			if LAD_DebugSearch@ = true then
+				BreakOnError := false;
+				SilentNonInteractiveErrors := true;
+
+				ret := CALL_WITH_CATCH(Func, [lad]);
+
+				BreakOnError := true;
+				SilentNonInteractiveErrors := false;
+			else
+				ret := [true, Func(lad)];
+			fi; 
+
+			if ret[1] = false then
+				ErrorNoReturn(StringFormatted("Error in function \"{1}\" (argument {2}).", NameFunction(Func), 2*idx-1));
+			fi;
+
+			if ret[2] = val then
+				Add(new_lads, lad);
+			fi;
+		od;
+
+		candidate_lads := new_lads;
+		new_lads := [];
+	od;
+
+	return candidate_lads;
+end);
+
+BindGlobal("OneLocalActionDiagram", 
+function(args...)
+	local all_lads;
+
+	all_lads := CallFuncList(AllLocalActionDiagrams, args);
+
+	if Size(all_lads) = 0 then
+		return fail;
+	else
+		return all_lads[1];
+	fi;
+end);
+
+# Add special "domain" and "degree" functions? 
+
+# AllLocalActionDiagrams(func list)
+# OneLocalActionDiagram(func list)

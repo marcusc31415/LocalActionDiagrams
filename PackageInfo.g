@@ -105,6 +105,14 @@ Extensions := [
 		needed := [ ["digraphs", "1.9.0"] ],
 		filename := "lib/Isomorphism.gi",
 	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/IsomorphismRequiredFunctions.gd",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/IsomorphismRequiredFunctions.gi",
+	),
 ],
 
 AvailabilityTest := ReturnTrue,
