@@ -77,6 +77,77 @@ function(degree, no_verts)
 		return [];
 	fi;
 
+	# There are exactly four in this case. We can construct them
+	# manually.
+	if degree = 2 and no_verts > 1 then
+		rs_graphs := [];
+		### Loop at one end and not the other. 
+		arc_list := [[1, 1]];
+		arc_no := 2;
+		rev_map := ();
+		for idx in [1..no_verts-1] do
+			Add(arc_list, [idx, idx+1]);
+			Add(arc_list, [idx+1, idx]);
+			rev_map := rev_map * (arc_no, arc_no+1);
+			arc_no := arc_no + 2;
+		od;
+
+		Add(rs_graphs, RSGraphByAdjacencyList(arc_list, rev_map));
+
+		### Loop at both ends. 
+		arc_list := StructuralCopy(arc_list);
+		rev_map := StructuralCopy(rev_map);
+		Add(arc_list, [no_verts, no_verts]);
+		Add(rs_graphs, RSGraphByAdjacencyList(arc_list, rev_map));
+
+
+		### Cycle. 
+		arc_list := StructuralCopy(arc_list);
+		rev_map := StructuralCopy(rev_map);
+
+		# Remove the first and last arc (the two loops). 
+		Remove(arc_list, 1);
+		Remove(arc_list);
+		# Connect the first and last vertices. 
+		Add(arc_list, [1, no_verts], 2); # Put this in the second position. 
+		Add(arc_list, [no_verts, 1]); 
+		# Easier to reconstruct the reverse map. 
+		rev_map := (1,3)*(2,Size(arc_list)); # Start with the ones in weird positions. 
+
+		Assert(1, IsInt(Size(arc_list)/2));
+
+		idx := 4;
+		while idx < Size(arc_list) do
+			rev_map := rev_map * (idx, idx+1);
+			idx := idx + 2;
+		od;
+
+
+
+		Add(rs_graphs, RSGraphByAdjacencyList(arc_list, rev_map));
+
+		### No loops and no cycle.
+		arc_list := StructuralCopy(arc_list);
+		rev_map := StructuralCopy(rev_map);
+
+		# The second and last arcs connect the first and last vertex. 
+		Remove(arc_list, 2);
+		Remove(arc_list);
+		# Remove the one between the two arcs we removed. 
+		rev_map := rev_map * (2, Size(arc_list)+2); 
+
+		# Conjugate the move every number greater than 1 down by 1. 
+		shift_perm := CycleFromList(Reversed([2..Size(arc_list)+1]));
+		rev_map := Inverse(shift_perm)*rev_map*shift_perm;
+
+		Add(rs_graphs, RSGraphByAdjacencyList(arc_list, rev_map));
+
+
+		return rs_graphs;
+
+	fi;
+
+
 
 	rec_string := StringFormatted("{1},{2}", degree, no_verts);
 
@@ -125,6 +196,76 @@ function(degree, no_verts)
 	# each vertex has degree 1. 
 	if degree = 1 and no_verts > 2 then
 		return [];
+	fi;
+
+	# There are exactly four in this case. We can construct them
+	# manually.
+	if degree = 2 and no_verts > 1 then
+		graph_list := RSGraphFromLibrary(degree, no_verts);	
+		lad_list := [];
+
+		# One loop. 
+
+		vert_labels := List([1..no_verts-1], x -> Group(()));
+		arc_labels := [];
+		for idx in [1..Size(vert_labels)] do
+			G := vert_labels[idx];
+			domain := [1+2*(idx-1), 2+2*(idx-1)];
+			SetPermGroupDomain(G, domain);
+
+			# Single vertex sets for arc labels. 
+			Add(arc_labels, [domain[1]]);
+			Add(arc_labels, [domain[2]]);
+		od;
+		domain := domain+2; # For the last group.
+		Add(vert_labels, Group((domain[1], domain[2])));
+		Add(arc_labels, domain); # A single arc originating here. 
+
+		Add(lad_list, LocalActionDiagramFromData(graph_list[1], vert_labels, arc_labels));
+
+
+		# Two loops. 
+		vert_labels := StructuralCopy(vert_labels);
+		arc_labels := StructuralCopy(arc_labels);
+		Remove(vert_labels); # Remove the last vertex and arc label. 
+		Remove(arc_labels); 
+
+		Add(vert_labels, Group(()));
+		SetPermGroupDomain(Last(vert_labels), domain);
+		Add(arc_labels, [domain[1]]);
+		Add(arc_labels, [domain[2]]);
+
+		Add(lad_list, LocalActionDiagramFromData(graph_list[2], vert_labels, arc_labels));
+
+		# Cycle. 
+		vert_labels := StructuralCopy(vert_labels);
+		arc_labels := StructuralCopy(arc_labels);
+		Add(lad_list, LocalActionDiagramFromData(graph_list[3], vert_labels, arc_labels));
+
+		# No loops. 
+		vert_labels := StructuralCopy(vert_labels);
+		arc_labels := StructuralCopy(arc_labels);
+
+		Remove(vert_labels, 1);
+		Remove(vert_labels);
+		Remove(arc_labels, 1);
+		Remove(arc_labels, 1);
+		Remove(arc_labels);
+		Remove(arc_labels);
+
+		Add(vert_labels, Group((1,2)), 1);
+		Add(vert_labels, Group((domain[1], domain[2])));
+		Add(arc_labels, [1, 2], 1);
+		Add(arc_labels, domain);
+
+		Add(lad_list, LocalActionDiagramFromData(graph_list[4], vert_labels, arc_labels));
+
+
+		return lad_list;
+
+
+
+
 	fi;
 
 

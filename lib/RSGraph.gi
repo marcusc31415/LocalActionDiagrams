@@ -238,7 +238,7 @@ end);
 
 InstallMethod(PrintString, "for an RSGraph", [IsRSGraph], String);
 
-InstallMethod(String, "for and RSGraph", [IsRSGraph], 
+InstallMethod(String, "for an RSGraph", [IsRSGraph], 
 function(graph)
 	local print_string, vertex_ids, arc_rec, rev_map, idx, vert;
 

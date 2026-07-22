@@ -172,8 +172,8 @@ function(lad)
 	graph := LocalActionDiagramRSGraph(lad);
 	vert_labels := LocalActionDiagramVertexLabels(lad);
 	arc_labels := LocalActionDiagramArcLabels(lad);
-	vert_ids := SortedList(RecNames(vert_labels));
-	arc_ids := SortedList(RecNames(arc_labels));
+	vert_ids := SortedList(List(RecNames(vert_labels), Int));
+	arc_ids := SortedList(List(RecNames(arc_labels), Int));
 
 	# First Print The Graph Details
 	print_string := String(graph);
