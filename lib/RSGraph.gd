@@ -4,7 +4,40 @@
 # then they set this variable to true. 
 BindGlobal("LAD_IsomorphismAvailable@", false);
 
-# Category
+#! @Chapter RSGraphs
+#!
+#! An RSGraph is a graph <M>\Gamma = (V, A, o, r)</M> that consists of
+#! a vertex set <M>V</M>, an arc set <M>A</M>, a map <M>o : A \to V</M>
+#! which assigns each vertex to an <E>origin</E>, and a bijection 
+#! <M>r : A \to A</M> which assigns each arc to a <E>reverse</E> arc. 
+#! There is also a map <M>t := o \circ r</M> which assigns each
+#! arc to a <E>terminus</E> vertex. Note the RSGraphs are allowed 
+#! to contain loops and parallel arcs. 
+#!
+#! We created the RSGraph object for this package due to our use of graphs 
+#! having a specialised definition. For example, every arc in an RSGraph
+#! must have a reverse arc associated with it while a <E>Digraph</E> from
+#! the <Package>Digraphs</Package> allows for arcs that do not have an
+#! associated reverse arc. Creating a new object category for RSGraphs
+#! allows for both better error checking when using RSGraphs and to avoid
+#! conflicting definitions, such as the definition of a cycle for a 
+#! Digraph and an RSGraph. We provide functionality to convert between an 
+#! RSGraph and a <E>Graph</E> from the <Package>GRAPE</Package> package or 
+#! a <E>Digraph</E> from the <Package>Digraphs</Package> package. 
+#!
+#! The name "RSGraph" arises from Reid and Smith, the authors of the local
+#! action diagram paper. This name was chosen to avoid conflicting with the
+#! <Package>GRAPE</Package> package. 
+
+
+#! @Section Creating RSGraphs
+#!
+#! @Returns <K>true</K> if <A>graph</A> is of the category <C>IsRSGraph</C> and
+#! false otherwise.
+#! @Arguments graph
+#! @Description
+#! Every RSGraph object belongs to the category <C>IsRSGraph</C>. Furthermore, 
+#! every RSGraph is an immutable attribute storing object. 
 DeclareCategory("IsRSGraph", IsObject);
 
 DeclareRepresentation("IsRSGraphRep", IsRSGraph and IsAttributeStoringRep);

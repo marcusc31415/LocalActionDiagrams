@@ -8,7 +8,7 @@
 <script type="text/javascript"
   src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
-<title>GAP (LocalActionDiagrams) - Chapter 1: Introduction</title>
+<title>GAP (LocalActionDiagrams) - Chapter 1: RSGraphs</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="generator" content="GAPDoc2HTML" />
 <link rel="stylesheet" type="text/css" href="manual.css" />
@@ -18,57 +18,46 @@
 <body class="chap1"  onload="jscontent()">
 
 
-<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chap2_mj.html">2</a>  <a href="chap3_mj.html">3</a>  <a href="chap4_mj.html">4</a>  <a href="chapInd_mj.html">Ind</a>  </div>
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chapInd_mj.html">Ind</a>  </div>
 
-<div class="chlinkprevnexttop">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap0_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap2_mj.html">[Next Chapter]</a>&nbsp;  </div>
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap0_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd_mj.html">[Next Chapter]</a>&nbsp;  </div>
 
 <p id="mathjaxlink" class="pcenter"><a href="chap1.html">[MathJax off]</a></p>
-<p><a id="X7DFB63A97E67C0A1" name="X7DFB63A97E67C0A1"></a></p>
-<div class="ChapSects"><a href="chap1_mj.html#X7DFB63A97E67C0A1">1 <span class="Heading">Introduction</span></a>
+<p><a id="X7AC2E3EF7B93A9FA" name="X7AC2E3EF7B93A9FA"></a></p>
+<div class="ChapSects"><a href="chap1_mj.html#X7AC2E3EF7B93A9FA">1 <span class="Heading">RSGraphs</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap1_mj.html#X7AA329AC8054CB4D">1.1 <span class="Heading">Creating RSGraphs</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap1_mj.html#X7FD262C784F26B41">1.1-1 IsRSGraph</a></span>
+</div></div>
 </div>
 
-<h3>1 <span class="Heading">Introduction</span></h3>
+<h3>1 <span class="Heading">RSGraphs</span></h3>
 
-<p>A local action diagram <span class="SimpleMath">\(\Delta = (\Gamma, (G(v)), (X_a))\)</span> consists of:</p>
+<p>An RSGraph is a graph <span class="SimpleMath">\(\Gamma = (V, A, o, r)\)</span> that consists of a vertex set <span class="SimpleMath">\(V\)</span>, an arc set <span class="SimpleMath">\(A\)</span>, a map <span class="SimpleMath">\(o : A \to V\)</span> which assigns each vertex to an <em>origin</em>, and a bijection <span class="SimpleMath">\(r : A \to A\)</span> which assigns each arc to a <em>reverse</em> arc. There is also a map <span class="SimpleMath">\(t := o \circ r\)</span> which assigns each arc to a <em>terminus</em> vertex. Note the RSGraphs are allowed to contain loops and parallel arcs.</p>
 
+<p>We created the RSGraph object for this package due to our use of graphs having a specialised definition. For example, every arc in an RSGraph must have a reverse arc associated with it while a <em>Digraph</em> from the <strong class="pkg">Digraphs</strong> allows for arcs that do not have an associated reverse arc. Creating a new object category for RSGraphs allows for both better error checking when using RSGraphs and to avoid conflicting definitions, such as the definition of a cycle for a Digraph and an RSGraph. We provide functionality to convert between an RSGraph and a <em>Graph</em> from the <strong class="pkg">GRAPE</strong> package or a <em>Digraph</em> from the <strong class="pkg">Digraphs</strong> package.</p>
 
-<ul>
-<li><p>a directed graph <span class="SimpleMath">\(\Gamma\)</span>,</p>
+<p>The name "RSGraph" arises from Reid and Smith, the authors of the local action diagram paper. This name was chosen to avoid conflicting with the <strong class="pkg">GRAPE</strong> package.</p>
 
-</li>
-<li><p>a closed permutation group <span class="SimpleMath">\(G(v)\)</span> for each <span class="SimpleMath">\(v \in V(\Gamma)\)</span>, and</p>
+<p><a id="X7AA329AC8054CB4D" name="X7AA329AC8054CB4D"></a></p>
 
-</li>
-<li><p>a set <span class="SimpleMath">\(X_{a}\)</span> for each <span class="SimpleMath">\(a \in A(\Gamma)\)</span> such that each <span class="SimpleMath">\(X_{a}\)</span> is disjoint and <span class="SimpleMath">\(X_{a}\)</span> is an orbit of the action of <span class="SimpleMath">\(G(o(a))\)</span> on <span class="SimpleMath">\(X_{v} := \bigsqcup_{a \in o^{-1}(v)}X_{a}\)</span>.</p>
+<h4>1.1 <span class="Heading">Creating RSGraphs</span></h4>
 
-</li>
-</ul>
-<p>The definition of digraph used is different to that of the <strong class="pkg">Digraphs</strong> package. For our purposes, a digraph <span class="SimpleMath">\(\Gamma\)</span> consists of:</p>
+<p><a id="X7FD262C784F26B41" name="X7FD262C784F26B41"></a></p>
 
+<h5>1.1-1 IsRSGraph</h5>
 
-<ul>
-<li><p>a vertex set <span class="SimpleMath">\(V\)</span>,</p>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsRSGraph</code>( <var class="Arg">graph</var> )</td><td class="tdright">(&nbsp;category&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if <var class="Arg">graph</var> is of the category <code class="code">IsRSGraph</code> and false otherwise.</p>
 
-</li>
-<li><p>an arc set <span class="SimpleMath">\(A\)</span>,</p>
-
-</li>
-<li><p>a map <span class="SimpleMath">\(o : A \to V\)</span> assigning each arc to an <em>origin</em> vertex, and</p>
-
-</li>
-<li><p>a bijection <span class="SimpleMath">\(r : A \to A\)</span> (denoted by <span class="SimpleMath">\(a \mapsto \overline{a}\)</span>) such that <span class="SimpleMath">\(r^{2} = \mathrm{id}\)</span>.</p>
-
-</li>
-</ul>
-<p>The bijection <span class="SimpleMath">\(r\)</span> defines a reverse arc for each arc of the graph. This is more specific than the definition in the <var class="Arg">digraphs</var> package which does not require a reverse mapping.</p>
-
-<p>The local action diagrams package provides a category for local action diagrams. It is built in the <var class="Arg">IsDigraph</var> category from the <strong class="pkg">Digraphs</strong> package.</p>
+<p>Every RSGraph object belongs to the category <code class="code">IsRSGraph</code>. Furthermore, every RSGraph is an immutable attribute storing object.</p>
 
 
-<div class="chlinkprevnextbot">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap0_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap2_mj.html">[Next Chapter]</a>&nbsp;  </div>
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap0_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd_mj.html">[Next Chapter]</a>&nbsp;  </div>
 
 
-<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chap2_mj.html">2</a>  <a href="chap3_mj.html">3</a>  <a href="chap4_mj.html">4</a>  <a href="chapInd_mj.html">Ind</a>  </div>
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0_mj.html">Top</a>  <a href="chap1_mj.html">1</a>  <a href="chapInd_mj.html">Ind</a>  </div>
 
 <hr />
 <p class="foot">generated by <a href="https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>

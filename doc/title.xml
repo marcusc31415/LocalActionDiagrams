@@ -12,13 +12,20 @@
     0.1
   </Version>
   <Author>
-    Marcus Chijoff<Alt Only="LaTeX"><Br/></Alt>
+    Marcus Chijoff
 <Address>
 No<Br/>
 </Address>
 <Email>marcus.chijoff@uon.edu.au</Email>
 <Homepage>https://newcastle.edu.au</Homepage>
-
+  </Author>
+  <Author>
+    Stephan Tornier
+<Address>
+No<Br/>
+</Address>
+<Email>stephan.tornier@newcastle.edu.au</Email>
+<Homepage>https://newcastle.edu.au</Homepage>
   </Author>
   <Date>
     29 January 2023

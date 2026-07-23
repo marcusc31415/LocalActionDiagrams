@@ -113,6 +113,14 @@ Extensions := [
 		needed := [ ["digraphs", "1.9.0"] ],
 		filename := "lib/IsomorphismRequiredFunctions.gi",
 	),
+	rec (
+		needed := [ ["grape", "4.9.3"] ],
+		filename := "lib/GRAPEConversion.gd",
+	),
+	rec (
+		needed := [ ["grape", "4.9.3"] ],
+		filename := "lib/GRAPEConversion.gi",
+	),
 ],
 
 AvailabilityTest := ReturnTrue,

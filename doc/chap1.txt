@@ -1,31 +1,34 @@
   
-  [1X1 [33X[0;0YIntroduction[133X[101X
+  [1X1 [33X[0;0YRSGraphs[133X[101X
   
-  [33X[0;0YA local action diagram [22X∆ = (Γ, (G(v)), (X_a))[122X consists of:[133X
+  [33X[0;0YAn  RSGraph  is a graph [22XΓ = (V, A, o, r)[122X that consists of a vertex set [22XV[122X, an
+  arc  set  [22XA[122X,  a map [22Xo : A -> V[122X which assigns each vertex to an [13Xorigin[113X, and a
+  bijection  [22Xr : A -> A[122X which assigns each arc to a [13Xreverse[113X arc. There is also
+  a  map  [22Xt  :=  o  ∘  r[122X which assigns each arc to a [13Xterminus[113X vertex. Note the
+  RSGraphs are allowed to contain loops and parallel arcs.[133X
   
-  [30X    [33X[0;6Ya directed graph [22XΓ[122X,[133X
+  [33X[0;0YWe  created  the  RSGraph  object  for this package due to our use of graphs
+  having  a  specialised definition. For example, every arc in an RSGraph must
+  have  a  reverse  arc  associated  with it while a [13XDigraph[113X from the [5XDigraphs[105X
+  allows  for  arcs that do not have an associated reverse arc. Creating a new
+  object  category  for  RSGraphs  allows  for both better error checking when
+  using  RSGraphs and to avoid conflicting definitions, such as the definition
+  of a cycle for a Digraph and an RSGraph. We provide functionality to convert
+  between  an RSGraph and a [13XGraph[113X from the [5XGRAPE[105X package or a [13XDigraph[113X from the
+  [5XDigraphs[105X package.[133X
   
-  [30X    [33X[0;6Ya closed permutation group [22XG(v)[122X for each [22Xv ∈ V(Γ)[122X, and[133X
+  [33X[0;0YThe  name  "RSGraph"  arises  from  Reid and Smith, the authors of the local
+  action  diagram  paper.  This  name was chosen to avoid conflicting with the
+  [5XGRAPE[105X package.[133X
   
-  [30X    [33X[0;6Ya  set [22XX_a[122X for each [22Xa ∈ A(Γ)[122X such that each [22XX_a[122X is disjoint and [22XX_a[122X is
-        an orbit of the action of [22XG(o(a))[122X on [22XX_v := ⨆_a ∈ o^-1(v)X_a[122X.[133X
   
-  [33X[0;0YThe definition of digraph used is different to that of the [5XDigraphs[105X package.
-  For our purposes, a digraph [22XΓ[122X consists of:[133X
+  [1X1.1 [33X[0;0YCreating RSGraphs[133X[101X
   
-  [30X    [33X[0;6Ya vertex set [22XV[122X,[133X
+  [1X1.1-1 IsRSGraph[101X
   
-  [30X    [33X[0;6Yan arc set [22XA[122X,[133X
+  [33X[1;0Y[29X[2XIsRSGraph[102X( [3Xgraph[103X ) [32X Category[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if [3Xgraph[103X is of the category [10XIsRSGraph[110X and false otherwise.[133X
   
-  [30X    [33X[0;6Ya map [22Xo : A -> V[122X assigning each arc to an [13Xorigin[113X vertex, and[133X
-  
-  [30X    [33X[0;6Ya  bijection  [22Xr  :  A  -> A[122X (denoted by [22Xa ↦ overlinea[122X) such that [22Xr^2 =
-        mathrmid[122X.[133X
-  
-  [33X[0;0YThe  bijection  [22Xr[122X  defines  a reverse arc for each arc of the graph. This is
-  more  specific  than  the  definition in the [3Xdigraphs[103X package which does not
-  require a reverse mapping.[133X
-  
-  [33X[0;0YThe  local  action  diagrams  package  provides  a category for local action
-  diagrams. It is built in the [3XIsDigraph[103X category from the [5XDigraphs[105X package.[133X
+  [33X[0;0YEvery  RSGraph  object belongs to the category [10XIsRSGraph[110X. Furthermore, every
+  RSGraph is an immutable attribute storing object.[133X
   
