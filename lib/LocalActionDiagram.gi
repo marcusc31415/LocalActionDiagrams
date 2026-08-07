@@ -153,13 +153,27 @@ InstallMethod(LocalActionDiagramGroupName, "for a local action diagram", [IsLoca
 
 InstallMethod(ViewString, "for a local action diagram", [IsLocalActionDiagram],
 function(lad)
-	local graph;
+	local graph, v_string, a_string;
 
 	if LocalActionDiagramGroupName(lad) <> "" then
 		return StringFormatted("<{1} (as a Local Action Diagram)>", LocalActionDiagramGroupName(lad));
 	else
 		graph := LocalActionDiagramRSGraph(lad);
-		return StringFormatted("<LocalActionDiagram with {1} vertices and {2} arcs>", RSGraphNumberVertices(graph), RSGraphNumberArcs(graph));
+
+		if Size(RSGraphVertices(graph)) = 1 then
+			v_string := StringFormatted("{1} vertex", Size(RSGraphVertices(graph)));
+		else
+			v_string := StringFormatted("{1} vertices", Size(RSGraphVertices(graph)));
+		fi;
+
+		if Size(RSGraphArcIDs(graph)) = 1 then
+			a_string := StringFormatted("{1} arc", Size(RSGraphArcIDs(graph)));
+		else
+			a_string := StringFormatted("{1} arcs", Size(RSGraphArcIDs(graph)));
+		fi;
+
+
+		return StringFormatted("<LocalActionDiagram with {1} and {2}>", v_string, a_string);
 	fi;
 end);
 
@@ -481,7 +495,7 @@ function(lad)
 	local group_type, v_label, max_cotree, max_scopo, scopos, arc_id, v_in_scopo, vertex_id, scopo, arc_list, arc_label_rec, arc, remove_domain, max_scopo_with_rev, RecIterName;
 
 	# Helper function for iterating records. 
-	RecIterName := x -> List(RecNames(x), y -> [y, x.(y)]);
+	RecIterName := x -> List(RecNames(x), y -> [Int(y), x.(y)]);
 
 	group_type := LocalActionDiagramGroupType(lad);
 
@@ -539,7 +553,7 @@ end);
 
 InstallMethod(LocalActionDiagramIsUnimodular, "Check if corresponding group is unimodular.", [IsLocalActionDiagram], 
 function(lad)
-	local spanning_tree, sp_arc_ids, cycle_arcs, cycle_basis, cycle_arc, is_unimodular, cycle, arc_id, prod, prod_rev, i, CycleFinder;
+	local spanning_tree, sp_arc_ids, cycle_arcs, cycle_basis, cycle_arc, is_unimodular, cycle, arc_id, prod, prod_rev, i, CycleFinder, rev_id;
 
 	# Find spanning tree by breadth first search to reduce the size of 
 	# each cycle in the basis. 
@@ -624,18 +638,16 @@ function(lad)
 
 	is_unimodular := true;
 
+
 	for cycle in cycle_basis do
 		i := 1;
 		prod := 1;
 		prod_rev := 1;
 		for arc_id in cycle do
-			if i mod 2 = 1 then
+				rev_id := arc_id^LocalActionDiagramReverseMap(lad);
 				prod := prod * Size(LocalActionDiagramArcLabels(lad).(arc_id));
+				prod_rev := prod_rev * Size(LocalActionDiagramArcLabels(lad).(rev_id));
 				i := i + 1;
-			else
-				prod_rev := prod_rev * Size(LocalActionDiagramArcLabels(lad).(arc_id));
-				i := i + 1;
-			fi;
 		od;
 		if prod <> prod_rev then
 			is_unimodular := false;
@@ -735,7 +747,7 @@ function(lad)
 end);
 
 
-InstallMethod(LocalActionDiagramIsFullAutomorphismGroup, "Number of arcs.", [IsLocalActionDiagram], 
+InstallMethod(LocalActionDiagramIsRegularTreeAutomorphismGroup, "Number of arcs.", [IsLocalActionDiagram], 
 function(lad)
 	local group_label, group_domain;
 
@@ -792,7 +804,7 @@ function(lad)
 	# Check if it is any of these types to get a group name. 
 	LocalActionDiagramIsBurgerMozesUniversalGroup(lad);
 	LocalActionDiagramIsEndStabiliser(lad);
-	LocalActionDiagramIsFullAutomorphismGroup(lad);
+	LocalActionDiagramIsRegularTreeAutomorphismGroup(lad);
 
 	if Size(LocalActionDiagramGroupName(lad)) <> 0 then
 		SetLocalActionDiagramGroupName(new_lad, StringFormatted("({1})^o", LocalActionDiagramGroupName(lad)));

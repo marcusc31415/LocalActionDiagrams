@@ -67,7 +67,7 @@ end);
 
 InstallMethod(RSGraphFromLibrary, "Return list of RSGraphs up to isomorphism.", [IsInt, IsInt],
 function(degree, no_verts)
-	local file_data, rs_graphs, rec_string, rs_graph_data_pairs, data_pair, idx, aut_groups, canon_labellings, seen_data, graph_data, graph;
+	local file_data, rs_graphs, rec_string, rs_graph_data_pairs, data_pair, idx, aut_groups, canon_labellings, seen_data, graph_data, graph, arc_list, arc_no, rev_map, shift_perm;
 
 	# Deal with special known cases first. 
 	
@@ -188,7 +188,7 @@ end);
 
 InstallMethod(LocalActionDiagramFromLibrary, "Return list of Local Action Diagrams up to isomorphism.", [IsInt, IsInt],
 function(degree, no_verts)
-	local file_data, lad_list, rec_string, idx_x, idx_y, vertex_labels, arc_labels, graph, v_id, lad;
+	local file_data, lad_list, rec_string, idx_x, idx_y, vertex_labels, arc_labels, graph, v_id, lad, G, domain, graph_list, idx;
 
 	# Deal with special known cases first. 
 	
@@ -206,10 +206,10 @@ function(degree, no_verts)
 
 		# One loop. 
 
-		vert_labels := List([1..no_verts-1], x -> Group(()));
+		vertex_labels := List([1..no_verts-1], x -> Group(()));
 		arc_labels := [];
-		for idx in [1..Size(vert_labels)] do
-			G := vert_labels[idx];
+		for idx in [1..Size(vertex_labels)] do
+			G := vertex_labels[idx];
 			domain := [1+2*(idx-1), 2+2*(idx-1)];
 			SetPermGroupDomain(G, domain);
 
@@ -218,47 +218,47 @@ function(degree, no_verts)
 			Add(arc_labels, [domain[2]]);
 		od;
 		domain := domain+2; # For the last group.
-		Add(vert_labels, Group((domain[1], domain[2])));
+		Add(vertex_labels, Group((domain[1], domain[2])));
 		Add(arc_labels, domain); # A single arc originating here. 
 
-		Add(lad_list, LocalActionDiagramFromData(graph_list[1], vert_labels, arc_labels));
+		Add(lad_list, LocalActionDiagramFromData(graph_list[1], vertex_labels, arc_labels));
 
 
 		# Two loops. 
-		vert_labels := StructuralCopy(vert_labels);
+		vertex_labels := StructuralCopy(vertex_labels);
 		arc_labels := StructuralCopy(arc_labels);
-		Remove(vert_labels); # Remove the last vertex and arc label. 
+		Remove(vertex_labels); # Remove the last vertex and arc label. 
 		Remove(arc_labels); 
 
-		Add(vert_labels, Group(()));
-		SetPermGroupDomain(Last(vert_labels), domain);
+		Add(vertex_labels, Group(()));
+		SetPermGroupDomain(Last(vertex_labels), domain);
 		Add(arc_labels, [domain[1]]);
 		Add(arc_labels, [domain[2]]);
 
-		Add(lad_list, LocalActionDiagramFromData(graph_list[2], vert_labels, arc_labels));
+		Add(lad_list, LocalActionDiagramFromData(graph_list[2], vertex_labels, arc_labels));
 
 		# Cycle. 
-		vert_labels := StructuralCopy(vert_labels);
+		vertex_labels := StructuralCopy(vertex_labels);
 		arc_labels := StructuralCopy(arc_labels);
-		Add(lad_list, LocalActionDiagramFromData(graph_list[3], vert_labels, arc_labels));
+		Add(lad_list, LocalActionDiagramFromData(graph_list[3], vertex_labels, arc_labels));
 
 		# No loops. 
-		vert_labels := StructuralCopy(vert_labels);
+		vertex_labels := StructuralCopy(vertex_labels);
 		arc_labels := StructuralCopy(arc_labels);
 
-		Remove(vert_labels, 1);
-		Remove(vert_labels);
+		Remove(vertex_labels, 1);
+		Remove(vertex_labels);
 		Remove(arc_labels, 1);
 		Remove(arc_labels, 1);
 		Remove(arc_labels);
 		Remove(arc_labels);
 
-		Add(vert_labels, Group((1,2)), 1);
-		Add(vert_labels, Group((domain[1], domain[2])));
+		Add(vertex_labels, Group((1,2)), 1);
+		Add(vertex_labels, Group((domain[1], domain[2])));
 		Add(arc_labels, [1, 2], 1);
 		Add(arc_labels, domain);
 
-		Add(lad_list, LocalActionDiagramFromData(graph_list[4], vert_labels, arc_labels));
+		Add(lad_list, LocalActionDiagramFromData(graph_list[4], vertex_labels, arc_labels));
 
 
 		return lad_list;
@@ -359,7 +359,7 @@ function(args...)
 	for idx in [1..Length(args)/2] do
 		if args[2*idx-1] in [RSGraphVertices, RSGraphNumberVertices, RSGraphArcs, RSGraphArcIDs, RSGraphNumberArcs, RSGraphReverseMap, RSGraphAdjacencyMatrix, \
 		                     RSGraphOutNeighbours, RSGraphInNeighbours, RSGraphOutArcs, RSGraphInArcs, RSGraphIsCycle, AutomorphismGroup, RSGraphCanonicalLabelling, \
-							 RSGraphMaximumDegree] then
+							 RSGraphDegree] then
 			Add(easy_args, args[2*idx-1]);
 			Add(easy_args, args[2*idx]);
 		else

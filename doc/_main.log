@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.7.23)  23 JUL 2026 18:49
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026/Arch Linux) (preloaded format=pdflatex 2026.7.23)  7 AUG 2026 18:17
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -571,42 +571,199 @@ LaTeX Font Info:    Trying to load font information for T1+phv on input line 15
 1.
 (/usr/share/texmf-dist/tex/latex/psnfss/t1phv.fd
 File: t1phv.fd 2020/03/25 scalable font definitions for T1/phv.
-) [3
+)
+Underfull \hbox (badness 10000) in paragraph at lines 202--204
+[]\T1/ptm/m/n/10.95 The re-verse map must be a per-mu-ta-tion that is an in-vo-
+lu-tion \T1/cmtt/m/n/10.95 --- \T1/ptm/m/n/10.95 i.e.
+ []
 
-] (./_main.ind [4
+[3
+
+]
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 215.
+
+Underfull \hbox (badness 2478) in paragraph at lines 243--245
+[]\T1/ptm/m/n/10.95 This func-tion cre-ates an RS-Graph de-scribed by an ad-ja-
+cency ma-trix. The ar-gu-ment
+ []
+
+[4] [5]
+Underfull \hbox (badness 10000) in paragraph at lines 451--452
+[]\T1/ptm/m/n/10.95 Since ev-ery arc has an in-verse arc this re-turns the same
+ re-sult as
+ []
+
+[6]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 5
+68.
+ (/usr/share/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+) [7] [8]
+Underfull \hbox (badness 10000) in paragraph at lines 730--731
+[]\T1/ptm/m/n/10.95 The \T1/cmtt/m/n/10.95 vertex_id_map \T1/ptm/m/n/10.95 and 
+\T1/cmtt/m/n/10.95 arc_id_map \T1/ptm/m/n/10.95 are both in the cat-e-gory
+ []
+
+[9] [10]
+Chapter 2.
+
+Underfull \hbox (badness 3240) in paragraph at lines 886--889
+[]\T1/ptm/m/n/10.95 If two lists are pro-vided then the ver-tex and arc la-bels
+ are as-sumed to be in the
+ []
 
 
+Underfull \hbox (badness 1881) in paragraph at lines 886--889
+\T1/ptm/m/n/10.95 same or-der as \T1/cmtt/m/n/10.95 RSGraphVertices([]) \T1/ptm
+/m/n/10.95 and \T1/cmtt/m/n/10.95 RSGraphArcIDs([]) \T1/ptm/m/n/10.95 re-spec-t
+ively. This
+ []
 
-])
-(./_main.aux)
+[11
+
+]
+
+LaTeX Warning: Reference `PermGroupDomain' on page 12 undefined on input line 8
+91.
+
+[12] [13] [14] [15]
+Underfull \hbox (badness 10000) in paragraph at lines 1304--1306
+[]\T1/ptm/m/n/10.95 This func-tion first cal-cu-lates the sco-pos of the lo-cal
+ ac-tion di-a-gram (see
+ []
+
+
+Underfull \hbox (badness 1953) in paragraph at lines 1331--1335
+[]\T1/ptm/m/n/10.95 This func-tion im-ple-ments (CITE THE-O-REM HERE) to de-ter
+-mine if the cor-re-spond-ing
+ []
+
+
+Underfull \hbox (badness 3260) in paragraph at lines 1331--1335
+\T1/ptm/m/n/10.95 uni-ver-sal group is dis-crete. This re-quires cal-cu-la-tion
+ of the di-a-grams group type (see
+ []
+
+
+Underfull \hbox (badness 2680) in paragraph at lines 1331--1335
+\T1/cmtt/m/n/10.95 LocalActionDiagramGroupType \T1/ptm/m/n/10.95 ([][]2.2.17[][
+])). Fur-ther-more, if the group is dis-crete then it
+ []
+
+
+Underfull \hbox (badness 2865) in paragraph at lines 1331--1335
+\T1/ptm/m/n/10.95 is also unis-calar and uni-mod-u-lar and so if this func-tion
+ re-turns \T1/cmtt/m/n/10.95 true \T1/ptm/m/n/10.95 then it also sets
+ []
+
+[16]
+Underfull \hbox (badness 1953) in paragraph at lines 1360--1364
+[]\T1/ptm/m/n/10.95 This func-tion im-ple-ments (CITE THE-O-REM HERE) to de-ter
+-mine if the cor-re-spond-ing
+ []
+
+
+Underfull \hbox (badness 2662) in paragraph at lines 1360--1364
+\T1/ptm/m/n/10.95 uni-ver-sal group is unis-calar. This re-quires cal-cu-la-tio
+n of the di-a-grams group type (see
+ []
+
+[17] [18] [19]
+Chapter 3.
+[20
+
+]
+Underfull \hbox (badness 10000) in paragraph at lines 1614--1619
+[]\T1/ptm/m/n/10.95 These func-tion take the out-put from the \T1/cmtt/m/n/10.9
+5 RSGraphToWritableString \T1/ptm/m/n/10.95 and
+ []
+
+[21]
+Underfull \hbox (badness 1325) in paragraph at lines 1676--1680
+[]\T1/ptm/m/n/10.95 The IO pack-age sup-ports se-ri-al-is-ing data through the 
+\T1/cmtt/m/n/10.95 IO_Pickle \T1/ptm/m/n/10.95 func-tion. Un-like the
+ []
+
+[22] [23]
+Chapter 4.
+[24
+
+]
+Chapter 5.
+[25
+
+] (./_main.ind
+Underfull \hbox (badness 10000) in paragraph at lines 19--21
+[]\T1/cmtt/m/n/10.95 Local\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Action\T1/ptm/m
+/n/10.95 -\T1/cmtt/m/n/10.95 Diagram\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Const
+ruct\T1/ptm/m/n/10.95 -
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 21--23
+[]\T1/cmtt/m/n/10.95 Local\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Action\T1/ptm/m
+/n/10.95 -\T1/cmtt/m/n/10.95 Diagram\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 From\
+T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Burger\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.9
+5 Mozes\T1/ptm/m/n/10.95 -
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--37
+[]\T1/cmtt/m/n/10.95 Local\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Action\T1/ptm/m
+/n/10.95 -\T1/cmtt/m/n/10.95 Diagram\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Is\T1
+/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Burger\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 
+Mozes\T1/ptm/m/n/10.95 -
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 39--41
+[]\T1/cmtt/m/n/10.95 Local\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Action\T1/ptm/m
+/n/10.95 -\T1/cmtt/m/n/10.95 Diagram\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Is\T1
+/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95 Regular\T1/ptm/m/n/10.95 -\T1/cmtt/m/n/10.95
+ Tree\T1/ptm/m/n/10.95 -
+ []
+
+[26
+
+
+] [27
+
+]) (./_main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-01-19>
  ***********
+
+
+LaTeX Warning: There were undefined references.
+
 Package rerunfilecheck Info: File `_main.out' has not changed.
-(rerunfilecheck)             Checksum: E9A8AE8A3ACFED4B3466C9209E2C80A4;294.
+(rerunfilecheck)             Checksum: 551E5C93E8548C6798621A907C261B32;1964.
  ) 
 Here is how much of TeX's memory you used:
- 12362 strings out of 469515
- 188213 string characters out of 5470807
- 603447 words of memory out of 5000000
- 40800 multiletter control sequences out of 15000+600000
- 682621 words of font info for 103 fonts, out of 8000000 for 9000
+ 12645 strings out of 469515
+ 193983 string characters out of 5470807
+ 617387 words of memory out of 5000000
+ 40917 multiletter control sequences out of 15000+600000
+ 693220 words of font info for 122 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 90i,5n,93p,424b,523s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/font
-s/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public
-/cm-super/sfst1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1
-000.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></usr/s
-hare/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf-dist/font
-s/type1/urw/symbol/usyr.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmb8a
-.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texmf-
-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on _main.pdf (4 pages, 138370 bytes).
+ 90i,8n,93p,501b,849s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texmf-dist/fon
+ts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy10.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfst
+1095.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/
+share/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></usr/share/texmf-dis
+t/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/sy
+mbol/usyr.pfb></usr/share/texmf-dist/fonts/type1/urw/symbol/usyr.pfb></usr/shar
+e/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/texmf-dist/fonts/type
+1/urw/times/utmr8a.pfb></usr/share/texmf-dist/fonts/type1/urw/times/utmr8a.pfb>
+</usr/share/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on _main.pdf (27 pages, 263497 bytes).
 PDF statistics:
- 112 PDF objects out of 1000 (max. 8388607)
- 83 compressed objects within 1 object stream
- 14 named destinations out of 1000 (max. 500000)
- 25 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 488 PDF objects out of 1000 (max. 8388607)
+ 426 compressed objects within 5 object streams
+ 159 named destinations out of 1000 (max. 500000)
+ 97 words of extra memory for PDF output out of 10000 (max. 10000000)
 

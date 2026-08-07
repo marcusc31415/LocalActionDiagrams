@@ -1,6 +1,6 @@
   
   
-                            [1X Local Action Diagrams [101X
+                             [1X LocalActionDiagrams [101X
   
   
                [1X Super awesome package for local action diagrams. [101X
@@ -39,6 +39,67 @@
   1 [33X[0;0YRSGraphs[133X
     1.1 [33X[0;0YCreating RSGraphs[133X
       1.1-1 IsRSGraph
+      1.1-2 RSGraphByAdjacencyList
+      1.1-3 RSGraphByAdjacencyMatrix
+    1.2 [33X[0;0YRSGraph Attributes and Properties[133X
+      1.2-1 RSGraphVertices
+      1.2-2 RSGraphNumberVertices
+      1.2-3 RSGraphArcs
+      1.2-4 RSGraphNumberArcs
+      1.2-5 RSGraphArcIDs
+      1.2-6 RSGraphReverseMap
+      1.2-7 RSGraphAdjacencyMatrix
+      1.2-8 RSGraphOutNeighbours
+      1.2-9 RSGraphInNeighbours
+      1.2-10 RSGraphOutArcs
+      1.2-11 RSGraphInArcs
+      1.2-12 RSGraphBipartition
+      1.2-13 RSGraphDegree
+      1.2-14 RSGraphIsCycle
+      1.2-15 RSGraphIsBipartite
+      1.2-16 RSGraphHasParallelArcs
+    1.3 [33X[0;0YRSGraph Operations[133X
+      1.3-1 RSGraphArcIterator
+      1.3-2 RSGraphSubgraph
+      1.3-3 RSGraphToStandardForm
+      1.3-4 RSGraphSpanningTree
+  2 [33X[0;0YLocal Action Diagrams[133X
+    2.1 [33X[0;0YCreating Local Action Diagrams[133X
+      2.1-1 IsLocalActionDiagram
+      2.1-2 LocalActionDiagramFromData
+      2.1-3 LocalActionDiagramFromBurgerMozesUniversalGroup
+      2.1-4 LocalActionDiagramConstructBipartitionPreserving
+    2.2 [33X[0;0YLocal Action Diagram Attributes and Properties[133X
+      2.2-1 LocalActionDiagramRSGraph
+      2.2-2 LocalActionDiagramVertexLabels
+      2.2-3 LocalActionDiagramArcLabels
+      2.2-4 LocalActionDiagramVertices
+      2.2-5 LocalActionDiagramArcs
+      2.2-6 LocalActionDiagramArcIDs
+      2.2-7 LocalActionDiagramNumberVertices
+      2.2-8 LocalActionDiagramNumberArcs
+      2.2-9 LocalActionDiagramReverseMap
+      2.2-10 LocalActionDiagramOutNeighbours
+      2.2-11 LocalActionDiagramInNeighbours
+      2.2-12 LocalActionDiagramOutArcs
+      2.2-13 LocalActionDiagramInArcs
+      2.2-14 LocalActionDiagramGroupName
+      2.2-15 LocalActionDiagramRegularTree
+      2.2-16 LocalActionDiagramScopos
+      2.2-17 LocalActionDiagramGroupType
+      2.2-18 LocalActionDiagramIsDiscrete
+      2.2-19 LocalActionDiagramIsUniscalar
+      2.2-20 LocalActionDiagramIsUnimodular
+      2.2-21 LocalActionDiagramIsBurgerMozesUniversalGroup
+      2.2-22 LocalActionDiagramIsEndStabiliser
+      2.2-23 LocalActionDiagramIsRegularTreeAutomorphismGroup
+  3 [33X[0;0YIO Operations and Visualisation[133X
+    3.1 [33X[0;0YIO Operations[133X
+      3.1-1 [33X[0;0YWriting To A String[133X
+      3.1-2 [33X[0;0YReading From A String[133X
+      3.1-3 [33X[0;0YIO Pickling/Unpickling[133X
+  4 [33X[0;0YIsomorphisms and Automorphisms[133X
+  5 [33X[0;0YEnumeration[133X
   
   
   [32X

@@ -271,7 +271,21 @@ end);
 
 InstallMethod(ViewString, "for an RSGraph", [IsRSGraph],
 function(graph)
-	return StringFormatted("<RSGraph with {1} vertices and {2} arcs>", Size(RSGraphVertices(graph)), Size(RSGraphArcIDs(graph)));
+	local v_string, a_string;
+
+	if Size(RSGraphVertices(graph)) = 1 then
+		v_string := StringFormatted("{1} vertex", Size(RSGraphVertices(graph)));
+	else
+		v_string := StringFormatted("{1} vertices", Size(RSGraphVertices(graph)));
+	fi;
+
+	if Size(RSGraphArcIDs(graph)) = 1 then
+		a_string := StringFormatted("{1} arc", Size(RSGraphArcIDs(graph)));
+	else
+		a_string := StringFormatted("{1} arcs", Size(RSGraphArcIDs(graph)));
+	fi;
+
+	return StringFormatted("<RSGraph with {1} and {2}>", v_string, a_string);
 end);
 
 InstallMethod(RSGraphNumberVertices, "for an RSGraph", [IsRSGraph], graph -> Size(RSGraphVertices(graph)));
@@ -298,164 +312,7 @@ function(graph)
 	return adj_mat;
 end);
 
-BindGlobal("LAD_dec_to_bin@", 
-function(dec_no)
-	local output_string, quot, idx, len_number;
 
-	output_string := [];
-	quot := QuotientRemainder(Integers, dec_no, 2);
-	
-	while quot[1] <> 0 do
-		# Add the character corresponding to the remainder
-		# to the start of the string. (The +48 makes a
-		# 0 or 1 correspond to it's ASCII character.)
-		Add(output_string, CharInt(quot[2] + 48), 1); 
-		quot := QuotientRemainder(Integers, quot[1], 2);
-	od;
-
-	# Need to do the final bit. 
-	Add(output_string, CharInt(quot[2] + 48), 1); 
-
-	return output_string;
-end);
-
-BindGlobal("LAD_bin_to_dec@",
-function(bin_string)
-	local i, dec_no;
-
-	dec_no := 0;
-	# Need to deal with this case separately. 
-	for i in [1..Length(bin_string)] do
-		# If the ith character is 1 then add 2^(Length - i)
-		# to the decimal number. Need to do Length - i
-		# because the numbers are in big-endian. The -48
-		# is there to convert the ASCII character to an integer. 
-		dec_no := dec_no + 2^((Length(bin_string)-i))*(IntChar(bin_string[i])-48);
-	od;
-
-	return dec_no;
-end);
-
-
-InstallMethod(RSGraphMG5String, "for an RSGraph", [IsRSGraph],
-function(graph)
-	local no_vert, flat_adj_mat, idx, output_string, dec_no, bin_no, pos, rev_map, arc_list, arc, lex_sort, ids, id_perm, new_rev_map;
-
-	no_vert := RSGraphNumberVertices(graph);
-	flat_adj_mat := Flat(RSGraphAdjacencyMatrix(graph));
-	output_string := [];
-
-	for dec_no in flat_adj_mat do
-		# Need to add one so that dec(0) is not represented
-		# by the white space (space bar) character. 
-		bin_no := LAD_dec_to_bin@(dec_no+1);
-		# Pad the front of the number with zeroes so it's 
-		# length is a multiple of five. 
-		while Length(bin_no) mod 5 <> 0 do
-			Add(bin_no, '0', 1);
-		od;
-
-		pos := 1;
-		while pos < Length(bin_no) do
-			# At the last block of 5 digits. 
-			if (pos+5-1) = Length(bin_no) then
-				Add(output_string, StringFormatted("001{1}", bin_no{[pos..pos+5-1]}));
-			else
-				Add(output_string, StringFormatted("010{1}", bin_no{[pos..pos+5-1]}));
-			fi;
-			pos := pos+5;
-		od;
-	od;
-
-	for idx in [1..Length(output_string)] do
-		# Replace the binary number with the corresponding ASCII character. 
-		output_string[idx] := CharInt(LAD_bin_to_dec@(output_string[idx]));
-	od;
-
-	# Have the reverse map work with a potential reordering of the arcs
-	# (due to the adjacency matrix not taking ids into account). 
-	rev_map := RSGraphReverseMap(graph);
-
-	arc_list := [];
-
-	# List will contain [id, [origin, terminus]]. 
-	for arc in RSGraphArcIterator(graph) do
-		Add(arc_list, [arc[1], [arc[2].origin, arc[2].terminus]]);
-	od;
-
-	# Sort the arcs in lexicographical order.  
-	lex_sort := function(x, y) return x[2] < y[2]; end;
-	Sort(arc_list, lex_sort);
-
-	ids := List(arc_list, x -> x[1]);
-
-	id_perm := [];
-
-	for idx in [1..Length(ids)] do
-		# Element *idx* will map to the reverse id of the
-		# corresponding id in the original list. 
-		id_perm[idx] := Position(ids, ids[idx]^rev_map);
-	od;
-
-	new_rev_map := PermList(id_perm);
-
-	return StringFormatted("{1}|{2}", output_string, new_rev_map);
-
-end);
-
-InstallMethod(RSGraphFromMG5String, "for RSGraphs", [IsString], 
-function(mg5_string)
-	local adj_mat, flat_adj_mat, bin_string, idx, dec_no, block, bin_no, no_vert, char, rev_map, split_string, graph;
-
-	split_string := SplitString(mg5_string, "|");
-
-	rev_map := EvalString(split_string[2]);
-
-	bin_string := [];
-	for char in split_string[1] do
-		# Subtract 1 to get back to the right number (added one
-		# in the encoding). 
-		block := LAD_dec_to_bin@(IntChar(char)-1);
-
-		# Write the full 8 bits of the ASCII character. 
-		while Length(block) <> 8 do
-			Add(block, '0', 1);
-		od;
-		Add(bin_string, block);
-	od;
-
-	flat_adj_mat := [];
-	bin_no := [];
-	for block in bin_string do
-		Assert(1, block{[1..3]} = "001" or block{[1..3]} = "010");
-		
-		# If it's the last block for a digit then turn the binary
-		# number into a decimal number and add it to the adjacency
-		# matrix. Otherwise add the block to the binary number and
-		# go to the next block. 
-		if block{[1..3]} = "001" then
-			Add(bin_no, block{[4..8]});
-			bin_no := Concatenation(bin_no);
-			dec_no := LAD_bin_to_dec@(bin_no);
-			Add(flat_adj_mat, dec_no);
-			bin_no := [];
-		else
-			Add(bin_no, block{[4..8]});
-		fi;
-	od;
-
-	Assert(1, IsInt(Sqrt(Length(flat_adj_mat))));
-	no_vert := Sqrt(Length(flat_adj_mat));
-
-	# Turn the flat list into a matrix. Unpack it from IsMatrixObj
-	# to IsMatrix list of lists. 
-	adj_mat := Unpack(Matrix(Integers, flat_adj_mat, no_vert));
-
-	graph := RSGraphByAdjacencyMatrix(adj_mat, rev_map);
-	SetRSGraphMG5String(graph, mg5_string);
-	return graph;
-
-end);
 
 InstallMethod(RSGraphOutNeighbours, [IsRSGraph],
 function(graph)
@@ -527,12 +384,6 @@ function(graph)
 	od;
 
 	return in_rec;
-end);
-
-
-InstallMethod(\=, "for RSGraphs", IsIdenticalObj, [IsRSGraph, IsRSGraph], 0,
-function(graph1, graph2)
-	return RSGraphMG5String(graph1) = RSGraphMG5String(graph2);
 end);
 
 InstallMethod(RSGraphArcIterator, "for RSGraphs", [IsRSGraph],
@@ -733,7 +584,10 @@ function(graph, type)
 
 	if type = "dfs" then
 		arc_ids := LAD_DFS_Tree@(graph);
+	elif type = "bfs" then
+		arc_ids := LAD_BFS_Tree@(graph);
 	else
+		Info(InfoWarning, 1, StringFormatted("\"{1}\" is an invalid parameter. Defaulting to breadth first search.", type));
 		arc_ids := LAD_BFS_Tree@(graph);
 	fi;
 
@@ -968,7 +822,7 @@ end);
 
 InstallMethod(RSGraphIsBipartite, "Check if the graph is a bipartite graph.", [IsRSGraph], graph -> RSGraphBipartition <> fail);
 
-InstallMethod(RSGraphMaximumDegree, "Maximum degree of any vertex.", [IsRSGraph], 
+InstallMethod(RSGraphDegree, "Maximum degree of any vertex.", [IsRSGraph], 
 function(graph)
 	local degree_list, v_id;
 

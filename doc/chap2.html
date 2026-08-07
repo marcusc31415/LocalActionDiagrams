@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+<title>GAP (LocalActionDiagrams) - Chapter 2: Local Action Diagrams</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<meta name="generator" content="GAPDoc2HTML" />
+<link rel="stylesheet" type="text/css" href="manual.css" />
+<script src="manual.js" type="text/javascript"></script>
+<script type="text/javascript">overwriteStyle();</script>
+</head>
+<body class="chap2"  onload="jscontent()">
+
+
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap1.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap3.html">[Next Chapter]</a>&nbsp;  </div>
+
+<p id="mathjaxlink" class="pcenter"><a href="chap2_mj.html">[MathJax on]</a></p>
+<p><a id="X7E4B6DDB802E1F7E" name="X7E4B6DDB802E1F7E"></a></p>
+<div class="ChapSects"><a href="chap2.html#X7E4B6DDB802E1F7E">2 <span class="Heading">Local Action Diagrams</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap2.html#X84CBE9FE85CF5E9D">2.1 <span class="Heading">Creating Local Action Diagrams</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X79A1FE3686A8ACCD">2.1-1 IsLocalActionDiagram</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7EB208B47BAB2BC1">2.1-2 LocalActionDiagramFromData</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X785DF9A07E409955">2.1-3 LocalActionDiagramFromBurgerMozesUniversalGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X81C137048009714A">2.1-4 LocalActionDiagramConstructBipartitionPreserving</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap2.html#X8048984C81A6C0C2">2.2 <span class="Heading">Local Action Diagram Attributes and Properties</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7D2ED3BD7CF95FA4">2.2-1 LocalActionDiagramRSGraph</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7D9D2615812AE56B">2.2-2 LocalActionDiagramVertexLabels</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7FA7E80680DE84C2">2.2-3 LocalActionDiagramArcLabels</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X874DED9479AE6960">2.2-4 LocalActionDiagramVertices</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7F304E9E7D9876A7">2.2-5 LocalActionDiagramArcs</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X823F306F799E4F11">2.2-6 LocalActionDiagramArcIDs</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7F687E2E879DE15C">2.2-7 LocalActionDiagramNumberVertices</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X792FCDFB843B6A7A">2.2-8 LocalActionDiagramNumberArcs</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7F74CB4E7D5078DA">2.2-9 LocalActionDiagramReverseMap</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X825FA59783951DCE">2.2-10 LocalActionDiagramOutNeighbours</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X82253261848258F8">2.2-11 LocalActionDiagramInNeighbours</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X792BBA5B7DEB9D04">2.2-12 LocalActionDiagramOutArcs</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X79F8BECC81804228">2.2-13 LocalActionDiagramInArcs</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7978DED887F2496F">2.2-14 LocalActionDiagramGroupName</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X7F2B374A8049A165">2.2-15 LocalActionDiagramRegularTree</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X78AB8E5D83D7823D">2.2-16 LocalActionDiagramScopos</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X84570C4A84D97EB2">2.2-17 LocalActionDiagramGroupType</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X83CEFD1682867DD9">2.2-18 LocalActionDiagramIsDiscrete</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X82155DA17AAC826E">2.2-19 LocalActionDiagramIsUniscalar</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X816A48F4838326B8">2.2-20 LocalActionDiagramIsUnimodular</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X87E1AE8587DA1FB1">2.2-21 LocalActionDiagramIsBurgerMozesUniversalGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X8443CE477DC98586">2.2-22 LocalActionDiagramIsEndStabiliser</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap2.html#X829A07D678914E89">2.2-23 LocalActionDiagramIsRegularTreeAutomorphismGroup</a></span>
+</div></div>
+</div>
+
+<h3>2 <span class="Heading">Local Action Diagrams</span></h3>
+
+<p>A local action diagram <span class="SimpleMath">∆ = (Γ, (X_a), (G(v)))</span> consists of:</p>
+
+
+<ul>
+<li><p>a graph <span class="SimpleMath">Γ</span> (an <code class="code">RSGraph</code>),</p>
+
+</li>
+<li><p>for each arc <span class="SimpleMath">a ∈ A(Γ)</span>a <em>colour set</em> <span class="SimpleMath">|X_a|</span> disjoint from every other colour set,</p>
+
+</li>
+<li><p>for each vertex <span class="SimpleMath">v ∈ V(Γ)</span> a group <span class="SimpleMath">G(v)</span> labelling the vertex such that <span class="SimpleMath">G(V)</span> acts on <span class="SimpleMath">⨆_a ∈ o^-1(v)X_a</span> and the orbits of <span class="SimpleMath">G(V)</span> are precisely the colour sets <span class="SimpleMath">|X_a|</span> for <span class="SimpleMath">a ∈ o^-1(v)</span>.</p>
+
+</li>
+</ul>
+<p>Local action diagrams are a powerful tool for studying <span class="SimpleMath">(P)</span>-closed groups because isomorphism classes of local action diagrams are in a one-to-one correspondence with conjugacy classes of <span class="SimpleMath">(P)</span>-closed groups. Furthermore, properties of the corresponding <span class="SimpleMath">(P)</span>-closed group can be determined from the local action diagram. In the case when a local action diagram is finite, we can represent the diagram in <strong class="pkg">GAP</strong> and determine properties of the (potentially infinite) corresponding group.</p>
+
+<p><a id="X84CBE9FE85CF5E9D" name="X84CBE9FE85CF5E9D"></a></p>
+
+<h4>2.1 <span class="Heading">Creating Local Action Diagrams</span></h4>
+
+<p><a id="X79A1FE3686A8ACCD" name="X79A1FE3686A8ACCD"></a></p>
+
+<h5>2.1-1 IsLocalActionDiagram</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsLocalActionDiagram</code>( <var class="Arg">obj</var> )</td><td class="tdright">(&nbsp;category&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the object is of the category <code class="code">IsLocalActionDiagram</code> and false otherwise.</p>
+
+<p>Every local action diagram belongs to the category <code class="code">IsLocalActionDiagram</code>. Furthermore, every local action diagram is an immutable attribute storing object.</p>
+
+<p><a id="X7EB208B47BAB2BC1" name="X7EB208B47BAB2BC1"></a></p>
+
+<h5>2.1-2 LocalActionDiagramFromData</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramFromData</code>( <var class="Arg">graph</var>, <var class="Arg">vertex_labels</var>, <var class="Arg">arc_labels</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramFromDataNC</code>( <var class="Arg">graph</var>, <var class="Arg">vertex_labels</var>, <var class="Arg">arc_labels</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A local action diagram object.</p>
+
+<p>This function constructs a local action diagram by having all of the diagrams data given to it. This is done by providing the <code class="code">RSGraph</code> of the diagram and either lists of vertex and arc labels or records of vertex and arc labels.</p>
+
+<p>If two lists are provided then the vertex and arc labels are assumed to be in the same order as <code class="code">RSGraphVertices(<var class="Arg">graph</var>)</code> and <code class="code">RSGraphArcIDs(<var class="Arg">graph</var>)</code> respectively. This means, for example, that element <code class="code">idx</code> of <var class="Arg">vertex_labels</var> is the label of the vertex with id <code class="code">RSGraphVertexIDs(<var class="Arg">graph</var>)[idx]</code>. If two records are provided then the names of the record elements are the vertex and arc ids respectively and the components are their labels.</p>
+
+<p>The vertex labels are permutation groups. The domain each label acts on is stored in the mutable attribute <code class="code">PermGroupDomain</code> (see <code class="func">PermGroupDomain</code> (<span class="RefLink">???</span>)). By default, this is equal to the <code class="code">MovedPoints</code> of the group but can be changed to allow for the group to have fixed points.</p>
+
+<p>The arc labels are lists of integers. Each arc must be labelled by by an orbit of the vertex label at the vertex that arc originates at. Furthermore, every vertex must have an arc originating at it for each orbit of its vertex label. Note that the orbits of a vertex label <code class="code">G</code> are determined by <code class="code">Orbits(G, PermGroupDomain(G))</code>.</p>
+
+<p>Unlike the formal definition of a local action diagram, we allow for overlap between the domains of different vertex labels. For example, a two vertex local action diagram could be labelled by <span class="SimpleMath">C_2</span> and <span class="SimpleMath">S_3</span> and they can have domains <span class="SimpleMath">{1, 2}</span> and <span class="SimpleMath">{1, 2, 3}</span> respectively.</p>
+
+<p>The NC variant of the function does not check that there is a label for each vertex and arc (and exactly this many labels), that the domains of the groups match up with the arc labels, or that the orbits of the vertex labels match up with the arc labels.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1], [1, 2], [2, 1]], (2,3));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">label_1 := Group((1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetPermGroupDomain(label_1, [1, 2, 3]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">label_2 := Group((1,2,3));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [label_1, label_2];</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1, 2], [3], [1,2,3]];</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);</span>
+&lt;LocalActionDiagram with 2 vertices and 3 arcs&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(lad);</span>
+Vertices = { 1, 2 }
+Arcs = {
+        1 = ( origin = 1, terminus = 1, inverse = 1 )
+        2 = ( origin = 1, terminus = 2, inverse = 3 )
+        3 = ( origin = 2, terminus = 1, inverse = 2 )
+}
+Reverse Map = (2,3)
+Vertex Labels = {
+        1 = Group( [ (1,2) ] )
+        2 = Group( [ (1,2,3) ] )
+}
+Arc Labels = {
+        1 = [ 1, 2 ]
+        2 = [ 3 ]
+        3 = [ 1, 2, 3 ]
+}
+</pre></div>
+
+<p><a id="X785DF9A07E409955" name="X785DF9A07E409955"></a></p>
+
+<h5>2.1-3 LocalActionDiagramFromBurgerMozesUniversalGroup</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramFromBurgerMozesUniversalGroup</code>( <var class="Arg">perm_group</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A local action diagram object.</p>
+
+<p>Given a permutation group <span class="SimpleMath">F</span> (<var class="Arg">perm_group</var>) this function returns the local action diagram corresponding to the Burger-Mozes universal group <span class="SimpleMath">U(F)</span> (see [cite Burger-Mozes and Colin and Simon for construction?]). This is a local action diagram with one vertex labelled by <span class="SimpleMath">F</span> and a self-reverse loop for each orbit of <span class="SimpleMath">F</span>. Note that <span class="SimpleMath">F</span> acts on the domain <code class="code">PermGroupDomain(<var class="Arg">perm_group</var>)</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1,2)(3,4)));</span>
+&lt;U(Group( [ (1,2)(3,4) ] )) (as a Local Action Diagram)&gt;
+</pre></div>
+
+<p><a id="X81C137048009714A" name="X81C137048009714A"></a></p>
+
+<h5>2.1-4 LocalActionDiagramConstructBipartitionPreserving</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramConstructBipartitionPreserving</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A local action diagram object.</p>
+
+<p>Given a single vertex local action diagram <span class="SimpleMath">∆</span> (<var class="Arg">lad</var>) corresponding to the group <span class="SimpleMath">U(∆)</span> acting on a tree <span class="SimpleMath">T</span> this function returns the local action diagram corresponding to the group <span class="SimpleMath">U(∆)^∘ = {g ∈ U(∆) | ∀ v ∈ V(T), d(v, gv) ≡ 0 mod 2}</span>. Intuitively this is the group of all automorphisms the preserve the bipartition of <span class="SimpleMath">T</span> which always exists since a single vertex local action diagram is vertex transitive.</p>
+
+<p>Given a group <span class="SimpleMath">G</span> labelling the single vertex of <span class="SimpleMath">∆</span> and arc labels <span class="SimpleMath">X_a</span> <span class="SimpleMath">r</span> this local action diagram is constructed as follows:</p>
+
+
+<ul>
+<li><p>Make a graph with two vertices and an edge for each loop of the graph for <span class="SimpleMath">∆</span>.</p>
+
+</li>
+<li><p>Label both vertices by <span class="SimpleMath">G</span>.</p>
+
+</li>
+<li><p>For each arc <span class="SimpleMath">a</span> in the graph of <span class="SimpleMath">∆</span> label the corresponding arc in the new graph by <span class="SimpleMath">X_a</span> and the reverse of this arc by <span class="SimpleMath">X_overlinea}</span>.</p>
+
+</li>
+</ul>
+<p><a id="X8048984C81A6C0C2" name="X8048984C81A6C0C2"></a></p>
+
+<h4>2.2 <span class="Heading">Local Action Diagram Attributes and Properties</span></h4>
+
+<p><a id="X7D2ED3BD7CF95FA4" name="X7D2ED3BD7CF95FA4"></a></p>
+
+<h5>2.2-1 LocalActionDiagramRSGraph</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramRSGraph</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: RSGraph associated with the local action diagram.</p>
+
+<p><a id="X7D9D2615812AE56B" name="X7D9D2615812AE56B"></a></p>
+
+<h5>2.2-2 LocalActionDiagramVertexLabels</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramVertexLabels</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: Vertex labels of the local action diagram.</p>
+
+<p><a id="X7FA7E80680DE84C2" name="X7FA7E80680DE84C2"></a></p>
+
+<h5>2.2-3 LocalActionDiagramArcLabels</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramArcLabels</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: Arc labels of the local action diagram.</p>
+
+<p><a id="X874DED9479AE6960" name="X874DED9479AE6960"></a></p>
+
+<h5>2.2-4 LocalActionDiagramVertices</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramVertices</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The vertices of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphVertices(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X7F304E9E7D9876A7" name="X7F304E9E7D9876A7"></a></p>
+
+<h5>2.2-5 LocalActionDiagramArcs</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramArcs</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The arcs of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphArcs(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X823F306F799E4F11" name="X823F306F799E4F11"></a></p>
+
+<h5>2.2-6 LocalActionDiagramArcIDs</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramArcIDs</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The arc ids of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphArcIDs(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X7F687E2E879DE15C" name="X7F687E2E879DE15C"></a></p>
+
+<h5>2.2-7 LocalActionDiagramNumberVertices</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramNumberVertices</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The number of vertices in the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphNumberVertices(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X792FCDFB843B6A7A" name="X792FCDFB843B6A7A"></a></p>
+
+<h5>2.2-8 LocalActionDiagramNumberArcs</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramNumberArcs</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The number of arcs in the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphNumberArcs(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X7F74CB4E7D5078DA" name="X7F74CB4E7D5078DA"></a></p>
+
+<h5>2.2-9 LocalActionDiagramReverseMap</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramReverseMap</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The reverse map of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphReverseMap(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X825FA59783951DCE" name="X825FA59783951DCE"></a></p>
+
+<h5>2.2-10 LocalActionDiagramOutNeighbours</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramOutNeighbours</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The record of out neighbours of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphOutNeighbours(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X82253261848258F8" name="X82253261848258F8"></a></p>
+
+<h5>2.2-11 LocalActionDiagramInNeighbours</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramInNeighbours</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The record of in neighbours of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphInNeighbours(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X792BBA5B7DEB9D04" name="X792BBA5B7DEB9D04"></a></p>
+
+<h5>2.2-12 LocalActionDiagramOutArcs</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramOutArcs</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The record of out arcs of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphOutArcs(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X79F8BECC81804228" name="X79F8BECC81804228"></a></p>
+
+<h5>2.2-13 LocalActionDiagramInArcs</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramInArcs</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The record of in arcs of the local action diagrams graph.</p>
+
+<p>Shorthand for <code class="code">RSGraphInArcs(LocalActionDiagramRSGraph(<var class="Arg">lad</var>))</code>.</p>
+
+<p><a id="X7978DED887F2496F" name="X7978DED887F2496F"></a></p>
+
+<h5>2.2-14 LocalActionDiagramGroupName</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramGroupName</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: A name for the associated universal group of the local action diagram.</p>
+
+<p>This is a mutable attribute which stores a human readable name for the associated universal group. By default it is equal to the empty string. In this case the <code class="code">View</code> function will print <code class="code">&lt;LocalActionDiagram with n vertices and m arcs&gt;</code> where <code class="code">n</code> is the number of vertices and <code class="code">m</code> is the number of arcs. If this attribute is set to to any other string then the <code class="code">View</code> function will print <code class="code">&lt;{group_name} (as a Local Action Diagram)&gt;</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1]], ());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [SymmetricGroup(3)];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1,2,3]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);</span>
+&lt;LocalActionDiagram with 1 vertex and 1 arc&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetLocalActionDiagramGroupName(lad, "Aut(T_3)");</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">View(lad);</span>
+&lt;Aut(T_3) (as a Local Action Diagram)&gt;
+</pre></div>
+
+<p><a id="X7F2B374A8049A165" name="X7F2B374A8049A165"></a></p>
+
+<h5>2.2-15 LocalActionDiagramRegularTree</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramRegularTree</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The degree of the regular tree the universal group acts on or <code class="keyw">fail</code> if it does not act on one.</p>
+
+<p>If every vertex label of the local action diagram has a domain of size <span class="SimpleMath">d</span> then the associated universal group acts on a regular tree of degree <span class="SimpleMath">d</span>. This functions returns <span class="SimpleMath">d</span> if this is the case and <code class="keyw">fail</code> otherwise.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [SymmetricGroup(3), Group((1,2,3))];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1,2,3], [1,2,3]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramRegularTree(lad);</span>
+3
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels_2 := [SymmetricGroup(3), Group((1,2))];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels_2 := [[1,2,3], [1,2]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad_2 := LocalActionDiagramFromData(graph, vertex_labels_2, arc_labels_2);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramRegularTree(lad_2);</span>
+fail
+</pre></div>
+
+<p><a id="X78AB8E5D83D7823D" name="X78AB8E5D83D7823D"></a></p>
+
+<h5>2.2-16 LocalActionDiagramScopos</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramScopos</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The list of scopos of the local action diagram.</p>
+
+<p>(CITE REID SMITH HERE) Let <span class="SimpleMath">∆ = (Γ, (X_a), (G(v)))</span> be a local action diagram. A strongly confluent partial orientation (<em>scopo</em>) of <span class="SimpleMath">∆</span> is a subset <span class="SimpleMath">O</span> of <span class="SimpleMath">A(Γ)</span> such that:</p>
+
+
+<ul>
+<li><p>if <span class="SimpleMath">a ∈ O</span> then <span class="SimpleMath">overlinea ∉ O</span>,</p>
+
+</li>
+<li><p>if <span class="SimpleMath">a ∈ O</span> then <span class="SimpleMath">|X_a| = 1</span>, and</p>
+
+</li>
+<li><p>for all <span class="SimpleMath">v ∈ V(Γ)</span> if <span class="SimpleMath">O</span> contains an arc <span class="SimpleMath">a</span> originating at <span class="SimpleMath">v</span> then <span class="SimpleMath">O</span> contains all arcs that terminate at <span class="SimpleMath">v</span> except for <span class="SimpleMath">overlinea</span>.</p>
+
+</li>
+</ul>
+<p>This function performs an iterative search for all scopos of a local action diagram. It stores each scopo as a list of arc ids in the scopo. Note that the empty set is a scopo and this is represented as the empty list.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">group := Group(());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetPermGroupDomain(group, [1]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [group, group];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1], [1]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramScopos(lad);</span>
+[ [ ], [ 1 ], [ 2 ]]
+</pre></div>
+
+<p><a id="X84570C4A84D97EB2" name="X84570C4A84D97EB2"></a></p>
+
+<h5>2.2-17 LocalActionDiagramGroupType</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramGroupType</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: The type of the corresponding universal group.</p>
+
+<p>(CITE REID SMITH HERE) Every group acting on a tree can be split into one of six mutually exclusive types: <em>fixed vertex</em>, <em>edge inversion</em>, <em>lineal</em>, <em>horocyclic</em>, <em>focal</em>, and <em>general</em>. This types can be recognised from the groups corresponding local action diagram by analysing the scopos of the local action diagram (see CITE REID SMITH).</p>
+
+<p>This function first calculates the scopos of the local action diagram (see <code class="func">LocalActionDiagramScopos</code> (<a href="chap2.html#X78AB8E5D83D7823D"><span class="RefLink">2.2-16</span></a>)) and then uses this to determine the type of the corresponding group. It outputs this types as a string.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">group := Group(());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetPermGroupDomain(group, [1]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [group, group];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1], [1]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramGroupType(lad);</span>
+"General"
+</pre></div>
+
+<p><a id="X83CEFD1682867DD9" name="X83CEFD1682867DD9"></a></p>
+
+<h5>2.2-18 LocalActionDiagramIsDiscrete</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsDiscrete</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the corresponding universal group is discrete and false otherwise.</p>
+
+<p>This function implements (CITE THEOREM HERE) to determine if the corresponding universal group is discrete. This requires calculation of the diagrams group type (see <code class="func">LocalActionDiagramGroupType</code> (<a href="chap2.html#X84570C4A84D97EB2"><span class="RefLink">2.2-17</span></a>)). Furthermore, if the group is discrete then it is also uniscalar and unimodular and so if this function returns <code class="keyw">true</code> then it also sets <code class="func">LocalActionDiagramIsUniscalar</code> (<a href="chap2.html#X82155DA17AAC826E"><span class="RefLink">2.2-19</span></a>) and <code class="func">LocalActionDiagramIsUnimodular</code> (<a href="chap2.html#X816A48F4838326B8"><span class="RefLink">2.2-20</span></a>) to true.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">group := Group(());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetPermGroupDomain(group, [1]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [group, group];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1], [1]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsDiscrete(lad);</span>
+true
+</pre></div>
+
+<p><a id="X82155DA17AAC826E" name="X82155DA17AAC826E"></a></p>
+
+<h5>2.2-19 LocalActionDiagramIsUniscalar</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsUniscalar</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the corresponding universal group is uniscalar and false otherwise.</p>
+
+<p>This function implements (CITE THEOREM HERE) to determine if the corresponding universal group is uniscalar. This requires calculation of the diagrams group type (see <code class="func">LocalActionDiagramGroupType</code> (<a href="chap2.html#X84570C4A84D97EB2"><span class="RefLink">2.2-17</span></a>)). Furthermore, if the group is uniscalar then it is also unimodular so if this function returns <code class="keyw">true</code> then it also sets <code class="func">LocalActionDiagramIsUnimodular</code> (<a href="chap2.html#X816A48F4838326B8"><span class="RefLink">2.2-20</span></a>) to true.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList ([[1, 2], [2, 1], [2, 2]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">group := Group(());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">group_2 := Group((1, 2), (1,2,3), (4,5));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetPermGroupDomain(group, [1]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [group, group_2];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1], [1, 2, 3], [4, 5]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsDiscrete(lad);</span>
+false
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsUniscalar(lad);</span>
+true
+</pre></div>
+
+<p><a id="X816A48F4838326B8" name="X816A48F4838326B8"></a></p>
+
+<h5>2.2-20 LocalActionDiagramIsUnimodular</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsUnimodular</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the corresponding universal group is unimodular and false otherwise.</p>
+
+<p>This function implements (CITE THEOREM HERE both us and BK) to determine if the corresponding universal group is unimodular. This requires calculation of a spanning tree of the graph (see <code class="func">RSGraphSpanningTree</code> (<a href="chap1.html#X7F29407D834B102E"><span class="RefLink">1.3-4</span></a>)).</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">adj_list := [[1, 2], [2, 1], [2, 3], [3, 2], [3, 1], [1, 3], [1, 1]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList(adj_list, (1,2)(3,4)(5,6));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Add(vertex_labels, Group((1, 2, 3), (4,5), (6,7)));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Add(vertex_labels, Group((1, 2), (3, 4, 5)));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Add(vertex_labels, Group((1, 2), (3, 4)));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1, 2, 3], [3, 4, 5], [1, 2], [1, 2], [3,4], [4,5], [6,7]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsDiscrete(lad);</span>
+false
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsUniscalar(lad);</span>
+false
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsUnimodular(lad);</span>
+true
+</pre></div>
+
+<p><a id="X87E1AE8587DA1FB1" name="X87E1AE8587DA1FB1"></a></p>
+
+<h5>2.2-21 LocalActionDiagramIsBurgerMozesUniversalGroup</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsBurgerMozesUniversalGroup</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the corresponding universal group is a Burger-Mozes Universal Group and <code class="keyw">false</code> otherwise.</p>
+
+<p>If a local action diagram has a single vertex and all loops at the vertex are self-reverse then the diagram corresponds to a Burger-Mozes group (see PROBABLY SECOND COLIN SIMON PAPER). If the given diagram has such a structure then this function returns true. It also sets <code class="func">LocalActionDiagramGroupName</code> (<a href="chap2.html#X7978DED887F2496F"><span class="RefLink">2.2-14</span></a>) to <code class="code">"U({vertex_label})"</code> where <code class="code">{vertex_label}</code> is the name of the group labelling the vertex.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1], [1, 1]], ());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [Group((1, 2), (3, 4))];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetName(vertex_labels[1], "C2 x C2");</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1, 2], [3, 4]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">View(lad);</span>
+&lt;LocalActionDiagram with 1 vertex and 2 arcs&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsBurgerMozesUniversalGroup(lad);</span>
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">View(lad);</span>
+&lt;U(C2 x C2) (as a Local Action Diagram)&gt;
+</pre></div>
+
+<p><a id="X8443CE477DC98586" name="X8443CE477DC98586"></a></p>
+
+<h5>2.2-22 LocalActionDiagramIsEndStabiliser</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsEndStabiliser</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the corresponding universal group is the stabiliser of a single end in the full automorphism group of a regular tree and <code class="keyw">false</code> otherwise. otherwise.</p>
+
+<p>If a local action diagram has a single vertex with two mutually reverse loops and the vertex is labelled by <span class="SimpleMath">S_d-1</span> acting on <span class="SimpleMath">{1, 2, dots, d}</span> then the universal group is isomorphic to <span class="SimpleMath">operatornameAut(T_d)_ω</span> where <span class="SimpleMath">ω</span> is an end of <span class="SimpleMath">T_d</span>. This function returns <code class="keyw">true</code> if the group satisfies this structure and <code class="keyw">false</code> otherwise. It also sets <code class="func">LocalActionDiagramGroupName</code> (<a href="chap2.html#X7978DED887F2496F"><span class="RefLink">2.2-14</span></a>) to <code class="code">Aut(Td)_omega</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1], [1, 1]], (1, 2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [SymmetricGroup(2)];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">SetPermGroupDomain(vertex_labels[1], [1,2,3]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1, 2], [3]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">View(lad);</span>
+&lt;LocalActionDiagram with 1 vertex and 2 arcs&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsEndStabiliser(lad);</span>
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">View(lad);</span>
+&lt;Aut(T3)_omega (as a Local Action Diagram)&gt;
+</pre></div>
+
+<p><a id="X829A07D678914E89" name="X829A07D678914E89"></a></p>
+
+<h5>2.2-23 LocalActionDiagramIsRegularTreeAutomorphismGroup</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsRegularTreeAutomorphismGroup</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;property&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">true</code> if the corresponding universal group is the full automorphism group of a regular tree and <code class="keyw">false</code> otherwise.</p>
+
+<p>If a local action diagram has a single vertex with one self-reverse loop and the vertex is labelled by <span class="SimpleMath">S_d</span> then the universal group is isomorphic to <span class="SimpleMath">operatornameAut(T_d)</span>. This function returns <code class="keyw">true</code> if the group satisfies this structure and <code class="keyw">false</code> otherwise. It also sets <code class="func">LocalActionDiagramGroupName</code> (<a href="chap2.html#X7978DED887F2496F"><span class="RefLink">2.2-14</span></a>) to <code class="code">Aut(Td)</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1]], ());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vertex_labels := [SymmetricGroup(5)];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_labels := [[1..5]];;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">View(lad);</span>
+&lt;LocalActionDiagram with 1 vertex and 1 arc&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramIsRegularTreeAutomorphismGroup(lad);</span>
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">View(lad);</span>
+&lt;Aut(T5) (as a Local Action Diagram)&gt;
+</pre></div>
+
+
+<div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap1.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap3.html">[Next Chapter]</a>&nbsp;  </div>
+
+
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapInd.html">Ind</a>  </div>
+
+<hr />
+<p class="foot">generated by <a href="https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>
+</body>
+</html>

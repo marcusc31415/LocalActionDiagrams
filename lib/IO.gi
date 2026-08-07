@@ -507,5 +507,200 @@ InstallMethod(LocalActionDiagramFromWritableString, "Constructs an local action 
 function(lad_string)
 	return LocalActionDiagramFromWritableString(lad_string, false);
 end);
-# Create local action diagram from the data as it's needed. 
-# This can save time as not all the data may be needed? 
+
+InstallMethod(IO_Pickle, "Pickle RSGraph objects.", [IsFile, IsRSGraph],
+function(file, graph)
+	local optional_attr, attr; 
+
+	if IO_Write(file, "RSGO") = fail then 
+		return IO_Error; 
+	fi;
+
+	if IO_Pickle(file, RSGraphVertices(graph)) = fail then
+		return IO_Error; 
+	fi;
+
+	if IO_Pickle(file, RSGraphArcs(graph)) = fail then
+		return IO_Error; 
+	fi;
+
+	if IO_Pickle(file, RSGraphReverseMap(graph)) = fail then
+		return IO_Error; 
+	fi;
+
+	if IO_Pickle(file, RSGraphHasParallelArcs(graph)) = fail then
+		return IO_Error; 
+	fi;
+
+
+	optional_attr := rec();
+
+	for attr in [RSGraphCanonicalLabelling, AutomorphismGroup] do
+		if NameFunction(attr) in KnownAttributesOfObject(graph) then
+			optional_attr.(NameFunction(attr)) := attr(graph);
+		fi;
+	od;
+
+	IO_Pickle(file, optional_attr);
+
+	return IO_OK;
+
+end);
+
+IO_Unpicklers.RSGO := function(file)
+	local verts, arcs, rev_map, optional_attr, arc_ids, graph, attr, graph_data, has_parallel;
+
+	verts := IO_Unpickle(file);
+	if verts = IO_Error then
+		return IO_Error;
+	fi;
+
+	arcs := IO_Unpickle(file);
+	if arcs = IO_Error then
+		return IO_Error;
+	fi;
+
+	arc_ids := List(RecNames(arcs), Int);
+
+	rev_map := IO_Unpickle(file);
+	if rev_map = IO_Error then
+		return IO_Error;
+	fi;
+
+	has_parallel := IO_Unpickle(file);
+	if has_parallel = IO_Error then
+		return IO_Error;
+	fi;
+
+
+	optional_attr := IO_Unpickle(file);
+	if optional_attr = IO_Error then
+		return IO_Error;
+	fi;
+
+	graph_data := rec(
+		vertices := verts,
+	    arcs := arcs,
+		arc_ids := arc_ids,
+		reverse_map := rev_map,
+		has_parallel := has_parallel,
+	);
+
+	graph := RSGraphConsNC(IsRSGraph, graph_data);
+
+	for attr in RecNames(optional_attr) do
+		if attr = NameFunction(RSGraphCanonicalLabelling) then
+			SetRSGraphCanonicalLabelling(graph, optional_attr.(attr));
+		elif attr = NameFunction(AutomorphismGroup) then
+			SetAutomorphismGroup(graph, optional_attr.(attr));
+		fi;
+	od;
+
+	return graph;
+
+end;
+
+InstallMethod(IO_Pickle, "Pickle LocalActionDiagram objects.", [IsFile, IsLocalActionDiagram],
+function(file, lad)
+	local optional_attr, perm_domains, vert, attr;
+
+	if IO_Write(file, "LADO") = fail then 
+		return IO_Error; 
+	fi;
+
+	if IO_Pickle(file, LocalActionDiagramRSGraph(lad)) = fail then
+		return IO_Error; 
+	fi;
+
+	if IO_Pickle(file, LocalActionDiagramVertexLabels(lad)) = fail then
+		return IO_Error; 
+	fi;
+
+	perm_domains := rec();
+
+	for vert in LocalActionDiagramVertices(lad) do
+		perm_domains.(vert) := PermGroupDomain(LocalActionDiagramVertexLabels(lad).(vert));
+	od;
+
+	if IO_Pickle(file, perm_domains) = fail then
+		return IO_Error; 
+	fi;
+
+	if IO_Pickle(file, LocalActionDiagramArcLabels(lad)) = fail then
+		return IO_Error; 
+	fi;
+
+	optional_attr := rec();
+
+	for attr in [LocalActionDiagramScopos, LocalActionDiagramGroupType, LocalActionDiagramIsDiscrete,
+		         LocalActionDiagramIsUniscalar, LocalActionDiagramIsUnimodular] do
+		if NameFunction(attr) in KnownAttributesOfObject(lad) then
+			optional_attr.(NameFunction(attr)) := attr(lad);
+		fi;
+	od;
+
+	if Size(LocalActionDiagramGroupName(lad)) <> 0 then
+		optional_attr.(NameFunction(LocalActionDiagramGroupName)) := LocalActionDiagramGroupName(lad);
+	fi;
+
+	if IO_Pickle(file, optional_attr) = fail then
+		return IO_Error; 
+	fi;
+
+	return IO_OK;
+end);
+
+IO_Unpicklers.LADO := function(file)
+	local graph, vert_labels, perm_domains, vert, arc_labels, optional_attr, lad, attr;
+
+	graph := IO_Unpickle(file);
+	if graph = IO_Error then
+		return IO_Error;
+	fi;
+
+	vert_labels := IO_Unpickle(file);
+	if vert_labels = IO_Error then
+		return IO_Error;
+	fi;
+
+	perm_domains := IO_Unpickle(file);
+	if perm_domains = IO_Error then
+		return IO_Error;
+	fi;
+
+	for vert in RSGraphVertices(graph) do
+		SetPermGroupDomain(vert_labels.(vert), perm_domains.(vert));
+	od;
+
+	arc_labels := IO_Unpickle(file);
+	if arc_labels = IO_Error then
+		return IO_Error;
+	fi;
+
+	lad := LocalActionDiagramFromDataNC(graph, vert_labels, arc_labels);
+
+	optional_attr := IO_Unpickle(file);
+	if optional_attr = IO_Error then
+		return IO_Error;
+	fi;
+
+
+
+	for attr in RecNames(optional_attr) do
+		if attr = NameFunction(LocalActionDiagramGroupName) then
+			SetLocalActionDiagramGroupName(lad, optional_attr.(attr));
+		elif attr = NameFunction(LocalActionDiagramScopos) then
+			SetLocalActionDiagramScopos(lad, optional_attr.(attr));
+		elif attr = NameFunction(LocalActionDiagramGroupType) then
+			SetLocalActionDiagramGroupType(lad, optional_attr.(attr));
+		elif attr = NameFunction(LocalActionDiagramIsDiscrete) then
+			SetLocalActionDiagramIsDiscrete(lad, optional_attr.(attr));
+		elif attr = NameFunction(LocalActionDiagramIsUniscalar) then
+			SetLocalActionDiagramIsUniscalar(lad, optional_attr.(attr));
+		elif attr = NameFunction(LocalActionDiagramIsUnimodular) then
+			SetLocalActionDiagramIsUnimodular(lad, optional_attr.(attr));
+		fi;
+	od;
+
+	return lad;
+end;

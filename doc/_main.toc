@@ -1,4 +1,65 @@
 \contentsline {chapter}{\numberline {1}\textcolor {Chapter }{RSGraphs}}{3}{chapter.1}%
 \contentsline {section}{\numberline {1.1}\textcolor {Chapter }{Creating RSGraphs}}{3}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1}\textcolor {Chapter }{IsRSGraph (for IsObject)}}{3}{subsection.1.1.1}%
-\contentsline {chapter}{Index}{4}{section*.2}%
+\contentsline {subsection}{\numberline {1.1.1}\textcolor {Chapter }{IsRSGraph (for an object)}}{3}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}\textcolor {Chapter }{RSGraphByAdjacencyList (for a list, permutation[, and list])}}{3}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}\textcolor {Chapter }{RSGraphByAdjacencyMatrix (for a matrix, permutation[, and list])}}{4}{subsection.1.1.3}%
+\contentsline {section}{\numberline {1.2}\textcolor {Chapter }{RSGraph Attributes and Properties}}{5}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}\textcolor {Chapter }{RSGraphVertices}}{5}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}\textcolor {Chapter }{RSGraphNumberVertices}}{5}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}\textcolor {Chapter }{RSGraphArcs}}{5}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.4}\textcolor {Chapter }{RSGraphNumberArcs}}{5}{subsection.1.2.4}%
+\contentsline {subsection}{\numberline {1.2.5}\textcolor {Chapter }{RSGraphArcIDs}}{5}{subsection.1.2.5}%
+\contentsline {subsection}{\numberline {1.2.6}\textcolor {Chapter }{RSGraphReverseMap}}{6}{subsection.1.2.6}%
+\contentsline {subsection}{\numberline {1.2.7}\textcolor {Chapter }{RSGraphAdjacencyMatrix}}{6}{subsection.1.2.7}%
+\contentsline {subsection}{\numberline {1.2.8}\textcolor {Chapter }{RSGraphOutNeighbours}}{6}{subsection.1.2.8}%
+\contentsline {subsection}{\numberline {1.2.9}\textcolor {Chapter }{RSGraphInNeighbours}}{6}{subsection.1.2.9}%
+\contentsline {subsection}{\numberline {1.2.10}\textcolor {Chapter }{RSGraphOutArcs}}{6}{subsection.1.2.10}%
+\contentsline {subsection}{\numberline {1.2.11}\textcolor {Chapter }{RSGraphInArcs}}{6}{subsection.1.2.11}%
+\contentsline {subsection}{\numberline {1.2.12}\textcolor {Chapter }{RSGraphBipartition}}{7}{subsection.1.2.12}%
+\contentsline {subsection}{\numberline {1.2.13}\textcolor {Chapter }{RSGraphDegree}}{7}{subsection.1.2.13}%
+\contentsline {subsection}{\numberline {1.2.14}\textcolor {Chapter }{RSGraphIsCycle}}{7}{subsection.1.2.14}%
+\contentsline {subsection}{\numberline {1.2.15}\textcolor {Chapter }{RSGraphIsBipartite}}{7}{subsection.1.2.15}%
+\contentsline {subsection}{\numberline {1.2.16}\textcolor {Chapter }{RSGraphHasParallelArcs}}{8}{subsection.1.2.16}%
+\contentsline {section}{\numberline {1.3}\textcolor {Chapter }{RSGraph Operations}}{8}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}\textcolor {Chapter }{RSGraphArcIterator}}{8}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}\textcolor {Chapter }{RSGraphSubgraph (for an RSGraph and List of arcs)}}{8}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}\textcolor {Chapter }{RSGraphToStandardForm}}{9}{subsection.1.3.3}%
+\contentsline {subsection}{\numberline {1.3.4}\textcolor {Chapter }{RSGraphSpanningTree}}{10}{subsection.1.3.4}%
+\contentsline {chapter}{\numberline {2}\textcolor {Chapter }{Local Action Diagrams}}{11}{chapter.2}%
+\contentsline {section}{\numberline {2.1}\textcolor {Chapter }{Creating Local Action Diagrams}}{11}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}\textcolor {Chapter }{IsLocalActionDiagram (for an object)}}{11}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}\textcolor {Chapter }{LocalActionDiagramFromData (for an RSGraph, list or record of vertex labels, and list or record of arc labels)}}{11}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}\textcolor {Chapter }{LocalActionDiagramFromBurgerMozesUniversalGroup}}{12}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}\textcolor {Chapter }{LocalActionDiagramConstructBipartitionPreserving}}{13}{subsection.2.1.4}%
+\contentsline {section}{\numberline {2.2}\textcolor {Chapter }{Local Action Diagram Attributes and Properties}}{13}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}\textcolor {Chapter }{LocalActionDiagramRSGraph}}{13}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}\textcolor {Chapter }{LocalActionDiagramVertexLabels}}{13}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}\textcolor {Chapter }{LocalActionDiagramArcLabels}}{13}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}\textcolor {Chapter }{LocalActionDiagramVertices}}{13}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}\textcolor {Chapter }{LocalActionDiagramArcs}}{14}{subsection.2.2.5}%
+\contentsline {subsection}{\numberline {2.2.6}\textcolor {Chapter }{LocalActionDiagramArcIDs}}{14}{subsection.2.2.6}%
+\contentsline {subsection}{\numberline {2.2.7}\textcolor {Chapter }{LocalActionDiagramNumberVertices}}{14}{subsection.2.2.7}%
+\contentsline {subsection}{\numberline {2.2.8}\textcolor {Chapter }{LocalActionDiagramNumberArcs}}{14}{subsection.2.2.8}%
+\contentsline {subsection}{\numberline {2.2.9}\textcolor {Chapter }{LocalActionDiagramReverseMap}}{14}{subsection.2.2.9}%
+\contentsline {subsection}{\numberline {2.2.10}\textcolor {Chapter }{LocalActionDiagramOutNeighbours}}{14}{subsection.2.2.10}%
+\contentsline {subsection}{\numberline {2.2.11}\textcolor {Chapter }{LocalActionDiagramInNeighbours}}{14}{subsection.2.2.11}%
+\contentsline {subsection}{\numberline {2.2.12}\textcolor {Chapter }{LocalActionDiagramOutArcs}}{14}{subsection.2.2.12}%
+\contentsline {subsection}{\numberline {2.2.13}\textcolor {Chapter }{LocalActionDiagramInArcs}}{15}{subsection.2.2.13}%
+\contentsline {subsection}{\numberline {2.2.14}\textcolor {Chapter }{LocalActionDiagramGroupName}}{15}{subsection.2.2.14}%
+\contentsline {subsection}{\numberline {2.2.15}\textcolor {Chapter }{LocalActionDiagramRegularTree}}{15}{subsection.2.2.15}%
+\contentsline {subsection}{\numberline {2.2.16}\textcolor {Chapter }{LocalActionDiagramScopos}}{15}{subsection.2.2.16}%
+\contentsline {subsection}{\numberline {2.2.17}\textcolor {Chapter }{LocalActionDiagramGroupType}}{16}{subsection.2.2.17}%
+\contentsline {subsection}{\numberline {2.2.18}\textcolor {Chapter }{LocalActionDiagramIsDiscrete}}{16}{subsection.2.2.18}%
+\contentsline {subsection}{\numberline {2.2.19}\textcolor {Chapter }{LocalActionDiagramIsUniscalar}}{17}{subsection.2.2.19}%
+\contentsline {subsection}{\numberline {2.2.20}\textcolor {Chapter }{LocalActionDiagramIsUnimodular}}{17}{subsection.2.2.20}%
+\contentsline {subsection}{\numberline {2.2.21}\textcolor {Chapter }{LocalActionDiagramIsBurgerMozesUniversalGroup}}{18}{subsection.2.2.21}%
+\contentsline {subsection}{\numberline {2.2.22}\textcolor {Chapter }{LocalActionDiagramIsEndStabiliser}}{18}{subsection.2.2.22}%
+\contentsline {subsection}{\numberline {2.2.23}\textcolor {Chapter }{LocalActionDiagramIsRegularTreeAutomorphismGroup}}{19}{subsection.2.2.23}%
+\contentsline {chapter}{\numberline {3}\textcolor {Chapter }{IO Operations and Visualisation}}{20}{chapter.3}%
+\contentsline {section}{\numberline {3.1}\textcolor {Chapter }{IO Operations}}{20}{section.3.1}%
+\contentsline {subsection}{\numberline {3.1.1}\textcolor {Chapter }{Writing To A String}}{20}{subsection.3.1.1}%
+\contentsline {subsection}{\numberline {3.1.2}\textcolor {Chapter }{Reading From A String}}{21}{subsection.3.1.2}%
+\contentsline {subsection}{\numberline {3.1.3}\textcolor {Chapter }{IO Pickling/Unpickling}}{22}{subsection.3.1.3}%
+\contentsline {chapter}{\numberline {4}\textcolor {Chapter }{Isomorphisms and Automorphisms}}{24}{chapter.4}%
+\contentsline {chapter}{\numberline {5}\textcolor {Chapter }{Enumeration}}{25}{chapter.5}%
+\contentsline {chapter}{Index}{26}{section*.2}%
