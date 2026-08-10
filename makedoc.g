@@ -8,12 +8,17 @@ if fail = LoadPackage("AutoDoc", "2018.02.14") then
 fi;
 
 AutoDoc( rec( 
-    autodoc := true,
+    autodoc := rec(
+		files := [ "doc/doc_order.autodoc" ],
+		scan_dirs := [ "doc", "lib" ],
+    ),
     gapdoc := rec(
         LaTeXOptions := rec( EarlyExtraPreamble := """
             \usepackage{a4wide}
             \newcommand{\bbZ}{\mathbb{Z}}
-        """ ),
+			\usepackage{mathtools}
+        """ 
+		),
     ),
     scaffold := true 
 ));

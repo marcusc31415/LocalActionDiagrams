@@ -1,31 +1,465 @@
   
-  [1X1 [33X[0;0YIntroduction[133X[101X
+  [1X1 [33X[0;0YRSGraphs[133X[101X
   
-  [33X[0;0YA local action diagram [22X∆ = (Γ, (G(v)), (X_a))[122X consists of:[133X
+  [33X[0;0YAn  RSGraph  is a graph [22XΓ = (V, A, o, r)[122X that consists of a vertex set [22XV[122X, an
+  arc  set  [22XA[122X,  a map [22Xo : A -> V[122X which assigns each vertex to an [13Xorigin[113X, and a
+  bijection  [22Xr : A -> A[122X which assigns each arc to a [13Xreverse[113X arc. There is also
+  a  map  [22Xt  :=  o  ∘  r[122X which assigns each arc to a [13Xterminus[113X vertex. Note the
+  RSGraphs are allowed to contain loops and parallel arcs.[133X
   
-  [30X    [33X[0;6Ya directed graph [22XΓ[122X,[133X
+  [33X[0;0YWe  created  the  RSGraph  object  for this package due to our use of graphs
+  having  a  specialised definition. For example, every arc in an RSGraph must
+  have  a  reverse  arc  associated  with it while a [13XDigraph[113X from the [5XDigraphs[105X
+  allows  for  arcs that do not have an associated reverse arc. Creating a new
+  object  category  for  RSGraphs  allows  for both better error checking when
+  using  RSGraphs and to avoid conflicting definitions, such as the definition
+  of a cycle for a Digraph and an RSGraph. We provide functionality to convert
+  between  an RSGraph and a [13XGraph[113X from the [5XGRAPE[105X package or a [13XDigraph[113X from the
+  [5XDigraphs[105X package.[133X
   
-  [30X    [33X[0;6Ya closed permutation group [22XG(v)[122X for each [22Xv ∈ V(Γ)[122X, and[133X
+  [33X[0;0YThe  name  "RSGraph"  arises  from  Reid and Smith, the authors of the local
+  action  diagram  paper.  This  name was chosen to avoid conflicting with the
+  [5XGRAPE[105X package.[133X
   
-  [30X    [33X[0;6Ya  set [22XX_a[122X for each [22Xa ∈ A(Γ)[122X such that each [22XX_a[122X is disjoint and [22XX_a[122X is
-        an orbit of the action of [22XG(o(a))[122X on [22XX_v := ⨆_a ∈ o^-1(v)X_a[122X.[133X
   
-  [33X[0;0YThe definition of digraph used is different to that of the [5XDigraphs[105X package.
-  For our purposes, a digraph [22XΓ[122X consists of:[133X
+  [1X1.1 [33X[0;0YCreating RSGraphs[133X[101X
   
-  [30X    [33X[0;6Ya vertex set [22XV[122X,[133X
+  [1X1.1-1 IsRSGraph[101X
   
-  [30X    [33X[0;6Yan arc set [22XA[122X,[133X
+  [33X[1;0Y[29X[2XIsRSGraph[102X( [3Xobj[103X ) [32X Category[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if [3Xgraph[103X is of the category [10XIsRSGraph[110X and [9Xfalse[109X otherwise.[133X
   
-  [30X    [33X[0;6Ya map [22Xo : A -> V[122X assigning each arc to an [13Xorigin[113X vertex, and[133X
+  [33X[0;0YEvery  RSGraph  object belongs to the category [10XIsRSGraph[110X. Furthermore, every
+  RSGraph is an immutable attribute storing object.[133X
   
-  [30X    [33X[0;6Ya  bijection  [22Xr  :  A  -> A[122X (denoted by [22Xa ↦ overlinea[122X) such that [22Xr^2 =
-        mathrmid[122X.[133X
+  [1X1.1-2 RSGraphByAdjacencyList[101X
   
-  [33X[0;0YThe  bijection  [22Xr[122X  defines  a reverse arc for each arc of the graph. This is
-  more  specific  than  the  definition in the [3Xdigraphs[103X package which does not
-  require a reverse mapping.[133X
+  [33X[1;0Y[29X[2XRSGraphByAdjacencyList[102X( [3Xadjacency_list[103X, [3Xreverse_map[103X[, [3Xvertex_ids[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XRSGraphByAdjacencyListNC[102X( [3Xadjacency_list[103X, [3Xreverse_map[103X[, [3Xvertex_ids[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAn RSGraph.[133X
   
-  [33X[0;0YThe  local  action  diagrams  package  provides  a category for local action
-  diagrams. It is built in the [3XIsDigraph[103X category from the [5XDigraphs[105X package.[133X
+  [33X[0;0YThis  function  creates  an  RSGraph  described  by  an  adjacency list. The
+  argument  [3Xadjacnecy_list[103X  is  a  list of the from [10X[[origin, terminus], ...][110X.
+  Each  arc  in  the graph is given an id which corresponds to its position in
+  the list [3Xadjacency_list[103X.[133X
+  
+  [33X[0;0YThe  reverse  map  must  be  a  permutation  that  is an involution --- i.e.
+  [10Xreverse_map*reverse_map  = ()[110X. Furthermore, if element [3Xidx[103X of [3Xadjacency_list[103X
+  is [10X[u, v][110X then [3Xadjacency_list[idx^reverse_map][103X must equal [10X[v, u][110X.[133X
+  
+  [33X[0;0YBy  default,  the  vertices are labelled with ids [22X{1, 2, dots, n}[122X where [22Xn[122X is
+  the  maximal element of [10XFlat(adjacency_list)[110X. If the optional third argument
+  [3Xvertex_ids[103X is given then these are taken to be the vertex ids. This argument
+  must be a dense list of integers.[133X
+  
+  [33X[0;0YFinally, the underlying graph must be connected.[133X
+  
+  [33X[0;0YThe  NC  variant of the function does not check that the graph is connected,
+  the reverse map is valid, and that each arc has an associated reverse arc.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [2, 2], [2, 2], [1, 1]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);[127X[104X
+    [4X[28X<RSGraph with 2 vertices and 5 arcs>[128X[104X
+    [4X[28X[128X[104X
+    [4X[25Xgap>[125X [27Xadj_list2 := [[2, 2]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map2 := ();;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_ids := [2];;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);[127X[104X
+    [4X[28X<RSGraph with 1 vertex and 1 arc>[128X[104X
+  [4X[32X[104X
+  
+  [1X1.1-3 RSGraphByAdjacencyMatrix[101X
+  
+  [33X[1;0Y[29X[2XRSGraphByAdjacencyMatrix[102X( [3Xadjacency_matrix[103X, [3Xreverse_map[103X[, [3Xvertex_ids[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XRSGraphByAdjacencyMatrixNC[102X( [3Xadjacency_matrix[103X, [3Xreverse_map[103X[, [3Xvertex_ids[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAn RSGraph.[133X
+  
+  [33X[0;0YThis  function  creates  an  RSGraph  described  by an adjacency matrix. The
+  argument [3Xadjacnecy_matrix[103X is an [22Xn × n[122X matrix represented by a list of lists.
+  This  means  that  there are [22Xm[122X arcs between vertices [22Xu[122X and [22Xv[122X of the graph if
+  [10Xadjacency_matrix[u][v] = m[110X.[133X
+  
+  [33X[0;0YThe matrix is read in row-major order to determine the arc ids of the graph.
+  This  is important for determining the reverse map of the graph. The reverse
+  map   must   be   a   permutation   that   is   an   involution   ---   i.e.
+  [10Xreverse_map*reverse_map = ()[110X.[133X
+  
+  [33X[0;0YBy  default,  the  vertices  are  labelled  with ids [22X{1, 2, dots, n}[122X where [22Xn[122X
+  [10XSize(adjacency_matrix)[110X  ---  i.e.  the  number  of rows (and columns) of the
+  matrix.  If  the  optional third argument [3Xvertex_ids[103X is given then these are
+  taken  to  be the vertex ids. This argument must be a dense list of integers
+  and  element  [10Xidx[110X  of  the  list  will be the label of the vertex in row and
+  column [10Xidx[110X of [3Xadjacency_matrix[103X.[133X
+  
+  [33X[0;0YFinally, the underlying graph must be connected.[133X
+  
+  [33X[0;0YNote  that  the  first  argument  must  be a list of lists with each sublist
+  containing  integers. In particular, it can not be an object in the category
+  [9XIsMatrixObj[109X constructed by the function [10XMatrix[110X.[133X
+  
+  [33X[0;0YThe  NC  variant of the function does not check that the graph is connected,
+  the reverse map is valid, and that each arc has an associated reverse arc.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_mat := [[1, 2], [2, 0]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (2, 4)(3,5);;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_ids := [2,3];;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyMatrix(adj_list, rev_map, vertex_ids);[127X[104X
+    [4X[28X<RSGraph with 2 vertices and 5 arcs>[128X[104X
+    [4X[28X[128X[104X
+    [4X[25Xgap>[125X [27XPrint(graph);[127X[104X
+    [4X[28XVertices = { 2, 3 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 2, terminus = 2, inverse = 1 )[128X[104X
+    [4X[28X        2 = ( origin = 2, terminus = 3, inverse = 4 )[128X[104X
+    [4X[28X        3 = ( origin = 2, terminus = 3, inverse = 5 )[128X[104X
+    [4X[28X        4 = ( origin = 3, terminus = 2, inverse = 2 )[128X[104X
+    [4X[28X        5 = ( origin = 3, terminus = 2, inverse = 3 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (2,4)(3,5)[128X[104X
+  [4X[32X[104X
+  
+  
+  [1X1.2 [33X[0;0YRSGraph Attributes and Properties[133X[101X
+  
+  [1X1.2-1 RSGraphVertices[101X
+  
+  [33X[1;0Y[29X[2XRSGraphVertices[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe list of vertex ids of [3Xgraph[103X.[133X
+  
+  [1X1.2-2 RSGraphNumberVertices[101X
+  
+  [33X[1;0Y[29X[2XRSGraphNumberVertices[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe number of vertices of [3Xgraph[103X.[133X
+  
+  [1X1.2-3 RSGraphArcs[101X
+  
+  [33X[1;0Y[29X[2XRSGraphArcs[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of arcs of [3Xgraph[103X.[133X
+  
+  [33X[0;0YThe  name  of  each  component  of  the  record  is  the id of the arc. Each
+  component  it  itself  a record with three components: origin, terminus, and
+  inverse.  These store the origin vertex, terminus vertex, and inverse arc id
+  respectively.[133X
+  
+  [33X[0;0YFor iterating over the arcs of an RSGraph see [2XRSGraphArcIterator[102X ([14X1.3-1[114X).[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [2, 2], [2, 2], [1, 1]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);[127X[104X
+    [4X[28X<RSGraph with 2 vertices and 5 arcs>[128X[104X
+    [4X[25Xgap>[125X [27XRSGraphArcs(graph).1;[127X[104X
+    [4X[28Xrec( inverse := 2, origin := 1, terminus := 2 )[128X[104X
+  [4X[32X[104X
+  
+  [1X1.2-4 RSGraphNumberArcs[101X
+  
+  [33X[1;0Y[29X[2XRSGraphNumberArcs[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe number of arcs of [3Xgraph[103X.[133X
+  
+  [1X1.2-5 RSGraphArcIDs[101X
+  
+  [33X[1;0Y[29X[2XRSGraphArcIDs[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe list of arc ids of [3Xgraph[103X.[133X
+  
+  [1X1.2-6 RSGraphReverseMap[101X
+  
+  [33X[1;0Y[29X[2XRSGraphReverseMap[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe reverse map of [3Xgraph[103X.[133X
+  
+  [1X1.2-7 RSGraphAdjacencyMatrix[101X
+  
+  [33X[1;0Y[29X[2XRSGraphAdjacencyMatrix[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe adjacency matrix of [3Xgraph[103X.[133X
+  
+  [1X1.2-8 RSGraphOutNeighbours[101X
+  
+  [33X[1;0Y[29X[2XRSGraphOutNeighbours[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of vertex neighbours of [3Xgraph[103X.[133X
+  
+  [33X[0;0YThe  name  of  each component is a vertex id of the graph. Each element is a
+  list  of  vertex ids corresponding to the neighbours of the vertex. A vertex
+  id  [10Xv_id[110X  is  in  list  [10Xidx[110X  if  and  only if there is an arc connecting the
+  vertices [10Xidx[110X and [10Xv_id[110X. For example, if there is an arc from vertex 1 to 3 of
+  the graph then 3 is an element of [10XRSGraphOutNeighbours(graph).1[110X.[133X
+  
+  [1X1.2-9 RSGraphInNeighbours[101X
+  
+  [33X[1;0Y[29X[2XRSGraphInNeighbours[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of vertex neighbours of [3Xgraph[103X.[133X
+  
+  [33X[0;0YSince  every  arc  has  an  inverse  arc  this  returns  the  same result as
+  [10XRSGraphOutNeighbours(graph)[110X.[133X
+  
+  [1X1.2-10 RSGraphOutArcs[101X
+  
+  [33X[1;0Y[29X[2XRSGraphOutArcs[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of arcs originating at each vertex.[133X
+  
+  [33X[0;0YThe  name  of  each component is a vertex id of the graph. Each element is a
+  list  of arc ids. An arc id is in list [10Xidx[110X if and only if the origin of that
+  arc  is  [10Xidx[110X. For example, if an arc with id [10X2[110X originates at vertex 3 then [10X2[110X
+  is an element of [10XRSGraphInNeighbours(graph).3[110X.[133X
+  
+  [1X1.2-11 RSGraphInArcs[101X
+  
+  [33X[1;0Y[29X[2XRSGraphInArcs[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of arcs originating at each vertex.[133X
+  
+  [33X[0;0YThe  name  of  each component is a vertex id of the graph. Each element is a
+  list  of  arc  ids.  An arc id is in list [10Xidx[110X if and only if the terminus of
+  that  arc  is  [10Xidx[110X.  For example, if an arc with id [10X2[110X terminates at vertex 1
+  then [10X2[110X is an element of [10XRSGraphInNeighbours(graph).1[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [2, 2], [2, 2]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);[127X[104X
+    [4X[28X<RSGraph with 2 vertices and 4 arcs>[128X[104X
+    [4X[25Xgap>[125X [27XRSGraphOutNeighbours(graph);[127X[104X
+    [4X[28Xrec( 1 := [ 2 ], 2 := [ 1, 2 ] )[128X[104X
+    [4X[25Xgap>[125X [27XRSGraphInNeighbours(graph);[127X[104X
+    [4X[28Xrec( 1 := [ 2 ], 2 := [ 1, 2 ] )[128X[104X
+    [4X[25Xgap>[125X [27XRSGraphOutArcs(graph);[127X[104X
+    [4X[28Xrec( 1 := [ 1 ], 2 := [ 2, 3, 4 ] )[128X[104X
+    [4X[25Xgap>[125X [27XRSGraphInArcs(graph);[127X[104X
+    [4X[28Xrec( 1 := [ 2 ], 2 := [ 1, 3, 4 ] )[128X[104X
+  [4X[32X[104X
+  
+  [1X1.2-12 RSGraphBipartition[101X
+  
+  [33X[1;0Y[29X[2XRSGraphBipartition[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe bipartition of [10Xgraph[110X if it is bipartite and [9Xfail[109X otherwise.[133X
+  
+  [33X[0;0YIf  the  graph  is  bipartite then this returns a list containing two lists.
+  These two lists contain the vertex ids in each bipartition.[133X
+  
+  [33X[0;0YNote  that for an RSGraph to be bipartite it must not contain parallel edges
+  or loops.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [1, 3], [3, 1]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);[127X[104X
+    [4X[28X<RSGraph with 3 vertices and 4 arcs>[128X[104X
+    [4X[25Xgap>[125X [27XRSGraphBipartition(graph);[127X[104X
+    [4X[28X[ [ 1 ], [ 2, 3 ] ][128X[104X
+    [4X[28X[128X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [2, 2], [2, 2]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);[127X[104X
+    [4X[28X<RSGraph with 2 vertices and 4 arcs>[128X[104X
+    [4X[25Xgap>[125X [27XRSGraphBipartition(graph);[127X[104X
+    [4X[28Xfail[128X[104X
+  [4X[32X[104X
+  
+  [1X1.2-13 RSGraphDegree[101X
+  
+  [33X[1;0Y[29X[2XRSGraphDegree[102X( [3Xgraph[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe  maximum  number of arcs originating/terminating at any vertex
+            in the graph.[133X
+  
+  [1X1.2-14 RSGraphIsCycle[101X
+  
+  [33X[1;0Y[29X[2XRSGraphIsCycle[102X( [3Xgraph[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if [3Xgraph[103X is a cycle graph and [9Xfalse[109X otherwise.[133X
+  
+  [33X[0;0YThis is a cycle in the sense of !!!cite RS paper here!!!. A graph is a cycle
+  if:[133X
+  
+  [30X    [33X[0;6YIt has a single vertex, two arcs, and a non-trivial reverse map.[133X
+  
+  [30X    [33X[0;6YIt has two vertices and two edges (i.e. four arcs) between them.[133X
+  
+  [30X    [33X[0;6YIt  has three or more vertices, no loops, and all vertices have degree
+        two.[133X
+  
+  [1X1.2-15 RSGraphIsBipartite[101X
+  
+  [33X[1;0Y[29X[2XRSGraphIsBipartite[102X( [3Xgraph[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if [3Xgraph[103X is a bipartite graph and [9Xfalse[109X otherwise.[133X
+  
+  [33X[0;0YThis is equivalent to [10XRSGraphBipartition(graph) <> fail[110X.[133X
+  
+  [1X1.2-16 RSGraphHasParallelArcs[101X
+  
+  [33X[1;0Y[29X[2XRSGraphHasParallelArcs[102X( [3Xgraph[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if [3Xgraph[103X has multiple arcs in the same direction between any
+            two pairs of vertices.[133X
+  
+  
+  [1X1.3 [33X[0;0YRSGraph Operations[133X[101X
+  
+  [1X1.3-1 RSGraphArcIterator[101X
+  
+  [33X[1;0Y[29X[2XRSGraphArcIterator[102X( [3Xgraph[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAn iterator which iterates over the arcs of [3Xgraph[103X.[133X
+  
+  [33X[0;0YThis  functions  returns  an iterator object which iterates over the arcs of
+  [3Xgraph[103X.  Each  element  of  the  iterator is of the form [10X[arc_id, arc_record][110X
+  where [10Xarc_record[110X is in the form described in [2XRSGraphArcs[102X ([14X1.2-3[114X).[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [2, 2]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);;[127X[104X
+    [4X[25Xgap>[125X [27Xfor arc in RSGraphArcIterator(graph) do[127X[104X
+    [4X[25Xgap>[125X [27X    View(arc); [127X[104X
+    [4X[25Xgap>[125X [27X    Print("\n");[127X[104X
+    [4X[25Xgap>[125X [27Xod; [127X[104X
+    [4X[28X[ 1, rec( inverse := 2, origin := 1, terminus := 2 ) ][128X[104X
+    [4X[28X[ 2, rec( inverse := 1, origin := 2, terminus := 1 ) ][128X[104X
+    [4X[28X[ 3, rec( inverse := 3, origin := 2, terminus := 2 ) ][128X[104X
+  [4X[32X[104X
+  
+  [1X1.3-2 RSGraphSubgraph[101X
+  
+  [33X[1;0Y[29X[2XRSGraphSubgraph[102X( [3Xgraph[103X, [3Xarc_list[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XRSGraphSubgraphNC[102X( [3Xgraph[103X, [3Xarc_list[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAn arc induced subgraph of [3Xgraph[103X.[133X
+  
+  [33X[0;0YGiven  a  graph  and  list  of arcs in this graph, this function returns the
+  subgraph  consisting exactly of those arcs and the vertices connecting them.
+  The  vertex  ids,  arc  ids,  and  reverse  map are preserved. Note that the
+  reverse  map  is not changed and so may act on a larger set of integers than
+  is strictly necessary.[133X
+  
+  [33X[0;0YIf  an  arc is in [3Xarc_list[103X then its reverse must also be in it. Furthermore,
+  the resulting subgraph must be connected.[133X
+  
+  [33X[0;0YThe  NC  variant of this function does not check for connectivity or for the
+  inclusion of arc reversals.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [1, 2], [2, 1], [2, 2]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(graph);[127X[104X
+    [4X[28XVertices = { 1, 2 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 1, terminus = 2, inverse = 2 )[128X[104X
+    [4X[28X        2 = ( origin = 2, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X        3 = ( origin = 1, terminus = 2, inverse = 4 )[128X[104X
+    [4X[28X        4 = ( origin = 2, terminus = 1, inverse = 3 )[128X[104X
+    [4X[28X        5 = ( origin = 2, terminus = 2, inverse = 5 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)(3,4)[128X[104X
+    [4X[25Xgap>[125X [27Xsubgraph := RSGraphSubgraph(graph, [1,2,5]);[127X[104X
+    [4X[28XPrint(subgraph);[128X[104X
+    [4X[28XVertices = { 1, 2 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 1, terminus = 2, inverse = 2 )[128X[104X
+    [4X[28X        2 = ( origin = 2, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X        5 = ( origin = 2, terminus = 2, inverse = 5 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)(3,4)[128X[104X
+  [4X[32X[104X
+  
+  [1X1.3-3 RSGraphToStandardForm[101X
+  
+  [33X[1;0Y[29X[2XRSGraphToStandardForm[102X( [3Xgraph[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA  record  containing  the  graph in a standard range and the maps
+            from the old graph to the new graph.[133X
+  
+  [33X[0;0YGiven  an arbitrary RSGraph with [22XN[122X vertices and [22XM[122X arcs this function changes
+  the  vertex  ids to be in [22X{1, 2, dots, N}[122X and arc ids to be in the range [22X{1,
+  2,  dots,  M}[122X.  It  also ensures that the arcs are sorted in lexicographical
+  order with respect to the origin and terminus vertices.[133X
+  
+  [33X[0;0YIf [22XΓ[122X is the [3Xgraph[103X then the vertex mapping is defined by [22XV(Γ)_i ↦ i[122X. The arcs
+  origin  and  terminus  vertices  then have this mapping applied to them. The
+  resulting  arcs are then sorted in lexicographical order so that an arc with
+  a  smaller arc id will have an origin vertex with a smaller id than one with
+  a  larger  arc  id.  If  the origin vertices are equal then the arc with the
+  smaller terminus id will have a smaller arc id. The reverse map of the graph
+  is changed to have the same action on the new arc ids.[133X
+  
+  [33X[0;0YThis  function  returns  a  record  containing  three  components. The [10Xgraph[110X
+  component  contains  the  new  graph  constructed from it, the [10Xvertex_id_map[110X
+  component  contains the map from the vertex ids of the original graph to the
+  new graph, and the [10Xarc_id_map[110X component contains the map from the arc ids of
+  the original graph to the new graph.[133X
+  
+  [33X[0;0YThe    [10Xvertex_id_map[110X    and    [10Xarc_id_map[110X   are   both   in   the   category
+  [10XIsConstantTimeAccessGeneralMapping[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[2, 3], [3, 2], [2, 3], [3, 2], [3, 3]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4);;[127X[104X
+    [4X[25Xgap>[125X [27Xverrtex_ids := [2, 3];;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(graph);[127X[104X
+    [4X[28XVertices = { 2, 3 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 2, terminus = 3, inverse = 2 )[128X[104X
+    [4X[28X        2 = ( origin = 3, terminus = 2, inverse = 1 )[128X[104X
+    [4X[28X        3 = ( origin = 2, terminus = 3, inverse = 4 )[128X[104X
+    [4X[28X        4 = ( origin = 3, terminus = 2, inverse = 3 )[128X[104X
+    [4X[28X        5 = ( origin = 3, terminus = 2, inverse = 5 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)(3,4)[128X[104X
+    [4X[25Xgap>[125X [27Xstandard_rec := RSGraphToStandardForm(graph);;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(standard_rec.graph);[127X[104X
+    [4X[28XVertices = { 1, 2 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 1, terminus = 2, inverse = 3 )[128X[104X
+    [4X[28X        2 = ( origin = 1, terminus = 2, inverse = 4 )[128X[104X
+    [4X[28X        3 = ( origin = 2, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X        4 = ( origin = 2, terminus = 1, inverse = 2 )[128X[104X
+    [4X[28X        5 = ( origin = 2, terminus = 2, inverse = 5 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,3)(2,4)[128X[104X
+    [4X[25Xgap>[125X [27XPrint(2^standard_rec.arc_id_map);[127X[104X
+    [4X[28X3[128X[104X
+  [4X[32X[104X
+  
+  [1X1.3-4 RSGraphSpanningTree[101X
+  
+  [33X[1;0Y[29X[2XRSGraphSpanningTree[102X( [3Xgraph[103X[, [3Xsearch_type[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA spanning tree of the graph.[133X
+  
+  [33X[0;0YThis  function  calculates  a spanning tree of the graph based on the edges.
+  This  means  it  does  not  include  and loops or cycles (see [2XRSGraphIsCycle[102X
+  ([14X1.2-14[114X)  for the definition of a cycle in an RSGraph). By default it uses a
+  breadth first search.[133X
+  
+  [33X[0;0YIf  the  optional parameter [3Xsearch_type[103X is equal to the string [10X"dfs"[110X then it
+  will  use  a  depth first search instead. If it is equal to the string [10X"bfs"[110X
+  then  it will use a breadth first search. If it is equal to any other string
+  then  a  warning  will  be  raised and the function will use a breadth first
+  search.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [1, 3], [3, 1], [1, 4], [4, 1], \[127X[104X
+    [4X[25Xgap>[125X [27X             [2, 3], [3, 2], [3, 4], [4, 3]];;[127X[104X
+    [4X[25Xgap>[125X [27Xrev_map := (1,2)(3,4)(5,6)(7,8)(9,10);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, rev_map);;[127X[104X
+    [4X[25Xgap>[125X [27Xtree_bfs := RSGraphSpanningTree(graph);;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(tree_bfs);[127X[104X
+    [4X[28XVertices = { 1, 2, 3, 4 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 1, terminus = 2, inverse = 2 )[128X[104X
+    [4X[28X        2 = ( origin = 2, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X        3 = ( origin = 1, terminus = 3, inverse = 4 )[128X[104X
+    [4X[28X        4 = ( origin = 3, terminus = 1, inverse = 3 )[128X[104X
+    [4X[28X        5 = ( origin = 1, terminus = 4, inverse = 6 )[128X[104X
+    [4X[28X        6 = ( origin = 4, terminus = 1, inverse = 5 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)(3,4)(5,6)(7,8)(9,10)[128X[104X
+    [4X[25Xgap>[125X [27Xtree_dfs := RSGraphSpanningTree(graph, "dfs");;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(tree_dfs);[127X[104X
+    [4X[28XVertices = { 1, 2, 3, 4 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 1, terminus = 2, inverse = 2 )[128X[104X
+    [4X[28X        2 = ( origin = 2, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X        7 = ( origin = 2, terminus = 3, inverse = 8 )[128X[104X
+    [4X[28X        8 = ( origin = 3, terminus = 2, inverse = 7 )[128X[104X
+    [4X[28X        9 = ( origin = 3, terminus = 4, inverse = 10 )[128X[104X
+    [4X[28X        10 = ( origin = 4, terminus = 3, inverse = 9 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)(3,4)(5,6)(7,8)(9,10)[128X[104X
+  [4X[32X[104X
   

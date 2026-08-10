@@ -5,7 +5,7 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>GAP (LocalActionDiagrams) - Chapter 3: Local Action Diagram Attributes and Operations</title>
+<title>GAP (LocalActionDiagrams) - Chapter 3: IO Operations and Visualisation</title>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 <meta name="generator" content="GAPDoc2HTML" />
 <link rel="stylesheet" type="text/css" href="manual.css" />
@@ -15,120 +15,195 @@
 <body class="chap3"  onload="jscontent()">
 
 
-<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chapInd.html">Ind</a>  </div>
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapInd.html">Ind</a>  </div>
 
 <div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4.html">[Next Chapter]</a>&nbsp;  </div>
 
 <p id="mathjaxlink" class="pcenter"><a href="chap3_mj.html">[MathJax on]</a></p>
-<p><a id="X7AB5EE64797BB014" name="X7AB5EE64797BB014"></a></p>
-<div class="ChapSects"><a href="chap3.html#X7AB5EE64797BB014">3 <span class="Heading">Local Action Diagram Attributes and Operations</span></a>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X843901697917FCE2">3.1 <span class="Heading">Local Action Diagram Attributes</span></a>
+<p><a id="X7E74125380A231F7" name="X7E74125380A231F7"></a></p>
+<div class="ChapSects"><a href="chap3.html#X7E74125380A231F7">3 <span class="Heading">IO Operations and Visualisation</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X816FBAE6846CB59A">3.1 <span class="Heading">IO Operations</span></a>
 </span>
 <div class="ContSSBlock">
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X82F7822E7CE957E9">3.1-1 LocalActionDiagramVertexLabels</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7EFA9F8A7AF03169">3.1-2 LocalActionDiagramEdges</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7DBFDBD67BEFFEDC">3.1-3 LocalActionDiagramEdgeLabels</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7AB4506A7B80460D">3.1-4 LocalActionDiagramEdgeReversal</a></span>
-</div></div>
-<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3.html#X85A1FDBA7F237079">3.2 <span class="Heading">Local Action Diagram Operations</span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X82FD5BB482591666">3.1-1 <span class="Heading">Writing To A String</span></a>
 </span>
-<div class="ContSSBlock">
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X823C18F980B022A7">3.2-1 LocalActionDiagramScopos</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7E4954157FBEEC4A">3.2-2 LocalActionDiagramGroupType</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7CC179F27B503D31">3.2-3 LocalActionDiagramIsDiscrete</a></span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7D93C024847EDC1C">3.2-4 LocalActionDiagramIsUniscalar</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7D399A9A7C7BE4D7">3.1-2 <span class="Heading">Reading From A String</span></a>
+</span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3.html#X7E57D3CD7869D64C">3.1-3 <span class="Heading">IO Pickling/Unpickling</span></a>
+</span>
 </div></div>
 </div>
 
-<h3>3 <span class="Heading">Local Action Diagram Attributes and Operations</span></h3>
+<h3>3 <span class="Heading">IO Operations and Visualisation</span></h3>
 
-<p><a id="X843901697917FCE2" name="X843901697917FCE2"></a></p>
+<p><a id="X816FBAE6846CB59A" name="X816FBAE6846CB59A"></a></p>
 
-<h4>3.1 <span class="Heading">Local Action Diagram Attributes</span></h4>
+<h4>3.1 <span class="Heading">IO Operations</span></h4>
 
-<p><a id="X82F7822E7CE957E9" name="X82F7822E7CE957E9"></a></p>
+<p><a id="X82FD5BB482591666" name="X82FD5BB482591666"></a></p>
 
-<h5>3.1-1 LocalActionDiagramVertexLabels</h5>
+<h5>3.1-1 <span class="Heading">Writing To A String</span></h5>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramVertexLabels</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: A list of groups.</p>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphToWritableString</code>( <var class="Arg">graph</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramToWritableString</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A String representation of the object.</p>
 
-<p>Returns the groups labelling the vertices of <var class="Arg">lad</var>. Entry <code class="code">i</code> of the list corresponds to the group labelling vertex <code class="code">i</code> of the digraph.</p>
+<p>These two functions turn an RSGraph or local action diagram into a string representation. The exact format of the representations are described in (APPENDIX REFERENCE). These functions are not designed to store the objects in the most space-efficient format. The formats are designed so that the objects can be read into a GAP session with very little overhead and so that the objects and known attributes can be recreated in a new GAP session.</p>
 
-<p><a id="X7EFA9F8A7AF03169" name="X7EFA9F8A7AF03169"></a></p>
+<p>Note that these functions do not perform any disk IO operations themselves. They return a string in the GAP session and it is up to the user to chose how disk IO operations with the string are done.</p>
 
-<h5>3.1-2 LocalActionDiagramEdges</h5>
+<p>For an RSGraph the data that is always stored is:</p>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramEdges</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: A list of lists.</p>
 
-<p>Returns a list of edges of <var class="Arg">lad</var>. Each edge is stored as a list <code class="code">[i, j]</code> where <code class="code">i</code> is the origin vertex and <code class="code">j</code> is the terminus vertex. The list is stored in lexicographical order.</p>
+<ul>
+<li><p>the vertex ids,</p>
 
-<p><a id="X7DBFDBD67BEFFEDC" name="X7DBFDBD67BEFFEDC"></a></p>
+</li>
+<li><p>the arc ids,</p>
 
-<h5>3.1-3 LocalActionDiagramEdgeLabels</h5>
+</li>
+<li><p>the adjacency list, and</p>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramEdgeLabels</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: A list of lists.</p>
+</li>
+<li><p>the reverse map.</p>
 
-<p>Returns the edge labels of <var class="Arg">lad</var>. Entry <code class="code">i</code> of the list corresponds to the label of edge <code class="code">i</code> of the digraph.</p>
+</li>
+</ul>
+<p>If the canonical labelling or automorphism group (REF FUNCTIONS) of the RSGraph are known then they are also stored.</p>
 
-<p><a id="X7AB4506A7B80460D" name="X7AB4506A7B80460D"></a></p>
+<p>For a local action diagram that data that is always stored is:</p>
 
-<h5>3.1-4 LocalActionDiagramEdgeReversal</h5>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramEdgeReversal</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: A permutation.</p>
+<ul>
+<li><p>the diagrams RSGraph (and all data known about it),</p>
 
-<p>Returns the reversal mapping of the local action digram <var class="Arg">lad</var>.</p>
+</li>
+<li><p>the vertex labels, and</p>
 
-<p><a id="X85A1FDBA7F237079" name="X85A1FDBA7F237079"></a></p>
+</li>
+<li><p>the arc labels.</p>
 
-<h4>3.2 <span class="Heading">Local Action Diagram Operations</span></h4>
+</li>
+</ul>
+<p>The data stored if it is known is:</p>
 
-<p><a id="X823C18F980B022A7" name="X823C18F980B022A7"></a></p>
 
-<h5>3.2-1 LocalActionDiagramScopos</h5>
+<ul>
+<li><p>the diagrams scopos,</p>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramScopos</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: A list of lists.</p>
+</li>
+<li><p>the corresponding group type,</p>
 
-<p>Returns a list of all scopos of <var class="Arg">lad</var>. Each entry of the list is a list of edges in the scopo. This list will always contain the empty scopo <code class="code">[]</code>.</p>
+</li>
+<li><p>if the corresponding group is discrete,</p>
 
-<p><a id="X7E4954157FBEEC4A" name="X7E4954157FBEEC4A"></a></p>
+</li>
+<li><p>if the corresponding group is uniscalar,</p>
 
-<h5>3.2-2 LocalActionDiagramGroupType</h5>
+</li>
+<li><p>if the corresponding group is unimodular, and</p>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramGroupType</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: A string.</p>
+</li>
+<li><p>the name of the corresponding group.</p>
 
-<p>Returns the group type the local action digram corresponds to. This is either "Fixed Vertex", "Edge Inversion", "Lineal", "Focal", or "General". Note that all "Horocyclic" local action diagrams have infinitely many vertices and so can never be the type returned by this function.</p>
+</li>
+</ul>
 
-<p><a id="X7CC179F27B503D31" name="X7CC179F27B503D31"></a></p>
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1]], ());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">RSGraphToWritableString(graph);</span>
+"1|1,1,1|P"
 
-<h5>3.2-3 LocalActionDiagramIsDiscrete</h5>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramGroupType(lad);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramToWritableString(lad);</span>
+"1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! "
+</pre></div>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsDiscrete</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: <code class="keyw">true</code> or <code class="keyw">false</code>.</p>
+<p><a id="X7D399A9A7C7BE4D7" name="X7D399A9A7C7BE4D7"></a></p>
 
-<p>Returns <code class="keyw">true</code> if <var class="Arg">lad</var> corresponds to a discrete group and <code class="keyw">false</code> otherwise.</p>
+<h5>3.1-2 <span class="Heading">Reading From A String</span></h5>
 
-<p><a id="X7D93C024847EDC1C" name="X7D93C024847EDC1C"></a></p>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphFromWritableString</code>( <var class="Arg">string</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramFromWritableString</code>( <var class="Arg">string</var>[, <var class="Arg">return_graph</var>] )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: The object(s) the string represents.</p>
 
-<h5>3.2-4 LocalActionDiagramIsUniscalar</h5>
+<p>These function take the output from the <code class="code">RSGraphToWritableString</code> and <code class="code">LocalActionDiagramToWritableString"</code> methods as input and returns the objects those strings represents. While it is possible to edit these strings outside of GAP these functions do not perform error checking and so this can potentially lead to invalid RSGraph or local action diagram objects. If the optional <var class="Arg">return_graph</var> parameter is set to true then the <code class="code">LocalActionDiagramFromWritableString</code> function will return a list whose first entry is the local action diagram object and second intro is the RSGraph for this local action diagram.</p>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramIsUniscalar</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
-<p>Returns: <code class="keyw">true</code> if the corresponding group is uniscalar and <code class="keyw">false</code> otherwise.</p>
+<p>Any optional attributes known about the objects at the time of writing will be stored in the objects returned by these functions without needing to be recomputed. Note that the (REF canon and aut functions) attributes can be stored in the objects created by these functions without needing the <strong class="pkg">Digraphs</strong> to be loaded even though computing these attributes required the <strong class="pkg">Digraphs</strong> to be loaded.</p>
 
-<p>If <var class="Arg">lad</var> is of type "Fixed Vertex", "Edge Inversion", or "Lineal" then it is always uniscalar and so the function returns true. If it is of type "General" then it is uniscalar if and only if all vertices in the unique minimal cotree of <var class="Arg">lad</var> are semi-regular with their action restricted to the cotree.</p>
 
-<p>Is it better to describe the maths here or just say returns true or false. Maybe give a theorem citation in the paper?</p>
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_string := "1|1,1,1|P";;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphFromWritableString(graph_string);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(graph);</span>
+Vertices = { 1 }
+Arcs = {
+    1 = ( origin = 1, terminus = 1, inverse = 1 )
+}
+Reverse Map = ()
+
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! ";;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromWritableString(lad_string);</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(lad);</span>
+Vertices = { 1 }
+Arcs = {
+    1 = ( origin = 1, terminus = 1, inverse = 1 )
+}
+Reverse Map = ()
+Vertex Labels = {
+    1 = Group( [ (1,2) ] )
+}
+Arc Labels = {
+    1 = [ 1, 2 ]
+}
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print("LocalActionDiagramScopos" in KnownAttributesOfObject(lad));</span>
+true
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print("LocalActionDiagramIsDiscrete" in KnownAttributesOfObject(lad));</span>
+false
+</pre></div>
+
+<p><a id="X7E57D3CD7869D64C" name="X7E57D3CD7869D64C"></a></p>
+
+<h5>3.1-3 <span class="Heading">IO Pickling/Unpickling</span></h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IO_Pickle</code>( [<var class="Arg">file</var>, ]<var class="Arg">graph</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IO_Pickle</code>( [<var class="Arg">file</var>, ]<var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: <code class="keyw">IO_OK</code> or the pickle string if the pickling was successful or <code class="keyw">IO_ERROR</code> if there was an error.</p>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IO_Unpickle</code>( <var class="Arg">file</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: An RSGraph or Local Action Diagram object if successful or <code class="keyw">IO_ERROR</code> if there was an error.</p>
+
+<p>The IO package supports serialising data through the <code class="code">IO_Pickle</code> function. Unlike the <code class="code">RSGraphToWritableString</code> and <code class="code">LocalActionDiagramToWritableString</code> functions these functions support recreating an arbitrary structure within the memory of a GAP session (assuming that the pickling functions have been defined for each object). In particular, it can easily recreate data structures storing objects.</p>
+
+<p>For example, if <code class="code">l</code> is a list of RSGraphs then you can write this list to the disk with a single call to <code class="code">IO_Pickle</code>. This generality comes at the cost of performance. For this reason, if you have a large collection of RSGraph and local action diagram objects that you need writing to the disk we recommend using the <code class="code">RSGraphToWritableString</code> and <code class="code">LocalActionDiagramToWritableString</code> functions.</p>
+
+<p>In the one argument version for <code class="code">IO_Pickle</code>, the pickle string for the object is returned if the pickling was successful. In the two argument version, an IO file opened to write mode is supplied and the pickle string is written to this file.</p>
+
+<p>The <code class="code">IO_Unpickle</code> function accepts either the pickle string as input or an IO file opened to read mode which stores pickled objects. It recreates the objects in memory exactly.</p>
+
+<p>As a note for developers, the RSGraph and local action diagram objects are pickled with the "magic values" <code class="code">RSGO</code> and <code class="code">LADO</code> respectively.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1]], ());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">list := [graph, lad];</span>
+[ &lt;RSGraph with 1 vertex and 1 arc&gt;, &lt;LocalActionDiagram with 1 vertex and 1 arc&gt; ]
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">file := IO_File("test.pickle", "w");;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IO_Pickle(file, list);</span>
+IO_OK
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IO_Close(file);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">file := IO_File("test.pickle", "r");;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IO_Unpickle(file);</span>
+[ &lt;RSGraph with 1 vertex and 1 arc&gt;, &lt;LocalActionDiagram with 1 vertex and 1 arc&gt; ]
+</pre></div>
 
 
 <div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap2.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap4.html">[Next Chapter]</a>&nbsp;  </div>
 
 
-<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chapInd.html">Ind</a>  </div>
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapInd.html">Ind</a>  </div>
 
 <hr />
 <p class="foot">generated by <a href="https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>

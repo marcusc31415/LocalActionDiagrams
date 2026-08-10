@@ -74,32 +74,51 @@ PackageDoc := rec(
 
 Dependencies := rec(
   GAP := ">= 4.11",
-  #NeededOtherPackages := [ ["Digraphs", "1.5.3"], ["datastructures", "0.2.7"] ],
-  NeededOtherPackages := [],
-  SuggestedOtherPackages := [ ],
+  NeededOtherPackages := [ ["IO", "4.9.3"] ],
+  SuggestedOtherPackages := [ ["Digraphs", "1.5.3"] ],
   ExternalConditions := [ ],
 ),
 
 Extensions := [
 	rec (
 		needed := [ ["ugaly", "4.1.3"] ],
-		filename := "gap/ugaly_extension_read.g",
+		filename := "lib/UgalyExtension.gd",
+	),
+	rec (
+		needed := [ ["ugaly", "4.1.3"] ],
+		filename := "lib/UgalyExtension.gi",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/DigraphsConversion.gd",
+		filename := "lib/DigraphsConversion.gd",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/DigraphsConversion.gi",
+		filename := "lib/DigraphsConversion.gi",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/Isomorphism.gd",
+		filename := "lib/Isomorphism.gd",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],
-		filename := "gap/Isomorphism.gi",
+		filename := "lib/Isomorphism.gi",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/IsomorphismRequiredFunctions.gd",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/IsomorphismRequiredFunctions.gi",
+	),
+	rec (
+		needed := [ ["grape", "4.9.3"] ],
+		filename := "lib/GRAPEConversion.gd",
+	),
+	rec (
+		needed := [ ["grape", "4.9.3"] ],
+		filename := "lib/GRAPEConversion.gi",
 	),
 ],
 

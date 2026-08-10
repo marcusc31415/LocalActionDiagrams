@@ -1,0 +1,61 @@
+\indexentry{IsRSGraph@\texttt  {IsRSGraph}!for an object|hyperpage}{3}
+\indexentry{RSGraphByAdjacencyList@\texttt  {RSGraphByAdjacencyList}!for a list, permutation[, and list]|hyperpage}{3}
+\indexentry{RSGraphByAdjacencyListNC@\texttt  {RSGraphByAdjacencyListNC}!for a list, permutation[, and list]|hyperpage}{3}
+\indexentry{RSGraphByAdjacencyMatrix@\texttt  {RSGraphByAdjacencyMatrix}!for a matrix, permutation[, and list]|hyperpage}{4}
+\indexentry{RSGraphByAdjacencyMatrixNC@\texttt  {RSGraphByAdjacencyMatrixNC}!for a matrix, permutation[, and list]|hyperpage}{4}
+\indexentry{RSGraphVertices@\texttt  {RSGraphVertices}|hyperpage}{5}
+\indexentry{RSGraphNumberVertices@\texttt  {RSGraphNumberVertices}|hyperpage}{5}
+\indexentry{RSGraphArcs@\texttt  {RSGraphArcs}|hyperpage}{5}
+\indexentry{RSGraphNumberArcs@\texttt  {RSGraphNumberArcs}|hyperpage}{5}
+\indexentry{RSGraphArcIDs@\texttt  {RSGraphArcIDs}|hyperpage}{5}
+\indexentry{RSGraphReverseMap@\texttt  {RSGraphReverseMap}|hyperpage}{6}
+\indexentry{RSGraphAdjacencyMatrix@\texttt  {RSGraphAdjacencyMatrix}|hyperpage}{6}
+\indexentry{RSGraphOutNeighbours@\texttt  {RSGraphOutNeighbours}|hyperpage}{6}
+\indexentry{RSGraphInNeighbours@\texttt  {RSGraphInNeighbours}|hyperpage}{6}
+\indexentry{RSGraphOutArcs@\texttt  {RSGraphOutArcs}|hyperpage}{6}
+\indexentry{RSGraphInArcs@\texttt  {RSGraphInArcs}|hyperpage}{6}
+\indexentry{RSGraphBipartition@\texttt  {RSGraphBipartition}|hyperpage}{7}
+\indexentry{RSGraphDegree@\texttt  {RSGraphDegree}|hyperpage}{7}
+\indexentry{RSGraphIsCycle@\texttt  {RSGraphIsCycle}|hyperpage}{7}
+\indexentry{RSGraphIsBipartite@\texttt  {RSGraphIsBipartite}|hyperpage}{7}
+\indexentry{RSGraphHasParallelArcs@\texttt  {RSGraphHasParallelArcs}|hyperpage}{8}
+\indexentry{RSGraphArcIterator@\texttt  {RSGraphArcIterator}|hyperpage}{8}
+\indexentry{RSGraphSubgraph@\texttt  {RSGraphSubgraph}!for an RSGraph and List of arcs|hyperpage}{8}
+\indexentry{RSGraphSubgraphNC@\texttt  {RSGraphSubgraphNC}!for an RSGraph and List of arcs|hyperpage}{8}
+\indexentry{RSGraphToStandardForm@\texttt  {RSGraphToStandardForm}|hyperpage}{9}
+\indexentry{RSGraphSpanningTree@\texttt  {RSGraphSpanningTree}|hyperpage}{10}
+\indexentry{IsLocalActionDiagram@\texttt  {IsLocalActionDiagram}!for an object|hyperpage}{11}
+\indexentry{LocalActionDiagramFromData@\texttt  {LocalActionDiagramFromData}!for an RSGraph, list or record of vertex labels, and list or record of arc labels|hyperpage}{11}
+\indexentry{LocalActionDiagramFromDataNC@\texttt  {LocalActionDiagramFromDataNC}!for an RSGraph, list or record of vertex labels, and list or record of arc labels|hyperpage}{11}
+\indexentry{LocalActionDiagramFromBurgerMozesUniversalGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}|hyperpage}{12}
+\indexentry{LocalActionDiagramConstructBipartitionPreserving@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Construct}\-\texttt  {Bipartition}\-\texttt  {Preserving}|hyperpage}{13}
+\indexentry{LocalActionDiagramRSGraph@\texttt  {LocalActionDiagramRSGraph}|hyperpage}{13}
+\indexentry{LocalActionDiagramVertexLabels@\texttt  {LocalActionDiagramVertexLabels}|hyperpage}{13}
+\indexentry{LocalActionDiagramArcLabels@\texttt  {LocalActionDiagramArcLabels}|hyperpage}{13}
+\indexentry{LocalActionDiagramVertices@\texttt  {LocalActionDiagramVertices}|hyperpage}{13}
+\indexentry{LocalActionDiagramArcs@\texttt  {LocalActionDiagramArcs}|hyperpage}{14}
+\indexentry{LocalActionDiagramArcIDs@\texttt  {LocalActionDiagramArcIDs}|hyperpage}{14}
+\indexentry{LocalActionDiagramNumberVertices@\texttt  {LocalActionDiagramNumberVertices}|hyperpage}{14}
+\indexentry{LocalActionDiagramNumberArcs@\texttt  {LocalActionDiagramNumberArcs}|hyperpage}{14}
+\indexentry{LocalActionDiagramReverseMap@\texttt  {LocalActionDiagramReverseMap}|hyperpage}{14}
+\indexentry{LocalActionDiagramOutNeighbours@\texttt  {LocalActionDiagramOutNeighbours}|hyperpage}{14}
+\indexentry{LocalActionDiagramInNeighbours@\texttt  {LocalActionDiagramInNeighbours}|hyperpage}{14}
+\indexentry{LocalActionDiagramOutArcs@\texttt  {LocalActionDiagramOutArcs}|hyperpage}{14}
+\indexentry{LocalActionDiagramInArcs@\texttt  {LocalActionDiagramInArcs}|hyperpage}{15}
+\indexentry{LocalActionDiagramGroupName@\texttt  {LocalActionDiagramGroupName}|hyperpage}{15}
+\indexentry{LocalActionDiagramRegularTree@\texttt  {LocalActionDiagramRegularTree}|hyperpage}{15}
+\indexentry{LocalActionDiagramScopos@\texttt  {LocalActionDiagramScopos}|hyperpage}{15}
+\indexentry{LocalActionDiagramGroupType@\texttt  {LocalActionDiagramGroupType}|hyperpage}{16}
+\indexentry{LocalActionDiagramIsDiscrete@\texttt  {LocalActionDiagramIsDiscrete}|hyperpage}{16}
+\indexentry{LocalActionDiagramIsUniscalar@\texttt  {LocalActionDiagramIsUniscalar}|hyperpage}{17}
+\indexentry{LocalActionDiagramIsUnimodular@\texttt  {LocalActionDiagramIsUnimodular}|hyperpage}{17}
+\indexentry{LocalActionDiagramIsBurgerMozesUniversalGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}|hyperpage}{18}
+\indexentry{LocalActionDiagramIsEndStabiliser@\texttt  {LocalActionDiagramIsEndStabiliser}|hyperpage}{18}
+\indexentry{LocalActionDiagramIsRegularTreeAutomorphismGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Regular}\-\texttt  {Tree}\-\texttt  {Automorphism}\-\texttt  {Group}|hyperpage}{19}
+\indexentry{RSGraphToWritableString@\texttt  {RSGraphToWritableString}!for IsRSGraph|hyperpage}{20}
+\indexentry{LocalActionDiagramToWritableString@\texttt  {LocalActionDiagramToWritableString}!for IsLocalActionDiagram|hyperpage}{20}
+\indexentry{RSGraphFromWritableString@\texttt  {RSGraphFromWritableString}!for IsString|hyperpage}{21}
+\indexentry{LocalActionDiagramFromWritableString@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Writable}\-\texttt  {String}!for IsString, IsBool|hyperpage}{21}
+\indexentry{IO{\textunderscore }Pickle@\texttt  {IO{\textunderscore }Pickle}!for [an IO File and] an RSGraph|hyperpage}{22}
+\indexentry{IO{\textunderscore }Pickle@\texttt  {IO{\textunderscore }Pickle}!for [an IO File and] a Local Action Diagram|hyperpage}{22}
+\indexentry{IO{\textunderscore }Unpickle@\texttt  {IO{\textunderscore }Unpickle}!for an IO File or String|hyperpage}{22}

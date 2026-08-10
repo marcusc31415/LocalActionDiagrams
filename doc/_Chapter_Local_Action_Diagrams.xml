@@ -1,0 +1,544 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Local_Action_Diagrams">
+<Heading>Local Action Diagrams</Heading>
+
+<P/>
+A local action diagram <M>\Delta = (\Gamma, (X_a), (G(v)))</M> consists of: 
+<List>
+<Item>
+a graph <M>\Gamma</M> (an <C>RSGraph</C>),
+</Item>
+<Item>
+for each arc <M>a \in A(\Gamma)</M>a <E>colour set</E> <M>|X_a|</M> disjoint
+  from every other colour set, 
+</Item>
+<Item>
+for each vertex <M>v \in V(\Gamma)</M> a group <M>G(v)</M> labelling the vertex
+  such that <M>G(V)</M> acts on <M>\bigsqcup_{a \in o^{-1}(v)}X_{a}</M> and the 
+  orbits of <M>G(V)</M> are precisely the colour sets <M>|X_a|</M> for <M>a \in o^{-1}(v)</M>. 
+</Item>
+</List>
+<P/>
+Local action diagrams are a powerful tool for studying <M>(P)</M>-closed groups because isomorphism classes of local
+action diagrams are in a one-to-one correspondence with conjugacy classes of <M>(P)</M>-closed groups. Furthermore,
+properties of the corresponding <M>(P)</M>-closed group can be determined from the local action diagram. In the case
+when a local action diagram is finite, we can represent the diagram in &GAP; and determine properties of the
+(potentially infinite) corresponding group. 
+<P/>
+<Section Label="Chapter_Local_Action_Diagrams_Section_Creating_Local_Action_Diagrams">
+<Heading>Creating Local Action Diagrams</Heading>
+
+<P/>
+<ManSection>
+  <Filt Arg="obj" Type="Category" Name="IsLocalActionDiagram" Label="for an object"/>
+ <Returns><K>true</K> if the object is of the category  <C>IsLocalActionDiagram</C> and false otherwise. 
+</Returns>
+ <Description>
+Every local action diagram belongs to the category <C>IsLocalActionDiagram</C>. Furthermore, every local
+ action diagram is an immutable attribute storing object. 
+ </Description>
+</ManSection>
+
+<P/>
+<ManSection Label="LADFromData">
+  <Oper Arg="graph, vertex_labels, arc_labels" Name="LocalActionDiagramFromData" Label="for an RSGraph, list or record of vertex labels, and list or record of arc labels"/>
+  <Oper Arg="graph, vertex_labels, arc_labels" Name="LocalActionDiagramFromDataNC" Label="for an RSGraph, list or record of vertex labels, and list or record of arc labels"/>
+ <Returns>A local action diagram object.
+</Returns>
+ <Description>
+This function constructs a local action diagram by having all of the diagrams data given to it. This is
+ done by providing the <C>RSGraph</C> of the diagram and either lists of vertex and arc labels or records of vertex
+ and arc labels. 
+<P/>
+ If two lists are provided then the vertex and arc labels are assumed to be in the same order as
+ <C>RSGraphVertices(<A>graph</A>)</C> and <C>RSGraphArcIDs(<A>graph</A>)</C> respectively. This means, for example,
+ that element <C>idx</C> of <A>vertex_labels</A> is the label of the vertex with id
+ <C>RSGraphVertexIDs(<A>graph</A>)[idx]</C>. If two records are provided then the names of the record elements are the
+ vertex and arc ids respectively and the components are their labels. 
+<P/>
+ The vertex labels are permutation groups. The domain each label acts on is stored in the mutable attribute
+ <C>PermGroupDomain</C> (see <Ref Func="PermGroupDomain"/>). By default, this is equal to the <C>MovedPoints</C> of the
+ group but can be changed to allow for the group to have fixed points. 
+<P/>
+ The arc labels are lists of integers. Each arc must be labelled by by an orbit of the vertex label at the vertex that
+ arc originates at. Furthermore, every vertex must have an arc originating at it for each orbit of its vertex label.
+ Note that the orbits of a vertex label <C>G</C> are determined by <C>Orbits(G, PermGroupDomain(G))</C>. 
+<P/>
+ Unlike the formal definition of a local action diagram, we allow for overlap between the domains of different vertex 
+ labels. For example, a two vertex local action diagram could be labelled by <M>C_2</M> and <M>S_3</M> and they can
+ have domains <M>\{1, 2\}</M> and <M>\{1, 2, 3\}</M> respectively. 
+<P/>
+The NC variant of the function does not check that there is a label for each vertex and arc (and exactly this many
+ labels), that the domains of the groups match up with the arc labels, or that the orbits of the vertex labels match
+ up with the arc labels. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 2], [2, 1]], (2,3));;
+gap> label_1 := Group((1,2));;
+gap> SetPermGroupDomain(label_1, [1, 2, 3]);;
+gap> label_2 := Group((1,2,3));;
+gap> vertex_labels := [label_1, label_2];
+gap> arc_labels := [[1, 2], [3], [1,2,3]];
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);
+<LocalActionDiagram with 2 vertices and 3 arcs>
+gap> Print(lad);
+Vertices = { 1, 2 }
+Arcs = {
+        1 = ( origin = 1, terminus = 1, inverse = 1 )
+        2 = ( origin = 1, terminus = 2, inverse = 3 )
+        3 = ( origin = 2, terminus = 1, inverse = 2 )
+}
+Reverse Map = (2,3)
+Vertex Labels = {
+        1 = Group( [ (1,2) ] )
+        2 = Group( [ (1,2,3) ] )
+}
+Arc Labels = {
+        1 = [ 1, 2 ]
+        2 = [ 3 ]
+        3 = [ 1, 2, 3 ]
+}
+]]></Example>
+
+<ManSection>
+  <Oper Arg="perm_group" Name="LocalActionDiagramFromBurgerMozesUniversalGroup" />
+ <Returns>A local action diagram object.
+</Returns>
+ <Description>
+Given a permutation group <M>F</M> (<A>perm_group</A>) this function returns the local action diagram
+ corresponding to the Burger-Mozes universal group <M>U(F)</M> (see [cite Burger-Mozes and Colin and Simon for
+ construction?]). This is a local action diagram with one vertex labelled by <M>F</M> and a self-reverse loop for each
+ orbit of <M>F</M>. Note that <M>F</M> acts on the domain <C>PermGroupDomain(<A>perm_group</A>)</C>. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> lad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1,2)(3,4)));
+<U(Group( [ (1,2)(3,4) ] )) (as a Local Action Diagram)>
+]]></Example>
+
+<ManSection>
+  <Oper Arg="lad" Name="LocalActionDiagramConstructBipartitionPreserving" />
+ <Returns>A local action diagram object.
+</Returns>
+ <Description>
+Given a single vertex local action diagram <M>\Delta</M> (<A>lad</A>) corresponding to the group
+ <M>U(\Delta)</M> acting on a tree <M>T</M> this function returns the local action diagram corresponding to the group 
+ <M>U(\Delta)^{\circ} = \{g \in U(\Delta)\, |\, \forall\, v \in V(T),\, d(v, gv) \equiv 0 \pmod{2}\}</M>. Intuitively this is
+ the group of all automorphisms the preserve the bipartition of <M>T</M> which always exists since a single vertex
+ local action diagram is vertex transitive. 
+<P/>
+ Given a group <M>G</M> labelling the single vertex of <M>\Delta</M> and arc labels <M>X_a</M> <M>r</M> this local
+ action diagram  is constructed as follows: 
+<List>
+<Item>
+Make a graph with two vertices and an edge for each loop of the graph for <M>\Delta</M>. 
+</Item>
+<Item>
+Label both vertices by <M>G</M>. 
+</Item>
+<Item>
+For each arc <M>a</M> in the graph of <M>\Delta</M> label the corresponding arc in the new graph by <M>X_{a}</M>
+   and the reverse of this arc by <M>X_{\overline{a}}</M>. 
+</Item>
+</List>
+ </Description>
+</ManSection>
+
+</Section>
+
+<Section Label="Chapter_Local_Action_Diagrams_Section_Local_Action_Diagram_Attributes_and_Properties">
+<Heading>Local Action Diagram Attributes and Properties</Heading>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramRSGraph" />
+ <Returns>RSGraph associated with the local action diagram.
+</Returns>
+ <Description>
+<P/>
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramVertexLabels" />
+ <Returns>Vertex labels of the local action diagram.
+</Returns>
+ <Description>
+<P/>
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramArcLabels" />
+ <Returns>Arc labels of the local action diagram.
+</Returns>
+ <Description>
+<P/>
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramVertices" />
+ <Returns>The vertices of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphVertices(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramArcs" />
+ <Returns>The arcs of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphArcs(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramArcIDs" />
+ <Returns>The arc ids of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphArcIDs(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramNumberVertices" />
+ <Returns>The number of vertices in the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphNumberVertices(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramNumberArcs" />
+ <Returns>The number of arcs in the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphNumberArcs(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramReverseMap" />
+ <Returns>The reverse map of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphReverseMap(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramOutNeighbours" />
+ <Returns>The record of out neighbours of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphOutNeighbours(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramInNeighbours" />
+ <Returns>The record of in neighbours of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphInNeighbours(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramOutArcs" />
+ <Returns>The record of out arcs of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphOutArcs(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramInArcs" />
+ <Returns>The record of in arcs of the local action diagrams graph.
+</Returns>
+ <Description>
+Shorthand for <C>RSGraphInArcs(LocalActionDiagramRSGraph(<A>lad</A>))</C>.
+ </Description>
+</ManSection>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramGroupName" />
+ <Returns>A name for the associated universal group of the local action diagram.
+</Returns>
+ <Description>
+This is a mutable attribute which stores a human readable name for the associated universal group. By
+ default it is equal to the empty string. In this case the <C>View</C> function will print <C>&lt;LocalActionDiagram
+ with n vertices and m arcs&gt;</C> where <C>n</C> is the number of vertices and <C>m</C> is the number of arcs. If
+ this attribute is set to to any other string then the <C>View</C> function will print <C>&lt;{group_name} (as a Local
+ Action Diagram)&gt;</C>. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
+gap> vertex_labels := [SymmetricGroup(3)];;
+gap> arc_labels := [[1,2,3]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);
+<LocalActionDiagram with 1 vertex and 1 arc>
+gap> SetLocalActionDiagramGroupName(lad, "Aut(T_3)");
+gap> View(lad);
+<Aut(T_3) (as a Local Action Diagram)>
+]]></Example>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramRegularTree" />
+ <Returns>The degree of the regular tree the universal group acts on or <K>fail</K> if it does not act on one.
+</Returns>
+ <Description>
+If every vertex label of the local action diagram has a domain of size <M>d</M> then the associated
+ universal group acts on a regular tree of degree <M>d</M>. This functions returns <M>d</M> if this is the case and
+ <K>fail</K> otherwise. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;
+gap> vertex_labels := [SymmetricGroup(3), Group((1,2,3))];;
+gap> arc_labels := [[1,2,3], [1,2,3]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> LocalActionDiagramRegularTree(lad);
+3
+gap> vertex_labels_2 := [SymmetricGroup(3), Group((1,2))];;
+gap> arc_labels_2 := [[1,2,3], [1,2]];;
+gap> lad_2 := LocalActionDiagramFromData(graph, vertex_labels_2, arc_labels_2);;
+gap> LocalActionDiagramRegularTree(lad_2);
+fail
+]]></Example>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramScopos" />
+ <Returns>The list of scopos of the local action diagram.
+</Returns>
+ <Description>
+(CITE REID SMITH HERE) Let <M>\Delta = (\Gamma, (X_a), (G(v)))</M> be a local action diagram. A strongly
+ confluent partial orientation (<E>scopo</E>) of <M>\Delta</M> is a subset <M>O</M> of <M>A(\Gamma)</M> such that: 
+<List>
+<Item>
+if <M>a \in O</M> then <M>\overline{a} \notin O</M>, 
+</Item>
+<Item>
+if <M>a \in O</M> then <M>\left|X_{a}\right| = 1</M>, and 
+</Item>
+<Item>
+for all <M>v \in V(\Gamma)</M> if <M>O</M> contains an arc <M>a</M> originating at <M>v</M> then <M>O</M> contains
+   all arcs that terminate at <M>v</M> except for <M>\overline{a}</M>. 
+</Item>
+</List>
+<P/>
+ This function performs an iterative search for all scopos of a local action diagram. It stores each scopo as a list
+ of arc ids in the scopo. Note that the empty set is a scopo and this is represented as the empty list. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;
+gap> group := Group(());;
+gap> SetPermGroupDomain(group, [1]);;
+gap> vertex_labels := [group, group];;
+gap> arc_labels := [[1], [1]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> LocalActionDiagramScopos(lad);
+[ [ ], [ 1 ], [ 2 ]]
+]]></Example>
+
+<ManSection>
+  <Attr Arg="lad" Name="LocalActionDiagramGroupType" />
+ <Returns>The type of the corresponding universal group.
+</Returns>
+ <Description>
+(CITE REID SMITH HERE) Every group acting on a tree can be split into one of six mutually exclusive
+ types: <E>fixed vertex</E>, <E>edge inversion</E>, <E>lineal</E>, <E>horocyclic</E>, <E>focal</E>, and
+ <E>general</E>. This types can be recognised from the groups corresponding local action diagram by analysing the
+ scopos of the local action diagram (see CITE REID SMITH). 
+<P/>
+ This function first calculates the scopos of the local action diagram (see <Ref Func="LocalActionDiagramScopos"/>) and
+ then uses this to determine the type of the corresponding group. It outputs this types as a string. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;
+gap> group := Group(());;
+gap> SetPermGroupDomain(group, [1]);;
+gap> vertex_labels := [group, group];;
+gap> arc_labels := [[1], [1]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> LocalActionDiagramGroupType(lad);
+"General"
+]]></Example>
+
+<ManSection>
+  <Prop Arg="lad" Name="LocalActionDiagramIsDiscrete" />
+ <Returns><K>true</K> if the corresponding universal group is discrete and false otherwise.
+</Returns>
+ <Description>
+This function implements (CITE THEOREM HERE) to determine if the corresponding universal group is
+ discrete. This requires calculation of the diagrams group type (see <Ref Func="LocalActionDiagramGroupType"/>).
+ Furthermore, if the group is discrete then it is also uniscalar and unimodular and so if this function returns
+ <K>true</K> then it also sets <Ref Func="LocalActionDiagramIsUniscalar"/> and <Ref
+ Func="LocalActionDiagramIsUnimodular"/> to true. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;
+gap> group := Group(());;
+gap> SetPermGroupDomain(group, [1]);;
+gap> vertex_labels := [group, group];;
+gap> arc_labels := [[1], [1]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> LocalActionDiagramIsDiscrete(lad);
+true
+]]></Example>
+
+<ManSection>
+  <Prop Arg="lad" Name="LocalActionDiagramIsUniscalar" />
+ <Returns><K>true</K> if the corresponding universal group is uniscalar and false otherwise.
+</Returns>
+ <Description>
+This function implements (CITE THEOREM HERE) to determine if the corresponding universal group is
+ uniscalar. This requires calculation of the diagrams group type (see <Ref Func="LocalActionDiagramGroupType"/>).
+ Furthermore, if the group is uniscalar then it is also unimodular so if this function returns <K>true</K> then it
+ also sets  <Ref Func="LocalActionDiagramIsUnimodular"/> to true. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList ([[1, 2], [2, 1], [2, 2]], (1,2));;
+gap> group := Group(());;
+gap> group_2 := Group((1, 2), (1,2,3), (4,5));;
+gap> SetPermGroupDomain(group, [1]);;
+gap> vertex_labels := [group, group_2];;
+gap> arc_labels := [[1], [1, 2, 3], [4, 5]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> LocalActionDiagramIsDiscrete(lad);
+false
+gap> LocalActionDiagramIsUniscalar(lad);
+true
+]]></Example>
+
+<ManSection>
+  <Prop Arg="lad" Name="LocalActionDiagramIsUnimodular" />
+ <Returns><K>true</K> if the corresponding universal group is unimodular and false otherwise.
+</Returns>
+ <Description>
+This function implements (CITE THEOREM HERE both us and BK) to determine if the corresponding universal
+ group is unimodular. This requires calculation of a spanning tree of the graph (see <Ref
+ Func="RSGraphSpanningTree"/>).
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> adj_list := [[1, 2], [2, 1], [2, 3], [3, 2], [3, 1], [1, 3], [1, 1]];;
+gap> graph := RSGraphByAdjacencyList(adj_list, (1,2)(3,4)(5,6));;
+gap> vertex_labels := [];;
+gap> Add(vertex_labels, Group((1, 2, 3), (4,5), (6,7)));;
+gap> Add(vertex_labels, Group((1, 2), (3, 4, 5)));;
+gap> Add(vertex_labels, Group((1, 2), (3, 4)));;
+gap> arc_labels := [[1, 2, 3], [3, 4, 5], [1, 2], [1, 2], [3,4], [4,5], [6,7]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> LocalActionDiagramIsDiscrete(lad);
+false
+gap> LocalActionDiagramIsUniscalar(lad);
+false
+gap> LocalActionDiagramIsUnimodular(lad);
+true
+]]></Example>
+
+<ManSection>
+  <Prop Arg="lad" Name="LocalActionDiagramIsBurgerMozesUniversalGroup" />
+ <Returns><K>true</K> if the corresponding universal group is a Burger-Mozes Universal Group and <K>false</K>  otherwise. 
+</Returns>
+ <Description>
+If a local action diagram has a single vertex and all loops at the vertex are self-reverse then the
+ diagram corresponds to a Burger-Mozes group (see PROBABLY SECOND COLIN SIMON PAPER). If the given diagram has such a
+ structure then this function returns true. It also sets <Ref Func="LocalActionDiagramGroupName"/> to
+ <C>"U({vertex_label})"</C> where <C>{vertex_label}</C> is the name of the group labelling the vertex. 
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1]], ());;
+gap> vertex_labels := [Group((1, 2), (3, 4))];;
+gap> SetName(vertex_labels[1], "C2 x C2");
+gap> arc_labels := [[1, 2], [3, 4]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> View(lad);
+<LocalActionDiagram with 1 vertex and 2 arcs>
+gap> LocalActionDiagramIsBurgerMozesUniversalGroup(lad);
+true
+gap> View(lad);
+<U(C2 x C2) (as a Local Action Diagram)>
+]]></Example>
+
+<ManSection>
+  <Prop Arg="lad" Name="LocalActionDiagramIsEndStabiliser" />
+ <Returns><K>true</K> if the corresponding universal group is the stabiliser of a single end in the full automorphism  group of a regular tree and <K>false</K> otherwise. 
+  otherwise. 
+</Returns>
+ <Description>
+If a local action diagram has a single vertex with two mutually reverse loops and the vertex is labelled
+ by <M>S_{d-1}</M> acting on <M>\{1, 2, \dots, d\}</M> then the universal group is isomorphic to
+ <M>\operatorname{Aut}(T_{d})_{\omega}</M> where <M>\omega</M> is an end of <M>T_{d}</M>. This function returns <K>true</K> if the group
+ satisfies this structure and <K>false</K> otherwise. It also sets <Ref Func="LocalActionDiagramGroupName"/> to <C>Aut(Td)_omega</C>.
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1]], (1, 2));;
+gap> vertex_labels := [SymmetricGroup(2)];;
+gap> SetPermGroupDomain(vertex_labels[1], [1,2,3]);;
+gap> arc_labels := [[1, 2], [3]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> View(lad);
+<LocalActionDiagram with 1 vertex and 2 arcs>
+gap> LocalActionDiagramIsEndStabiliser(lad);
+true
+gap> View(lad);
+<Aut(T3)_omega (as a Local Action Diagram)>
+]]></Example>
+
+<ManSection>
+  <Prop Arg="lad" Name="LocalActionDiagramIsRegularTreeAutomorphismGroup" />
+ <Returns><K>true</K> if the corresponding universal group is the full automorphism group of a regular tree and  <K>false</K> otherwise. 
+</Returns>
+ <Description>
+If a local action diagram has a single vertex with one self-reverse loop and the vertex is labelled by
+ <M>S_d</M> then the universal group is isomorphic to <M>\operatorname{Aut}(T_d)</M>. This function returns
+ <K>true</K> if the group satisfies this structure and <K>false</K> otherwise. It also sets <Ref
+ Func="LocalActionDiagramGroupName"/> to <C>Aut(Td)</C>.
+ </Description>
+</ManSection>
+
+<Example><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
+gap> vertex_labels := [SymmetricGroup(5)];;
+gap> arc_labels := [[1..5]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> View(lad);
+<LocalActionDiagram with 1 vertex and 1 arc>
+gap> LocalActionDiagramIsRegularTreeAutomorphismGroup(lad);
+true
+gap> View(lad);
+<Aut(T5) (as a Local Action Diagram)>
+]]></Example>
+
+</Section>
+
+</Chapter>
+

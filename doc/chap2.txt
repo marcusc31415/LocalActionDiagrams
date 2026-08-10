@@ -1,57 +1,492 @@
   
-  [1X2 [33X[0;0YCreating Local Action Diagrams[133X[101X
+  [1X2 [33X[0;0YLocal Action Diagrams[133X[101X
+  
+  [33X[0;0YA local action diagram [22X∆ = (Γ, (X_a), (G(v)))[122X consists of:[133X
+  
+  [30X    [33X[0;6Ya graph [22XΓ[122X (an [10XRSGraph[110X),[133X
+  
+  [30X    [33X[0;6Yfor  each  arc  [22Xa  ∈  A(Γ)[122Xa [13Xcolour set[113X [22X|X_a|[122X disjoint from every other
+        colour set,[133X
+  
+  [30X    [33X[0;6Yfor  each  vertex [22Xv ∈ V(Γ)[122X a group [22XG(v)[122X labelling the vertex such that
+        [22XG(V)[122X acts on [22X⨆_a ∈ o^-1(v)X_a[122X and the orbits of [22XG(V)[122X are precisely the
+        colour sets [22X|X_a|[122X for [22Xa ∈ o^-1(v)[122X.[133X
+  
+  [33X[0;0YLocal  action  diagrams  are  a powerful tool for studying [22X(P)[122X-closed groups
+  because  isomorphism  classes  of  local action diagrams are in a one-to-one
+  correspondence  with  conjugacy  classes  of [22X(P)[122X-closed groups. Furthermore,
+  properties  of the corresponding [22X(P)[122X-closed group can be determined from the
+  local  action diagram. In the case when a local action diagram is finite, we
+  can   represent   the  diagram  in  [5XGAP[105X  and  determine  properties  of  the
+  (potentially infinite) corresponding group.[133X
   
   
   [1X2.1 [33X[0;0YCreating Local Action Diagrams[133X[101X
   
   [1X2.1-1 IsLocalActionDiagram[101X
   
-  [33X[1;0Y[29X[2XIsLocalActionDiagram[102X( [3Xlad[103X ) [32X filter[133X
-  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  [3Xlad[103X  is  of  the category [10XIsLocalActionDiagram[110X and [9Xfalse[109X
+  [33X[1;0Y[29X[2XIsLocalActionDiagram[102X( [3Xobj[103X ) [32X Category[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  the  object  is of the category [10XIsLocalActionDiagram[110X and
+            false otherwise.[133X
+  
+  [33X[0;0YEvery  local  action  diagram  belongs to the category [10XIsLocalActionDiagram[110X.
+  Furthermore,  every  local  action diagram is an immutable attribute storing
+  object.[133X
+  
+  [1X2.1-2 LocalActionDiagramFromData[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramFromData[102X( [3Xgraph[103X, [3Xvertex_labels[103X, [3Xarc_labels[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XLocalActionDiagramFromDataNC[102X( [3Xgraph[103X, [3Xvertex_labels[103X, [3Xarc_labels[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA local action diagram object.[133X
+  
+  [33X[0;0YThis  function  constructs  a  local  action  diagram  by  having all of the
+  diagrams  data  given  to  it.  This is done by providing the [10XRSGraph[110X of the
+  diagram  and  either lists of vertex and arc labels or records of vertex and
+  arc labels.[133X
+  
+  [33X[0;0YIf  two  lists are provided then the vertex and arc labels are assumed to be
+  in   the  same  order  as  [10XRSGraphVertices([3Xgraph[103X[10X)[110X  and  [10XRSGraphArcIDs([3Xgraph[103X[10X)[110X
+  respectively.  This means, for example, that element [10Xidx[110X of [3Xvertex_labels[103X is
+  the label of the vertex with id [10XRSGraphVertexIDs([3Xgraph[103X[10X)[idx][110X. If two records
+  are  provided  then  the names of the record elements are the vertex and arc
+  ids respectively and the components are their labels.[133X
+  
+  [33X[0;0YThe  vertex  labels are permutation groups. The domain each label acts on is
+  stored   in  the  mutable  attribute  [10XPermGroupDomain[110X  (see  [2XPermGroupDomain[102X
+  ([14X???PermGroupDomain???[114X)).  By  default,  this is equal to the [10XMovedPoints[110X of
+  the group but can be changed to allow for the group to have fixed points.[133X
+  
+  [33X[0;0YThe  arc  labels  are  lists of integers. Each arc must be labelled by by an
+  orbit of the vertex label at the vertex that arc originates at. Furthermore,
+  every vertex must have an arc originating at it for each orbit of its vertex
+  label.  Note that the orbits of a vertex label [10XG[110X are determined by [10XOrbits(G,
+  PermGroupDomain(G))[110X.[133X
+  
+  [33X[0;0YUnlike the formal definition of a local action diagram, we allow for overlap
+  between  the  domains  of different vertex labels. For example, a two vertex
+  local  action  diagram  could  be  labelled by [22XC_2[122X and [22XS_3[122X and they can have
+  domains [22X{1, 2}[122X and [22X{1, 2, 3}[122X respectively.[133X
+  
+  [33X[0;0YThe NC variant of the function does not check that there is a label for each
+  vertex  and  arc  (and  exactly  this  many labels), that the domains of the
+  groups match up with the arc labels, or that the orbits of the vertex labels
+  match up with the arc labels.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1], [1, 2], [2, 1]], (2,3));;[127X[104X
+    [4X[25Xgap>[125X [27Xlabel_1 := Group((1,2));;[127X[104X
+    [4X[25Xgap>[125X [27XSetPermGroupDomain(label_1, [1, 2, 3]);;[127X[104X
+    [4X[25Xgap>[125X [27Xlabel_2 := Group((1,2,3));;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [label_1, label_2];[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1, 2], [3], [1,2,3]];[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);[127X[104X
+    [4X[28X<LocalActionDiagram with 2 vertices and 3 arcs>[128X[104X
+    [4X[25Xgap>[125X [27XPrint(lad);[127X[104X
+    [4X[28XVertices = { 1, 2 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X        1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X        2 = ( origin = 1, terminus = 2, inverse = 3 )[128X[104X
+    [4X[28X        3 = ( origin = 2, terminus = 1, inverse = 2 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (2,3)[128X[104X
+    [4X[28XVertex Labels = {[128X[104X
+    [4X[28X        1 = Group( [ (1,2) ] )[128X[104X
+    [4X[28X        2 = Group( [ (1,2,3) ] )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XArc Labels = {[128X[104X
+    [4X[28X        1 = [ 1, 2 ][128X[104X
+    [4X[28X        2 = [ 3 ][128X[104X
+    [4X[28X        3 = [ 1, 2, 3 ][128X[104X
+    [4X[28X}[128X[104X
+  [4X[32X[104X
+  
+  [1X2.1-3 LocalActionDiagramFromBurgerMozesUniversalGroup[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramFromBurgerMozesUniversalGroup[102X( [3Xperm_group[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA local action diagram object.[133X
+  
+  [33X[0;0YGiven  a  permutation  group  [22XF[122X ([3Xperm_group[103X) this function returns the local
+  action  diagram  corresponding to the Burger-Mozes universal group [22XU(F)[122X (see
+  [cite  Burger-Mozes and Colin and Simon for construction?]). This is a local
+  action  diagram  with  one  vertex labelled by [22XF[122X and a self-reverse loop for
+  each orbit of [22XF[122X. Note that [22XF[122X acts on the domain [10XPermGroupDomain([3Xperm_group[103X[10X)[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1,2)(3,4)));[127X[104X
+    [4X[28X<U(Group( [ (1,2)(3,4) ] )) (as a Local Action Diagram)>[128X[104X
+  [4X[32X[104X
+  
+  [1X2.1-4 LocalActionDiagramConstructBipartitionPreserving[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramConstructBipartitionPreserving[102X( [3Xlad[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA local action diagram object.[133X
+  
+  [33X[0;0YGiven  a  single  vertex  local  action diagram [22X∆[122X ([3Xlad[103X) corresponding to the
+  group [22XU(∆)[122X acting on a tree [22XT[122X this function returns the local action diagram
+  corresponding to the group [22XU(∆)^∘ = {g ∈ U(∆) | ∀ v ∈ V(T), d(v, gv) ≡ 0 mod
+  2}[122X.  Intuitively  this  is  the  group of all automorphisms the preserve the
+  bipartition  of  [22XT[122X  which  always  exists since a single vertex local action
+  diagram is vertex transitive.[133X
+  
+  [33X[0;0YGiven  a  group [22XG[122X labelling the single vertex of [22X∆[122X and arc labels [22XX_a[122X [22Xr[122X this
+  local action diagram is constructed as follows:[133X
+  
+  [30X    [33X[0;6YMake  a graph with two vertices and an edge for each loop of the graph
+        for [22X∆[122X.[133X
+  
+  [30X    [33X[0;6YLabel both vertices by [22XG[122X.[133X
+  
+  [30X    [33X[0;6YFor  each  arc  [22Xa[122X in the graph of [22X∆[122X label the corresponding arc in the
+        new graph by [22XX_a[122X and the reverse of this arc by [22XX_overlinea}[122X.[133X
+  
+  
+  [1X2.2 [33X[0;0YLocal Action Diagram Attributes and Properties[133X[101X
+  
+  [1X2.2-1 LocalActionDiagramRSGraph[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramRSGraph[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YRSGraph associated with the local action diagram.[133X
+  
+  [1X2.2-2 LocalActionDiagramVertexLabels[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramVertexLabels[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YVertex labels of the local action diagram.[133X
+  
+  [1X2.2-3 LocalActionDiagramArcLabels[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramArcLabels[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YArc labels of the local action diagram.[133X
+  
+  [1X2.2-4 LocalActionDiagramVertices[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramVertices[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe vertices of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphVertices(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-5 LocalActionDiagramArcs[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramArcs[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe arcs of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphArcs(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-6 LocalActionDiagramArcIDs[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramArcIDs[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe arc ids of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphArcIDs(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-7 LocalActionDiagramNumberVertices[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramNumberVertices[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe number of vertices in the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphNumberVertices(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-8 LocalActionDiagramNumberArcs[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramNumberArcs[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe number of arcs in the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphNumberArcs(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-9 LocalActionDiagramReverseMap[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramReverseMap[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe reverse map of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphReverseMap(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-10 LocalActionDiagramOutNeighbours[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramOutNeighbours[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of out neighbours of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphOutNeighbours(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-11 LocalActionDiagramInNeighbours[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramInNeighbours[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of in neighbours of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphInNeighbours(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-12 LocalActionDiagramOutArcs[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramOutArcs[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of out arcs of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphOutArcs(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-13 LocalActionDiagramInArcs[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramInArcs[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe record of in arcs of the local action diagrams graph.[133X
+  
+  [33X[0;0YShorthand for [10XRSGraphInArcs(LocalActionDiagramRSGraph([3Xlad[103X[10X))[110X.[133X
+  
+  [1X2.2-14 LocalActionDiagramGroupName[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramGroupName[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YA  name  for  the  associated  universal group of the local action
+            diagram.[133X
+  
+  [33X[0;0YThis  is  a  mutable  attribute  which  stores a human readable name for the
+  associated  universal  group. By default it is equal to the empty string. In
+  this  case  the [10XView[110X function will print [10X<LocalActionDiagram with n vertices
+  and  m  arcs>[110X where [10Xn[110X is the number of vertices and [10Xm[110X is the number of arcs.
+  If  this attribute is set to to any other string then the [10XView[110X function will
+  print [10X<{group_name} (as a Local Action Diagram)>[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1]], ());;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [SymmetricGroup(3)];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1,2,3]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);[127X[104X
+    [4X[28X<LocalActionDiagram with 1 vertex and 1 arc>[128X[104X
+    [4X[25Xgap>[125X [27XSetLocalActionDiagramGroupName(lad, "Aut(T_3)");[127X[104X
+    [4X[25Xgap>[125X [27XView(lad);[127X[104X
+    [4X[28X<Aut(T_3) (as a Local Action Diagram)>[128X[104X
+  [4X[32X[104X
+  
+  [1X2.2-15 LocalActionDiagramRegularTree[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramRegularTree[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe degree of the regular tree the universal group acts on or [9Xfail[109X
+            if it does not act on one.[133X
+  
+  [33X[0;0YIf  every  vertex  label  of the local action diagram has a domain of size [22Xd[122X
+  then the associated universal group acts on a regular tree of degree [22Xd[122X. This
+  functions returns [22Xd[122X if this is the case and [9Xfail[109X otherwise.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [SymmetricGroup(3), Group((1,2,3))];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1,2,3], [1,2,3]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramRegularTree(lad);[127X[104X
+    [4X[28X3[128X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels_2 := [SymmetricGroup(3), Group((1,2))];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels_2 := [[1,2,3], [1,2]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad_2 := LocalActionDiagramFromData(graph, vertex_labels_2, arc_labels_2);;[127X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramRegularTree(lad_2);[127X[104X
+    [4X[28Xfail[128X[104X
+  [4X[32X[104X
+  
+  [1X2.2-16 LocalActionDiagramScopos[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramScopos[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe list of scopos of the local action diagram.[133X
+  
+  [33X[0;0Y(CITE REID SMITH HERE) Let [22X∆ = (Γ, (X_a), (G(v)))[122X be a local action diagram.
+  A  strongly confluent partial orientation ([13Xscopo[113X) of [22X∆[122X is a subset [22XO[122X of [22XA(Γ)[122X
+  such that:[133X
+  
+  [30X    [33X[0;6Yif [22Xa ∈ O[122X then [22Xoverlinea ∉ O[122X,[133X
+  
+  [30X    [33X[0;6Yif [22Xa ∈ O[122X then [22X|X_a| = 1[122X, and[133X
+  
+  [30X    [33X[0;6Yfor  all  [22Xv  ∈  V(Γ)[122X  if  [22XO[122X  contains an arc [22Xa[122X originating at [22Xv[122X then [22XO[122X
+        contains all arcs that terminate at [22Xv[122X except for [22Xoverlinea[122X.[133X
+  
+  [33X[0;0YThis  function performs an iterative search for all scopos of a local action
+  diagram.  It  stores each scopo as a list of arc ids in the scopo. Note that
+  the empty set is a scopo and this is represented as the empty list.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27Xgroup := Group(());;[127X[104X
+    [4X[25Xgap>[125X [27XSetPermGroupDomain(group, [1]);;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [group, group];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1], [1]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramScopos(lad);[127X[104X
+    [4X[28X[ [ ], [ 1 ], [ 2 ]][128X[104X
+  [4X[32X[104X
+  
+  [1X2.2-17 LocalActionDiagramGroupType[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramGroupType[102X( [3Xlad[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe type of the corresponding universal group.[133X
+  
+  [33X[0;0Y(CITE REID SMITH HERE) Every group acting on a tree can be split into one of
+  six   mutually  exclusive  types:  [13Xfixed  vertex[113X,  [13Xedge  inversion[113X,  [13Xlineal[113X,
+  [13Xhorocyclic[113X, [13Xfocal[113X, and [13Xgeneral[113X. This types can be recognised from the groups
+  corresponding  local  action  diagram  by  analysing the scopos of the local
+  action diagram (see CITE REID SMITH).[133X
+  
+  [33X[0;0YThis  function  first calculates the scopos of the local action diagram (see
+  [2XLocalActionDiagramScopos[102X  ([14X2.2-16[114X)) and then uses this to determine the type
+  of the corresponding group. It outputs this types as a string.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27Xgroup := Group(());;[127X[104X
+    [4X[25Xgap>[125X [27XSetPermGroupDomain(group, [1]);;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [group, group];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1], [1]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramGroupType(lad);[127X[104X
+    [4X[28X"General"[128X[104X
+  [4X[32X[104X
+  
+  [1X2.2-18 LocalActionDiagramIsDiscrete[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramIsDiscrete[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  the  corresponding universal group is discrete and false
             otherwise.[133X
   
-  [33X[0;0YEvery  local  action  diagram  belongs to the [10XIsLocalActionDiagram[110X category.
-  Every local action diagram is immutable.[133X
+  [33X[0;0YThis   function   implements   (CITE  THEOREM  HERE)  to  determine  if  the
+  corresponding  universal group is discrete. This requires calculation of the
+  diagrams group type (see [2XLocalActionDiagramGroupType[102X ([14X2.2-17[114X)). Furthermore,
+  if  the group is discrete then it is also uniscalar and unimodular and so if
+  this  function  returns [9Xtrue[109X then it also sets [2XLocalActionDiagramIsUniscalar[102X
+  ([14X2.2-19[114X) and [2XLocalActionDiagramIsUnimodular[102X ([14X2.2-20[114X) to true.[133X
   
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27Xgroup := Group(());;[127X[104X
+    [4X[25Xgap>[125X [27XSetPermGroupDomain(group, [1]);;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [group, group];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1], [1]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsDiscrete(lad);[127X[104X
+    [4X[28Xtrue[128X[104X
+  [4X[32X[104X
   
-  [1X2.1-2 [33X[0;0YConstructing From Data[133X[101X
+  [1X2.2-19 LocalActionDiagramIsUniscalar[101X
   
-  [33X[1;0Y[29X[2XLocalActionDiagramFromData[102X( [3XD[103X, [3Xvertex_labels[103X, [3Xedge_labels[103X, [3Xrev[103X ) [32X operation[133X
-  [33X[1;0Y[29X[2XLocalActionDiagramFromDataNC[102X( [3XD[103X, [3Xvertex_labels[103X, [3Xedge_labels[103X, [3Xrev[103X ) [32X operation[133X
-  [6XReturns:[106X  [33X[0;10YA local action diagram.[133X
+  [33X[1;0Y[29X[2XLocalActionDiagramIsUniscalar[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  the corresponding universal group is uniscalar and false
+            otherwise.[133X
   
-  [33X[0;0YConstructs  a  local action diagram, checking that the arguments given are a
-  valid  local  action  diagram. The argument [3XD[103X is a digraph and [3Xrev[103X must be a
-  compatible  involution  on  the  edges of [3XD[103X. The argument [3Xvertex_labels[103X is a
-  list  of  vertex  labels  such  that [10X[3Xvertex_labels[103X[10X[i][110X is the group labelling
-  vertex [10Xi[110X of [3XD[103X.[133X
+  [33X[0;0YThis   function   implements   (CITE  THEOREM  HERE)  to  determine  if  the
+  corresponding universal group is uniscalar. This requires calculation of the
+  diagrams group type (see [2XLocalActionDiagramGroupType[102X ([14X2.2-17[114X)). Furthermore,
+  if  the  group  is  uniscalar then it is also unimodular so if this function
+  returns  [9Xtrue[109X  then  it also sets [2XLocalActionDiagramIsUnimodular[102X ([14X2.2-20[114X) to
+  true.[133X
   
-  [33X[0;0YThe argument [3Xedge_labels[103X is a list of edge labels. The edges of [3XD[103X are stored
-  in lexicographical order and [10X[3Xedge_labels[103X[10X[i][110X is the set labelling edge [10Xi[110X of [3XD[103X
-  (when sorted in lexicographical order).[133X
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList ([[1, 2], [2, 1], [2, 2]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27Xgroup := Group(());;[127X[104X
+    [4X[25Xgap>[125X [27Xgroup_2 := Group((1, 2), (1,2,3), (4,5));;[127X[104X
+    [4X[25Xgap>[125X [27XSetPermGroupDomain(group, [1]);;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [group, group_2];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1], [1, 2, 3], [4, 5]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsDiscrete(lad);[127X[104X
+    [4X[28Xfalse[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsUniscalar(lad);[127X[104X
+    [4X[28Xtrue[128X[104X
+  [4X[32X[104X
   
-  [33X[0;0YThe  NC variant of the operation does not check that the arguments given are
-  a valid local action diagram.[133X
+  [1X2.2-20 LocalActionDiagramIsUnimodular[101X
   
-  [1X2.1-3 LocalActionDiagramUniversalGroup[101X
+  [33X[1;0Y[29X[2XLocalActionDiagramIsUnimodular[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if the corresponding universal group is unimodular and false
+            otherwise.[133X
   
-  [33X[1;0Y[29X[2XLocalActionDiagramUniversalGroup[102X( [3XF[103X ) [32X operation[133X
-  [6XReturns:[106X  [33X[0;10YA local action diagram.[133X
+  [33X[0;0YThis  function implements (CITE THEOREM HERE both us and BK) to determine if
+  the  corresponding  universal group is unimodular. This requires calculation
+  of a spanning tree of the graph (see [2XRSGraphSpanningTree[102X ([14X1.3-4[114X)).[133X
   
-  [33X[0;0YConstructs  a  local  action diagram corresponding to the Burger-Mozes group
-  [22XU([3XF[103X)[122X  where  [3XF[103X  is  a  permutation  group.  This diagram has a single vertex
-  labelled by the group [3XF[103X and a self-reverse loop for each orbit of the action
-  of  [3XF[103X. The argument [3XF[103X can instead by an object of the category [10XIsLocalAction[110X
-  from the package [5XUGALY[105X.[133X
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_list := [[1, 2], [2, 1], [2, 3], [3, 2], [3, 1], [1, 3], [1, 1]];;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList(adj_list, (1,2)(3,4)(5,6));;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [];;[127X[104X
+    [4X[25Xgap>[125X [27XAdd(vertex_labels, Group((1, 2, 3), (4,5), (6,7)));;[127X[104X
+    [4X[25Xgap>[125X [27XAdd(vertex_labels, Group((1, 2), (3, 4, 5)));;[127X[104X
+    [4X[25Xgap>[125X [27XAdd(vertex_labels, Group((1, 2), (3, 4)));;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1, 2, 3], [3, 4, 5], [1, 2], [1, 2], [3,4], [4,5], [6,7]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsDiscrete(lad);[127X[104X
+    [4X[28Xfalse[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsUniscalar(lad);[127X[104X
+    [4X[28Xfalse[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsUnimodular(lad);[127X[104X
+    [4X[28Xtrue[128X[104X
+  [4X[32X[104X
   
-  [1X2.1-4 LocalActionDiagramToUniversalGroup[101X
+  [1X2.2-21 LocalActionDiagramIsBurgerMozesUniversalGroup[101X
   
-  [33X[1;0Y[29X[2XLocalActionDiagramToUniversalGroup[102X( [3Xlad[103X ) [32X operation[133X
-  [6XReturns:[106X  [33X[0;10YA local action.[133X
+  [33X[1;0Y[29X[2XLocalActionDiagramIsBurgerMozesUniversalGroup[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  the  corresponding  universal  group  is  a Burger-Mozes
+            Universal Group and [9Xfalse[109X otherwise.[133X
   
-  [33X[0;0YGiven  a local action diagram [3Xlad[103X corresponding to a Burger-Mozes group this
-  returns  the  corresponding group as an object of the category [10XIsLocalAction[110X
-  from  the  package  [5XUGALY[105X.  The  local action diagram [3Xlad[103X must have a single
-  vertex  and  have  only  self-reverse  edges. It must also have at least one
-  edge.[133X
+  [33X[0;0YIf  a  local  action diagram has a single vertex and all loops at the vertex
+  are  self-reverse  then the diagram corresponds to a Burger-Mozes group (see
+  PROBABLY  SECOND  COLIN  SIMON  PAPER).  If  the  given  diagram  has such a
+  structure    then    this    function    returns    true.   It   also   sets
+  [2XLocalActionDiagramGroupName[102X    ([14X2.2-14[114X)    to    [10X"U({vertex_label})"[110X   where
+  [10X{vertex_label}[110X is the name of the group labelling the vertex.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1], [1, 1]], ());;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [Group((1, 2), (3, 4))];;[127X[104X
+    [4X[25Xgap>[125X [27XSetName(vertex_labels[1], "C2 x C2");[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1, 2], [3, 4]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XView(lad);[127X[104X
+    [4X[28X<LocalActionDiagram with 1 vertex and 2 arcs>[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsBurgerMozesUniversalGroup(lad);[127X[104X
+    [4X[28Xtrue[128X[104X
+    [4X[25Xgap>[125X [27XView(lad);[127X[104X
+    [4X[28X<U(C2 x C2) (as a Local Action Diagram)>[128X[104X
+  [4X[32X[104X
+  
+  [1X2.2-22 LocalActionDiagramIsEndStabiliser[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramIsEndStabiliser[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  the corresponding universal group is the stabiliser of a
+            single  end  in  the full automorphism group of a regular tree and
+            [9Xfalse[109X otherwise. otherwise.[133X
+  
+  [33X[0;0YIf  a  local  action  diagram  has a single vertex with two mutually reverse
+  loops and the vertex is labelled by [22XS_d-1[122X acting on [22X{1, 2, dots, d}[122X then the
+  universal group is isomorphic to [22XoperatornameAut(T_d)_ω[122X where [22Xω[122X is an end of
+  [22XT_d[122X.  This  function  returns [9Xtrue[109X if the group satisfies this structure and
+  [9Xfalse[109X  otherwise.  It  also  sets  [2XLocalActionDiagramGroupName[102X  ([14X2.2-14[114X)  to
+  [10XAut(Td)_omega[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1], [1, 1]], (1, 2));;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [SymmetricGroup(2)];;[127X[104X
+    [4X[25Xgap>[125X [27XSetPermGroupDomain(vertex_labels[1], [1,2,3]);;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1, 2], [3]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XView(lad);[127X[104X
+    [4X[28X<LocalActionDiagram with 1 vertex and 2 arcs>[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsEndStabiliser(lad);[127X[104X
+    [4X[28Xtrue[128X[104X
+    [4X[25Xgap>[125X [27XView(lad);[127X[104X
+    [4X[28X<Aut(T3)_omega (as a Local Action Diagram)>[128X[104X
+  [4X[32X[104X
+  
+  [1X2.2-23 LocalActionDiagramIsRegularTreeAutomorphismGroup[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramIsRegularTreeAutomorphismGroup[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if the corresponding universal group is the full automorphism
+            group of a regular tree and [9Xfalse[109X otherwise.[133X
+  
+  [33X[0;0YIf a local action diagram has a single vertex with one self-reverse loop and
+  the  vertex  is  labelled  by  [22XS_d[122X then the universal group is isomorphic to
+  [22XoperatornameAut(T_d)[122X. This function returns [9Xtrue[109X if the group satisfies this
+  structure  and  [9Xfalse[109X  otherwise.  It  also sets [2XLocalActionDiagramGroupName[102X
+  ([14X2.2-14[114X) to [10XAut(Td)[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1]], ());;[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [SymmetricGroup(5)];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1..5]];;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
+    [4X[25Xgap>[125X [27XView(lad);[127X[104X
+    [4X[28X<LocalActionDiagram with 1 vertex and 1 arc>[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramIsRegularTreeAutomorphismGroup(lad);[127X[104X
+    [4X[28Xtrue[128X[104X
+    [4X[25Xgap>[125X [27XView(lad);[127X[104X
+    [4X[28X<Aut(T5) (as a Local Action Diagram)>[128X[104X
+  [4X[32X[104X
   

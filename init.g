@@ -4,10 +4,14 @@
 # Reading the declaration part of the package.
 #
 
-ReadPackage( "LocalActionDiagrams", "gap/RSGraph.gd");
+ReadPackage( "LocalActionDiagrams", "lib/RSGraph.gd");
 
-ReadPackage( "LocalActionDiagrams", "gap/PermGroupDomain.gd");
+ReadPackage( "LocalActionDiagrams", "lib/PermGroupDomain.gd");
 
-ReadPackage( "LocalActionDiagrams", "gap/LocalActionDiagram.gd");
+ReadPackage( "LocalActionDiagrams", "lib/LocalActionDiagram.gd");
+
+ReadPackage( "LocalActionDiagrams", "lib/IO.gd");
+
+ReadPackage( "LocalActionDiagrams", "lib/LocalActionDiagramEnumerator.gd");
 
 ReadPackage( "LocalActionDiagrams", "gap/TikZ.gd");
