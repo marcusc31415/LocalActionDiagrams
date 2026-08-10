@@ -1,60 +1,58 @@
 # Example
-# D:=LocalActionDiagramFromUniversalGroup(SymmetricGroup(3));
+# D:=LocalActionDiagramFromLibrary(3,1,6);
 # GenerateTikZCode(D);
-
-
-COLOURS := [["blue"], ["blue", "red"], ["blue", "green", "red"], ["blue", "green", "yellow", "orange"], ["blue", "green", "yellow", "orange", "red"], ["blue", "cyan", "green", "yellow", "orange", "red"]];
-
-GROUP_NAMES := rec(
-("1") := "\langle\mathrm{id}\rangle",
-("C2") := "C_{2}",
-("C3") := "C_{3}",
-("S3") := "S_{3}",
-("C2 x C2") := "C_{2}\times C_{2}",
-("C4") := "C_{4}",
-("D8") := "D_{4}",
-("A4") := "A_{4}",
-("S4") := "S_{4}",
-("C5") := "C_{5}",
-("C6") := "C_{6}",
-("D10") := "D_{5}",
-("D12") := "D_{6}",
-("C5 : C4") := "\mathrm{AGL}(1,5)",
-("A5") := "A_{5}",
-("S5") := "S_{5}",
-("C6") := "C_{6}",
-("C2 x C2 x C2") := "C_{2}^{3}",
-("C4 x C2") := "C_{4}\times C_{2}",
-("C3 x C3") := "C_{3}\times C_{3}",
-("C2 x D8") := "C_{2}\times D_{4}",
-("(C3 x C3) : C2") := "C_{3}^{2}\rtimes C_{2}",
-("C3 x S3") := "C_{3}\times S_{3}",
-("C2 x A4") := "C_{2}\times A_{4}",
-("S3 x S3") := "S_{3}\times S_{3}",
-("(C3 x C3) : C4") := "C_{3}^{2}\rtimes C_{4}",
-("C2 x S4") := "C_{2}\times S_{4}",
-("(S3 x S3) : C2") := "S_{3} \wr C_{2}",
-("A6") := "A_{6}",
-("S6") := "S_{6}" );
-
 
 InstallMethod(GenerateTikZCode, [IsLocalActionDiagram],
 function(D)
-	local grp, deg, grp_name, nr, grps, degs, grp_names, M, arc_labels, arc_reversal, arcs, arc_colours, i, j, domain, orbits, nr_colours, k, l, f;
+	local COLOURS, GROUP_NAMES, grp, grp_name, deg, arc_labels, arc_reversal, nr, grps, degs, grp_names, M, arcs, arc_colours, i, j, domain, orbits, nr_colours, k, l, f;
+	
+	COLOURS := [["blue"], ["blue", "red"], ["blue", "green", "red"], ["blue", "green", "yellow", "orange"], ["blue", "green", "yellow", "orange", "red"], ["blue", "cyan", "green", "yellow", "orange", "red"]];
+	
+	GROUP_NAMES := rec(
+	("1") := "\langle\mathrm{id}\rangle",
+	("C2") := "C_{2}",
+	("C3") := "C_{3}",
+	("S3") := "S_{3}",
+	("C2 x C2") := "C_{2}\times C_{2}",
+	("C4") := "C_{4}",
+	("D8") := "D_{4}",
+	("A4") := "A_{4}",
+	("S4") := "S_{4}",
+	("C5") := "C_{5}",
+	("C6") := "C_{6}",
+	("D10") := "D_{5}",
+	("D12") := "D_{6}",
+	("C5 : C4") := "\mathrm{AGL}(1,5)",
+	("A5") := "A_{5}",
+	("S5") := "S_{5}",
+	("C6") := "C_{6}",
+	("C2 x C2 x C2") := "C_{2}^{3}",
+	("C4 x C2") := "C_{4}\times C_{2}",
+	("C3 x C3") := "C_{3}\times C_{3}",
+	("C2 x D8") := "C_{2}\times D_{4}",
+	("(C3 x C3) : C2") := "C_{3}^{2}\rtimes C_{2}",
+	("C3 x S3") := "C_{3}\times S_{3}",
+	("C2 x A4") := "C_{2}\times A_{4}",
+	("S3 x S3") := "S_{3}\times S_{3}",
+	("(C3 x C3) : C4") := "C_{3}^{2}\rtimes C_{4}",
+	("C2 x S4") := "C_{2}\times S_{4}",
+	("(S3 x S3) : C2") := "S_{3} \wr C_{2}",
+	("A6") := "A_{6}",
+	("S6") := "S_{6}" );	
 
 	if Length(LocalActionDiagramVertices(D)) > 1 then
 		Error("TiKZ code is currently only implemented for local action diagrams on up to one vertex. Try Splash(DotDigraph(D)) for more vertices to get an indication.");
 	elif Length(LocalActionDiagramVertices(D)) = 1 then
 		# Setup
 		grp := LocalActionDiagramVertexLabels(D).(LocalActionDiagramVertices(D)[1]);
-		grp_name := GROUP_NAMES.(StructureDescription(Group));
+		grp_name := GROUP_NAMES.(StructureDescription(grp));
 		deg := Size(PermGroupDomain(grp));
 		arc_labels := LocalActionDiagramArcLabels(D);
 		arc_labels := List(RecNames(arc_labels), x -> arc_labels.(x));
 		arc_reversal := LocalActionDiagramReverseMap(D);
 		
 		# rainbow-y arc colours
-		arcs := DigraphEdges(D);
+		arcs := LocalActionDiagramArcs(D);
 		arc_colours := [];
 
 		domain := Positions(arcs, [1,1]);

@@ -10,8 +10,8 @@ ReadPackage( "LocalActionDiagrams", "lib/PermGroupDomain.gi");
 
 ReadPackage( "LocalActionDiagrams", "lib/LocalActionDiagram.gi");
 
-ReadPackage( "LocalActionDiagrams", "lib/TikZ.gi");
-
 ReadPackage( "LocalActionDiagrams", "lib/IO.gi");
 
 ReadPackage( "LocalActionDiagrams", "lib/LocalActionDiagramEnumerator.gi");
+
+ReadPackage( "LocalActionDiagrams", "lib/TikZ.gi");

@@ -14,4 +14,4 @@ ReadPackage( "LocalActionDiagrams", "lib/IO.gd");
 
 ReadPackage( "LocalActionDiagrams", "lib/LocalActionDiagramEnumerator.gd");
 
-ReadPackage( "LocalActionDiagrams", "gap/TikZ.gd");
+ReadPackage( "LocalActionDiagrams", "lib/TikZ.gd");
