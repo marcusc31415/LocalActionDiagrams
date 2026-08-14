@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This is an automatically generated file. -->
+<Chapter Label="Chapter_Extensions">
+<Heading>Extensions</Heading>
+
+<P/>
+We support converting between RSGraphs and digraphs from the <Package>Digraphs</Package> and graphs from the
+<Package>GRAPE</Package>. Converting from an RSGraph returns both the (di)graph and all data needed to convert back
+to the original RSGraph. 
+</Chapter>
+

@@ -1,0 +1,7 @@
+  
+  [1X6 [33X[0;0YExtensions[133X[101X
+  
+  [33X[0;0YWe  support  converting  between RSGraphs and digraphs from the [5XDigraphs[105X and
+  graphs from the [5XGRAPE[105X. Converting from an RSGraph returns both the (di)graph
+  and all data needed to convert back to the original RSGraph.[133X
+  

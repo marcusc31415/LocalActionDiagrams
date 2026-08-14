@@ -62,11 +62,10 @@ DeclareOperation("RSGraphByAdjacencyListNC", [IsList, IsPerm, IsList]);
 #! gap> rev_map := (1,2)(3,4);;
 #! gap> graph := RSGraphByAdjacencyList(adj_list, rev_map);
 #! <RSGraph with 2 vertices and 5 arcs>
-#!
 #! gap> adj_list2 := [[2, 2]];;
 #! gap> rev_map2 := ();;
 #! gap> vertex_ids := [2];;
-#! gap> graph := RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);
+#! gap> graph := RSGraphByAdjacencyList(adj_list2, rev_map2, vertex_ids);
 #! <RSGraph with 1 vertex and 1 arc>
 #! @EndExampleSession
 
@@ -119,18 +118,17 @@ DeclareOperation("RSGraphByAdjacencyMatrixNC", [IsMatrix, IsPerm, IsList]);
 #! @BeginExampleSession
 #! gap> adj_mat := [[1, 2], [2, 0]];;
 #! gap> rev_map := (2, 4)(3,5);;
-#! gap> vertex_ids := [2,3];;
-#! gap> graph := RSGraphByAdjacencyMatrix(adj_list, rev_map, vertex_ids);
+#! gap> vertex_ids := [2, 3];;
+#! gap> graph := RSGraphByAdjacencyMatrix(adj_mat, rev_map, vertex_ids);
 #! <RSGraph with 2 vertices and 5 arcs>
-#!
 #! gap> Print(graph);
 #! Vertices = { 2, 3 }
 #! Arcs = {
-#!         1 = ( origin = 2, terminus = 2, inverse = 1 )
-#!         2 = ( origin = 2, terminus = 3, inverse = 4 )
-#!         3 = ( origin = 2, terminus = 3, inverse = 5 )
-#!         4 = ( origin = 3, terminus = 2, inverse = 2 )
-#!         5 = ( origin = 3, terminus = 2, inverse = 3 )
+#! 	1 = ( origin = 2, terminus = 2, inverse = 1 )
+#! 	2 = ( origin = 2, terminus = 3, inverse = 4 )
+#! 	3 = ( origin = 2, terminus = 3, inverse = 5 )
+#! 	4 = ( origin = 3, terminus = 2, inverse = 2 )
+#! 	5 = ( origin = 3, terminus = 2, inverse = 3 )
 #! }
 #! Reverse Map = (2,4)(3,5)
 #! @EndExampleSession
@@ -275,7 +273,6 @@ DeclareAttribute("RSGraphBipartition", IsRSGraph);
 #! <RSGraph with 3 vertices and 4 arcs>
 #! gap> RSGraphBipartition(graph);
 #! [ [ 1 ], [ 2, 3 ] ]
-#!
 #! gap> adj_list := [[1, 2], [2, 1], [2, 2], [2, 2]];;
 #! gap> rev_map := (1,2)(3,4);;
 #! gap> graph := RSGraphByAdjacencyList(adj_list, rev_map);
@@ -333,9 +330,9 @@ DeclareOperation("RSGraphArcIterator", [IsRSGraph]);
 #! gap> rev_map := (1,2);;
 #! gap> graph := RSGraphByAdjacencyList(adj_list, rev_map);;
 #! gap> for arc in RSGraphArcIterator(graph) do
-#! gap>     View(arc); 
-#! gap>     Print("\n");
-#! gap> od; 
+#! >     View(arc);
+#! >     Print("\n");
+#! > od;
 #! [ 1, rec( inverse := 2, origin := 1, terminus := 2 ) ]
 #! [ 2, rec( inverse := 1, origin := 2, terminus := 1 ) ]
 #! [ 3, rec( inverse := 3, origin := 2, terminus := 2 ) ]
@@ -370,20 +367,21 @@ DeclareOperation("RSGraphSubgraphNC", [IsRSGraph, IsList]);
 #! gap> Print(graph);
 #! Vertices = { 1, 2 }
 #! Arcs = {
-#!         1 = ( origin = 1, terminus = 2, inverse = 2 )
-#!         2 = ( origin = 2, terminus = 1, inverse = 1 )
-#!         3 = ( origin = 1, terminus = 2, inverse = 4 )
-#!         4 = ( origin = 2, terminus = 1, inverse = 3 )
-#!         5 = ( origin = 2, terminus = 2, inverse = 5 )
+#! 	1 = ( origin = 1, terminus = 2, inverse = 2 )
+#! 	2 = ( origin = 2, terminus = 1, inverse = 1 )
+#! 	3 = ( origin = 1, terminus = 2, inverse = 4 )
+#! 	4 = ( origin = 2, terminus = 1, inverse = 3 )
+#! 	5 = ( origin = 2, terminus = 2, inverse = 5 )
 #! }
 #! Reverse Map = (1,2)(3,4)
 #! gap> subgraph := RSGraphSubgraph(graph, [1,2,5]);
-#! Print(subgraph);
+#! <RSGraph with 2 vertices and 3 arcs>
+#! gap> Print(subgraph);
 #! Vertices = { 1, 2 }
 #! Arcs = {
-#!         1 = ( origin = 1, terminus = 2, inverse = 2 )
-#!         2 = ( origin = 2, terminus = 1, inverse = 1 )
-#!         5 = ( origin = 2, terminus = 2, inverse = 5 )
+#! 	1 = ( origin = 1, terminus = 2, inverse = 2 )
+#! 	2 = ( origin = 2, terminus = 1, inverse = 1 )
+#! 	5 = ( origin = 2, terminus = 2, inverse = 5 )
 #! }
 #! Reverse Map = (1,2)(3,4)
 #! @EndExampleSession
@@ -422,35 +420,36 @@ DeclareOperation("RSGraphSubgraphNC", [IsRSGraph, IsList]);
 #! <C>IsConstantTimeAccessGeneralMapping</C>. 
 DeclareOperation("RSGraphToStandardForm", [IsRSGraph]);
 
-#! @BeginExampleSession
+# Can't test due to the print output on the final line.
+#! @BeginLogSession
 #! gap> adj_list := [[2, 3], [3, 2], [2, 3], [3, 2], [3, 3]];;
 #! gap> rev_map := (1,2)(3,4);;
-#! gap> verrtex_ids := [2, 3];;
+#! gap> vertex_ids := [2, 3];;
 #! gap> graph := RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);;
 #! gap> Print(graph);
 #! Vertices = { 2, 3 }
 #! Arcs = {
-#!         1 = ( origin = 2, terminus = 3, inverse = 2 )
-#!         2 = ( origin = 3, terminus = 2, inverse = 1 )
-#!         3 = ( origin = 2, terminus = 3, inverse = 4 )
-#!         4 = ( origin = 3, terminus = 2, inverse = 3 )
-#!         5 = ( origin = 3, terminus = 2, inverse = 5 )
+#! 	1 = ( origin = 2, terminus = 3, inverse = 2 )
+#! 	2 = ( origin = 3, terminus = 2, inverse = 1 )
+#! 	3 = ( origin = 2, terminus = 3, inverse = 4 )
+#! 	4 = ( origin = 3, terminus = 2, inverse = 3 )
+#! 	5 = ( origin = 3, terminus = 3, inverse = 5 )
 #! }
 #! Reverse Map = (1,2)(3,4)
 #! gap> standard_rec := RSGraphToStandardForm(graph);;
 #! gap> Print(standard_rec.graph);
 #! Vertices = { 1, 2 }
 #! Arcs = {
-#!         1 = ( origin = 1, terminus = 2, inverse = 3 )
-#!         2 = ( origin = 1, terminus = 2, inverse = 4 )
-#!         3 = ( origin = 2, terminus = 1, inverse = 1 )
-#!         4 = ( origin = 2, terminus = 1, inverse = 2 )
-#!         5 = ( origin = 2, terminus = 2, inverse = 5 )
+#! 	1 = ( origin = 1, terminus = 2, inverse = 3 )
+#! 	2 = ( origin = 1, terminus = 2, inverse = 4 )
+#! 	3 = ( origin = 2, terminus = 1, inverse = 1 )
+#! 	4 = ( origin = 2, terminus = 1, inverse = 2 )
+#! 	5 = ( origin = 2, terminus = 2, inverse = 5 )
 #! }
 #! Reverse Map = (1,3)(2,4)
-#! gap> Print(2^standard_rec.arc_id_map);
+#! gap> Print(2^standard_rec.arc_id_map = 3);
 #! 3
-#! @EndExampleSession
+#! @EndLogSession
 
 
 #! @Returns A spanning tree of the graph. 
@@ -473,37 +472,37 @@ DeclareOperation("RSGraphSpanningTree", [IsRSGraph, IsString]);
 
 #! @BeginExampleSession
 #! gap> adj_list := [[1, 2], [2, 1], [1, 3], [3, 1], [1, 4], [4, 1], \
-#! gap>              [2, 3], [3, 2], [3, 4], [4, 3]];;
+#! >                 [2, 3], [3, 2], [3, 4], [4, 3]];;
 #! gap> rev_map := (1,2)(3,4)(5,6)(7,8)(9,10);;
 #! gap> graph := RSGraphByAdjacencyList(adj_list, rev_map);;
 #! gap> tree_bfs := RSGraphSpanningTree(graph);;
 #! gap> Print(tree_bfs);
 #! Vertices = { 1, 2, 3, 4 }
 #! Arcs = {
-#!         1 = ( origin = 1, terminus = 2, inverse = 2 )
-#!         2 = ( origin = 2, terminus = 1, inverse = 1 )
-#!         3 = ( origin = 1, terminus = 3, inverse = 4 )
-#!         4 = ( origin = 3, terminus = 1, inverse = 3 )
-#!         5 = ( origin = 1, terminus = 4, inverse = 6 )
-#!         6 = ( origin = 4, terminus = 1, inverse = 5 )
+#! 	1 = ( origin = 1, terminus = 2, inverse = 2 )
+#! 	2 = ( origin = 2, terminus = 1, inverse = 1 )
+#! 	3 = ( origin = 1, terminus = 3, inverse = 4 )
+#! 	4 = ( origin = 3, terminus = 1, inverse = 3 )
+#! 	5 = ( origin = 1, terminus = 4, inverse = 6 )
+#! 	6 = ( origin = 4, terminus = 1, inverse = 5 )
 #! }
 #! Reverse Map = (1,2)(3,4)(5,6)(7,8)(9,10)
 #! gap> tree_dfs := RSGraphSpanningTree(graph, "dfs");;
 #! gap> Print(tree_dfs);
 #! Vertices = { 1, 2, 3, 4 }
 #! Arcs = {
-#!         1 = ( origin = 1, terminus = 2, inverse = 2 )
-#!         2 = ( origin = 2, terminus = 1, inverse = 1 )
-#!         7 = ( origin = 2, terminus = 3, inverse = 8 )
-#!         8 = ( origin = 3, terminus = 2, inverse = 7 )
-#!         9 = ( origin = 3, terminus = 4, inverse = 10 )
-#!         10 = ( origin = 4, terminus = 3, inverse = 9 )
+#! 	1 = ( origin = 1, terminus = 2, inverse = 2 )
+#! 	2 = ( origin = 2, terminus = 1, inverse = 1 )
+#! 	7 = ( origin = 2, terminus = 3, inverse = 8 )
+#! 	8 = ( origin = 3, terminus = 2, inverse = 7 )
+#! 	9 = ( origin = 3, terminus = 4, inverse = 10 )
+#! 	10 = ( origin = 4, terminus = 3, inverse = 9 )
 #! }
 #! Reverse Map = (1,2)(3,4)(5,6)(7,8)(9,10)
 #! @EndExampleSession
 
-
 DeclareAttribute("AutomorphismGroup", IsRSGraph);
+
 DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph);
 
 DeclareOperation("LAD_Internal_RSGraphsEnumerate@", [IsInt, IsInt]);

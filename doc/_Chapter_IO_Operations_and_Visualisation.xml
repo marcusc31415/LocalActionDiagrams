@@ -83,11 +83,11 @@ the name of the corresponding group.
 gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
 gap> RSGraphToWritableString(graph);
 "1|1,1,1|P"
-
 gap> lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;
 gap> LocalActionDiagramGroupType(lad);;
 gap> LocalActionDiagramToWritableString(lad);
-"1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! "
+"1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDia\
+gramScopos! "
 ]]></Example>
 
 <ManSection Label="AutoDoc_generated_group2">
@@ -112,35 +112,35 @@ These function take the output from the <C>RSGraphToWritableString</C> and
  </Description>
 </ManSection>
 
-<Example><![CDATA[
+<Log><![CDATA[
 gap> graph_string := "1|1,1,1|P";;
 gap> graph := RSGraphFromWritableString(graph_string);;
 gap> Print(graph);
 Vertices = { 1 }
 Arcs = {
-    1 = ( origin = 1, terminus = 1, inverse = 1 )
+	1 = ( origin = 1, terminus = 1, inverse = 1 )
 }
 Reverse Map = ()
-
-gap> lad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! ";;
-gap> lad := LocalActionDiagramFromWritableString(lad_string);
+gap> lad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!Gene\
+> ral|LocalActionDiagramScopos! ";;
+gap> lad := LocalActionDiagramFromWritableString(lad_string);;
 gap> Print(lad);
 Vertices = { 1 }
 Arcs = {
-    1 = ( origin = 1, terminus = 1, inverse = 1 )
+	1 = ( origin = 1, terminus = 1, inverse = 1 )
 }
 Reverse Map = ()
 Vertex Labels = {
-    1 = Group( [ (1,2) ] )
+	1 = Group( [ (1,2) ] )
 }
 Arc Labels = {
-    1 = [ 1, 2 ]
+	1 = [ 1, 2 ]
 }
 gap> Print("LocalActionDiagramScopos" in KnownAttributesOfObject(lad));
 true
 gap> Print("LocalActionDiagramIsDiscrete" in KnownAttributesOfObject(lad));
 false
-]]></Example>
+]]></Log>
 
  <ManSection>
      <Heading>IO Pickling/Unpickling</Heading>
@@ -172,20 +172,29 @@ false
 		   <C>RSGO</C> and <C>LADO</C> respectively.  
      </Description>
  </ManSection>
-<Example><![CDATA[
+<Log><![CDATA[
 gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
 gap> lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;
 gap> list := [graph, lad];
-[ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ]
+[ <RSGraph with 1 vertex and 1 arc>, 
+  <LocalActionDiagram with 1 vertex and 1 arc> ]
 gap> file := IO_File("test.pickle", "w");;
 gap> IO_Pickle(file, list);
 IO_OK
 gap> IO_Close(file);;
 gap> file := IO_File("test.pickle", "r");;
 gap> IO_Unpickle(file);
-[ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ]
-]]></Example>
+[ <RSGraph with 1 vertex and 1 arc>, 
+  <LocalActionDiagram with 1 vertex and 1 arc> ]
+]]></Log>
 
+</Section>
+
+<Section Label="Chapter_IO_Operations_and_Visualisation_Section_Visualisation">
+<Heading>Visualisation</Heading>
+
+<P/>
+ <E>Stephan to do.</E>
 </Section>
 
 </Chapter>

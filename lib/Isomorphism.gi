@@ -102,7 +102,15 @@ end);
 # Then find the one compatible with the isomorphism and reverse map. 
 InstallMethod(IsomorphismRSGraphs, "Isormorphism between two RSGraphs", [IsRSGraph, IsRSGraph],
 function(graph1, graph2)
-	local MapPerm, g1_canon_label, g2_canon_label, g1_canon_cert, g2_canon_cert, ism, dp_elms; 
+	local PermToMap, g1_canon_label, g2_canon_label, g1_canon_cert, g2_canon_cert, ism, dp_elms, ism_list; 
+
+	PermToMap := function(perm, domain_1, domain_2)
+		local dp_elms;
+
+		dp_elms := List(domain_1, x -> DirectProductElement([x, x^perm]));
+
+		return GeneralMappingByElements(domain_1, domain_2, dp_elms);
+	end;
 
 	if RSGraphNumberVertices(graph1) <> RSGraphNumberVertices(graph2) then
 		return fail;
@@ -122,27 +130,58 @@ function(graph1, graph2)
 		return fail;
 	fi;
 
+	# Convert all these maps to general mappings to avoid lots of case checking. 
+	ism_list := [];
+
 	ism := g1_canon_label.arc_isomorphism;
-	ism := ism*g1_canon_label.arc_standard_map;
-	if IsPerm(g2_canon_label.arc_standard_map) then
-		ism := ism*Inverse(g2_canon_label.arc_standard_map);
+	if IsPerm(ism) then
+		Add(ism_list, PermToMap(ism, Domain(RSGraphArcIDs(graph1)), Domain([1..RSGraphNumberArcs(graph1)])));
 	else
-		ism := ism*InverseGeneralMapping(g2_canon_label.arc_standard_map);
+		Add(ism_list, ism);
 	fi;
 
-	if IsPerm(g2_canon_label.arc_isomorphism) then
-		ism := ism*Inverse(g2_canon_label.arc_isomorphism);
+	ism := g1_canon_label.arc_standard_map;
+	if IsPerm(ism) then
+		Add(ism_list, PermToMap(ism, Domain([1..RSGraphNumberArcs(graph1)]), Domain([1..RSGraphNumberArcs(graph1)])));
 	else
-		ism := ism*InverseGeneralMapping(g2_canon_label.arc_isomorphism);
+		Add(ism_list, ism);
 	fi;
 
-	if IsGeneralMapping(ism) then
-		if Source(ism) = Range(ism) then
-			ism := MappingPermListList(List(Source(ism)), List(Source(ism), x -> x^ism));
-		else
-			dp_elms := List(Source(ism), x -> DirectProductElement([x, x^ism]));
-			ism := GeneralMappingByElements(Source(ism), Range(ism), dp_elms);
-		fi;
+	ism := g2_canon_label.arc_standard_map;
+	if IsPerm(ism) then
+		Add(ism_list, InverseGeneralMapping(PermToMap(ism, Domain([1..RSGraphNumberArcs(graph2)]), Domain([1..RSGraphNumberArcs(graph2)]))));
+	else
+		Add(ism_list, InverseGeneralMapping(ism));
+	fi;
+
+	ism := g2_canon_label.arc_isomorphism;
+	if IsPerm(ism) then
+		Add(ism_list, InverseGeneralMapping(PermToMap(ism, Domain([1..RSGraphNumberArcs(graph2)]), Domain(RSGraphArcIDs(graph2)))));
+	else
+		Add(ism_list, InverseGeneralMapping(ism));
+	fi;
+
+	ism := Product(ism_list);
+
+	#ism := g1_canon_label.arc_isomorphism;
+	#ism := ism*g1_canon_label.arc_standard_map;
+	#if IsPerm(g2_canon_label.arc_standard_map) and IsPerm(ism) then # They are 
+	#	ism := ism*Inverse(g2_canon_label.arc_standard_map);
+	#else
+	#	ism := ism*InverseGeneralMapping(g2_canon_label.arc_standard_map);
+	#fi;
+
+	#if IsPerm(g2_canon_label.arc_isomorphism) and IsPerm(ism) then
+	#	ism := ism*Inverse(g2_canon_label.arc_isomorphism);
+	#else
+	#	ism := ism*InverseGeneralMapping(g2_canon_label.arc_isomorphism);
+	#fi;
+
+	if Source(ism) = Range(ism) then
+		ism := MappingPermListList(List(Source(ism)), List(Source(ism), x -> x^ism));
+	else
+		dp_elms := List(Source(ism), x -> DirectProductElement([x, x^ism]));
+		ism := GeneralMappingByElements(Source(ism), Range(ism), dp_elms);
 	fi;
 
 	return ism;
@@ -214,7 +253,15 @@ end);
 
 InstallMethod(RSGraphsIsomorphismsIterator, "Iterator of all isomorphisms between two RSGraphs", [IsRSGraph, IsRSGraph],
 function(graph1, graph2)
-	local NextIterator, IsDoneIterator, ShallowCopy, base_iso;
+	local NextIterator, IsDoneIterator, ShallowCopy, base_iso, SimplifyMapping;
+
+	SimplifyMapping := function(map)
+		local dp_elms;
+
+		dp_elms := List(Source(map), x -> DirectProductElement([x, x^map]));
+
+		return GeneralMappingByElements(Source(map), Range(map), dp_elms);
+	end;
 
 	ShallowCopy := function(iter)
 		return rec(
@@ -237,7 +284,13 @@ function(graph1, graph2)
 		elif IsGeneralMapping(iter!.iso[1]) and IsGeneralMapping(iter!.iso[2]) then
 			aut_vert_map := GeneralMappingByElements(Source(iter!.iso[1]), Source(iter!.iso[1]), List(RSGraphVertices(iter!.graph1), x -> DirectProductElement([x, x^v_aut])));
 			aut_arc_map := GeneralMappingByElements(Source(iter!.iso[2]), Source(iter!.iso[2]), List(RSGraphArcIDs(iter!.graph1), x -> DirectProductElement([x, x^arc_aut])));
-			return [ aut_vert_map * iter!.iso[1], aut_arc_map * iter!.iso[2]];
+			return [ SimplifyMapping(aut_vert_map * iter!.iso[1]), SimplifyMapping(aut_arc_map * iter!.iso[2])];
+		elif IsGeneralMapping(iter!.iso[1]) and IsPerm(iter!.iso[2]) then
+			aut_vert_map := GeneralMappingByElements(Source(iter!.iso[1]), Source(iter!.iso[1]), List(RSGraphVertices(iter!.graph1), x -> DirectProductElement([x, x^v_aut])));
+			return [SimplifyMapping(aut_vert_map * iter!.iso[1]), arc_aut*iter!.iso[2]];
+		elif IsPerm(iter!.iso[1]) and IsGeneralMapping(iter!.iso[2]) then
+			aut_arc_map := GeneralMappingByElements(Source(iter!.iso[2]), Source(iter!.iso[2]), List(RSGraphArcIDs(iter!.graph1), x -> DirectProductElement([x, x^arc_aut])));
+			return [ v_aut * iter!.iso[1], SimplifyMapping(aut_arc_map * iter!.iso[2])];
 		else
 			ErrorNoReturn("Problem with isomorphism function output");
 		fi;

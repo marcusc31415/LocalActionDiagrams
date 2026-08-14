@@ -1,3 +1,247 @@
   
   [1X4 [33X[0;0YIsomorphisms and Automorphisms[133X[101X
   
+  [33X[0;0YWe  support  calculating  isomorphisms  between  RSGraphs,  calculating  the
+  automorphism group of an RSGraph, and calculating isomorphisms between local
+  action   diagrams.   This   functionality  relies  on  the  isomorphism  and
+  automorphism  functions  from  the  [5XDigraphs[105X  and so is not available if the
+  [5XDigraphs[105X  is  not  available.  By  default  this  makes  use  of  [10XBliss[110X  for
+  calculating  morphisms  but  it can use [10XNauty[110X if the [5XNautyTracesInterface[105X is
+  available.[133X
+  
+  [33X[0;0YGiven  two  RSGraphs  [22XΓ_1[122X and [22XΓ_2[122X an [13Xisomorphism[113X is a pair of bijective maps
+  [22XΘ_V  :  V(Γ_1)  ->  V(Γ_2)[122X  and  [22XΘ_A  : A(Γ_1) -> A(Γ_2)[122X that respect origin
+  vertices  and  the arc reversal map. Explicitly, this means that [22XΘ_V(o(a)) =
+  o(Θ_A(a))[122X  and  [22XoverlineΘ_A(a)  =  Θ_A(overlinea)[122X.  An  automorphism  is  an
+  isomorphism  from an RSGraph to itself and the set of all automorphism of an
+  RSGraph form a group under function composition.[133X
+  
+  [33X[0;0YGiven two local action diagrams [22X∆ = (Γ, (X_a), (G(v)))[122X and [22X∆' = (Γ', (X_a'),
+  (G'(v)))[122X  and isomorphism between [22X∆[122X and [22X∆'[122X consists of: - an isomorphism [22XΘ :
+  Γ  -> Γ'[122X and - for each vertex [22Xv ∈ V(Γ)[122X a bijection [22XΘ_v : X_v -> X_Θ(v)[122X that
+  restricts  to  a  bijection from [22XX_a[122X to [22XX_Θ(a)[122X for each [22Xa ∈ o^-1(a)[122X and such
+  that [22XΘ_vG(v)Θ_v^-1 = G'(v)[122X.[133X
+  
+  
+  [1X4.1 [33X[0;0YRSGraph Morphisms[133X[101X
+  
+  [1X4.1-1 AutomorphismGroup[101X
+  
+  [33X[1;0Y[29X[2XAutomorphismGroup[102X( [3Xgraph[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA permutation group.[133X
+  
+  [33X[0;0YThis  function  returns the automorphism group of the [3Xgraph[103X as a permutation
+  group.  Each  permutation in the group is an automorphism on the arcs of the
+  graph.  For  each arc automorphism the corresponding vertex automorphism can
+  be found with the [2XRSGraphVertexAutomorphism[102X ([14X4.1-3[114X) function.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;[127X[104X
+    [4X[25Xgap>[125X [27XAutomorphismGroup(graph);[127X[104X
+    [4X[28XGroup([ (2,3) ])[128X[104X
+  [4X[32X[104X
+  
+  [1X4.1-2 IsomorphismRSGraphs[101X
+  
+  [33X[1;0Y[29X[2XIsomorphismRSGraphs[102X( [3Xgraph_1[103X, [3Xgraph_2[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA  permutation or general mapping if the graphs are isomorphic and
+            [9Xfail[109X otherwise.[133X
+  
+  [33X[0;0YIf  [3Xgraph_1[103X  and  [3Xgraph_2[103X  are isomorphic then this function returns one arc
+  isomorphism  between  them.  If  the  graphs have the same arc ids then this
+  isomorphism  is  returned  as  a permutation. If they have different arc ids
+  then the isomorphism is returned as a constant access time general mapping.[133X
+  
+  [33X[0;0YThis  isomorphism  found is not necessarily unique. To get every isomorphism
+  you  can  find the automorphism group of one of the graphs and compose these
+  automorphisms  with  the isomorphism found (see [2XRSGraphsIsomorphismsIterator[102X
+  ([14X4.1-5[114X).  For  each  arc  isomorphism  you  can get the corresponding vertex
+  isomorphism with the [2XRSGraphsVertexIsomorphism[102X ([14X4.1-4[114X) function.[133X
+  
+  [33X[0;0YThe  isomorphisms are found by finding a "canonical form" of each graph (see
+  [2XRSGraphCanonicalLabelling[102X   ([14X4.1-6[114X))  and  composing  the  mappings  to  the
+  canonical  form.  This  means  that subsequent calls of this function on the
+  same graphs have constant time complexity.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27XIsomorphismRSGraphs(graph_1, graph_2);[127X[104X
+    [4X[28X(1,3,2)[128X[104X
+  [4X[32X[104X
+  
+  [1X4.1-3 RSGraphVertexAutomorphism[101X
+  
+  [33X[1;0Y[29X[2XRSGraphVertexAutomorphism[102X( [3Xgraph[103X, [3Xarc_aut[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA permutation.[133X
+  
+  [33X[0;0YGiven  an  RSGraph and an automorphism of the arcs this function returns the
+  corresponding automorphism of the vertices of the graph. The automorphism of
+  the  arcs is represented as a permutation. If the argument [3Xarc_aut[103X is not an
+  automorphism  of  the  graph's  arcs  then the behaviour of this function is
+  undefined.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 2], [2, 1], [2, 2], [2, 2]], (3,4));;[127X[104X
+    [4X[25Xgap>[125X [27Xaut_group := AutomorphismGroup(graph);;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_aut := Elements(aut_group)[5];[127X[104X
+    [4X[28X(1,5)(2,6)(3,4)[128X[104X
+    [4X[25Xgap>[125X [27Xvert_aut := RSGraphVertexAutomorphism(graph, arc_aut);[127X[104X
+    [4X[28X(1,2)[128X[104X
+  [4X[32X[104X
+  
+  [1X4.1-4 RSGraphsVertexIsomorphism[101X
+  
+  [33X[1;0Y[29X[2XRSGraphsVertexIsomorphism[102X( [3Xgraph_1[103X, [3Xgraph_2[103X, [3Xarc_iso[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA permutation or general mapping.[133X
+  
+  [33X[0;0YGiven two RSGraphs and an isomorphism of the arcs between them this function
+  returns  the  corresponding  isomorphism between the vertices of the graphs.
+  The  argument  [3Xarc_iso[103X  can either be a permutation or a general mapping. If
+  the  vertex  ids of the two graphs are the same then the isomorphism will be
+  returned  as  a  permutation.  Otherwise  it  will  be returned as a general
+  mapping.  If  the argument [3Xarc_iso[103X is not an isomorphism between the arcs of
+  the two graphs then the behaviour of this function is undefined.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_2 := RSGraphByAdjacencyList([[2, 2], [2, 2], [2, 2]], (1,2), [2]);;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_iso := IsomorphismRSGraphs(graph_1, graph_2);[127X[104X
+    [4X[28X(1,3,2)[128X[104X
+    [4X[25Xgap>[125X [27Xvert_iso := RSGraphsVertexIsomorphism(graph_1, graph_2, arc_iso);[127X[104X
+    [4X[28X<general mapping: Domain([ 1 ]) -> Domain([ 2 ]) >[128X[104X
+    [4X[25Xgap>[125X [27X1^vert_iso;[127X[104X
+    [4X[28X2[128X[104X
+  [4X[32X[104X
+  
+  [1X4.1-5 RSGraphsIsomorphismsIterator[101X
+  
+  [33X[1;0Y[29X[2XRSGraphsIsomorphismsIterator[102X( [3Xgraph_1[103X, [3Xgraph_2[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAn iterator over all permutations between two RSGraphs.[133X
+  
+  [33X[0;0YThis  function returns an iterator over all isomorphisms between [3Xgraph_1[103X and
+  [3Xgraph_2[103X  composing  every  automorphism of [3Xgraph_1[103X with a "base isomorphism"
+  between [3Xgraph_1[103X and [3Xgraph_2[103X. Note that as the automorphism group is a stored
+  attribute of each graph if the same graph is used for multiple calls of this
+  function  it  should  be used as the first argument to avoid calculating the
+  automorphism group each time.[133X
+  
+  [33X[0;0YThe iterator returns the isomorphisms in the form [10X[vertex_iso, arc_iso][110X. The
+  elements  of  this  list  will  be  either permutations are general mappings
+  depending  on  whether  or  not the vertex/arc ids are the same between both
+  graphs.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;[127X[104X
+    [4X[25Xgap>[125X [27Xfor iso in RSGraphsIsomorphismsIterator(graph_1, graph_2) do [127X[104X
+    [4X[25X>[125X [27X   	Print(iso, "\n"); [127X[104X
+    [4X[25X>[125X [27X   od;[127X[104X
+    [4X[28X[ (), () ][128X[104X
+    [4X[28X[ (), (2,3) ][128X[104X
+    [4X[28X[ (), (1,3,2) ][128X[104X
+    [4X[28X[ (), (1,3) ][128X[104X
+    [4X[28X[ (), (1,2,3) ][128X[104X
+    [4X[28X[ (), (1,2) ][128X[104X
+  [4X[32X[104X
+  
+  [1X4.1-6 RSGraphCanonicalLabelling[101X
+  
+  [33X[1;0Y[29X[2XRSGraphCanonicalLabelling[102X( [3Xgraph[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA record to to identify the "canonical labelling" of the graph.[133X
+  
+  [33X[0;0YGiven  a  graph  [22XΓ_1[122X  a  canonical  form  of  [22XΓ_1[122X  is a graph [22Xρ(Γ_1)[122X that is
+  isomorphic  to [22XΓ_1[122X and such that every graph isomorphic to [22XΓ_1[122X has Canonical
+  form  [22Xρ(Γ_1)[122X.  This  means  that  [22XΓ_1[122X  and [22XΓ_2[122X are isomorphic if and only if
+  [22Xρ(Γ_1)  =  ρ(Γ_2)[122X. Finding canonical labellings of a graph is how both [13XBliss[113X
+  and [13XNauty[113X find graph isomorphisms.[133X
+  
+  [33X[0;0YThis  function returns a record containing all information of the "canonical
+  labelling" of the graph. The elements of the record are:[133X
+  
+  [30X    [33X[0;6Y[10Xcanon_certificate[110X:  A string that represents the canonical form of the
+        graph.  Two  graphs  are isomorphic if and only if this string has the
+        same value for both.[133X
+  
+  [30X    [33X[0;6Y[10Xarc_isomorphism[110X:  This  maps  the arcs of the graph to the arcs of the
+        canonical form of the graph. It does not take into account the reverse
+        map.[133X
+  
+  [30X    [33X[0;6Y[10Xvertex_isomorphism[110X:  This  maps  the  vertices  of  the  graph  to the
+        vertices of the canonical form of the graph.[133X
+  
+  [30X    [33X[0;6Y[10Xarc_standard_map[110X:  This  maps the arcs of the graph so that loops that
+        are  not  self-reverse have smaller arc ids then self-reverse loops at
+        the  same  vertex.  This is needed to make sure the reverse map of the
+        canonical  forms  for  two  graphs  is  the  same  if  the  graphs are
+        isomorphic.[133X
+  
+  [30X    [33X[0;6Y[10Xreverse_map[110X: The reverse map of the canonical form of the graph.[133X
+  
+  [33X[0;0YUsing  this  information  it is possible to construct an isomorphism between
+  two  graphs by following the maps from the first graph to the canonical form
+  and  then  taking  the  inverses  maps  to the second graph. This is how the
+  [2XIsomorphismRSGraphs[102X ([14X4.1-2[114X) function works.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;[127X[104X
+    [4X[25Xgap>[125X [27Xcanon_1 := RSGraphCanonicalLabelling(graph_1);;[127X[104X
+    [4X[25Xgap>[125X [27Xcanon_2 := RSGraphCanonicalLabelling(graph_2);;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(canon_1);[127X[104X
+    [4X[28Xrec([128X[104X
+    [4X[28X  arc_isomorphism := (),[128X[104X
+    [4X[28X  arc_standard_map := (),[128X[104X
+    [4X[28X  canon_certificate := "[ [ 3 ] ]2;",[128X[104X
+    [4X[28X  reverse_map := (1,2),[128X[104X
+    [4X[28X  vertex_isomorphism := () )[128X[104X
+    [4X[25Xgap>[125X [27Xgraph_iso := canon_1.arc_isomorphism;;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_iso := graph_iso*canon_1.arc_standard_map;;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_iso := graph_iso*Inverse(canon_2.arc_standard_map);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_iso := graph_iso*Inverse(canon_2.arc_isomorphism);;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(graph_iso);[127X[104X
+    [4X[28X(1,2,3)[128X[104X
+    [4X[25Xgap>[125X [27XPrint(IsomorphismRSGraphs(graph_1, graph_2));[127X[104X
+    [4X[28X(1,2,3)[128X[104X
+  [4X[32X[104X
+  
+  [1X4.1-7 IsomorphismLocalActionDiagrams[101X
+  
+  [33X[1;0Y[29X[2XIsomorphismLocalActionDiagrams[102X( [3Xlad_1[103X, [3Xlad_2[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA  list  containing  the vertex and arc isomorphisms and record of
+            bijective maps or [9Xfail[109X if there is no isomorphism.[133X
+  
+  [33X[0;0YThis  function  searches  for a local action diagram isomorphism between two
+  local   action  diagrams.  It  does  this  by  iterating  over  every  graph
+  isomorphism  between  the  two  underlying  graphs. It then searches through
+  every  possible  bijection between the vertex label's domains based on where
+  the  vertices map to under the isomorphism. This search checks if the vertex
+  labels  are  conjugate  under  each  bijection.  If it can find one for each
+  vertex  label  then  it  has found a local action diagram isomorphism. If it
+  can't  and  has  exhausted  all  graph  isomorphisms  then  the local action
+  diagrams are not isomorphic.[133X
+  
+  [33X[0;0YIf  the  diagrams  are isomorphic then this function returns the isomorphism
+  found  in the form [10X[vert_iso, arc_iso, bijection_rec][110X. The first two entries
+  of this list are either permutations are bijections (see [2XIsomorphismRSGraphs[102X
+  ([14X4.1-2[114X)).  The final entry is a record where the names are the vertex ids of
+  [3Xlad_1[103X.  Each  component  contains  the bijective map between the two domains
+  which  conjugates  the groups. Specifically, if [10Xi[110X is a vertex label of [3Xlad_1[103X
+  then  [10Xbijection_rec.(i)[110X  is a mapping from the domain of the group labelling
+  vertex [10Xi[110X in [3Xlad_1[103X to the domain of the group labelling [10Xi^vert_iso[110X in [3Xlad_2[103X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;[127X[104X
+    [4X[25Xgap>[125X [27Xlad_1 := LocalActionDiagramFromData(graph, [Group((1,2)), Group((3,4))], \[127X[104X
+    [4X[25X>[125X [27X                                       [[1, 2], [3, 4]]);;[127X[104X
+    [4X[25Xgap>[125X [27Xlad_2 := LocalActionDiagramFromData(graph, [Group((3,4)), Group((1,2))], \[127X[104X
+    [4X[25X>[125X [27X                                       [[3, 4], [1, 2]]);;[127X[104X
+    [4X[25Xgap>[125X [27Xiso := IsomorphismLocalActionDiagrams(lad_1, lad_2);;[127X[104X
+    [4X[25Xgap>[125X [27Xfor elm in iso do Print(elm, "\n"); od;[127X[104X
+    [4X[28X()[128X[104X
+    [4X[28X()[128X[104X
+    [4X[28Xrec([128X[104X
+    [4X[28X  1 := <mapping: Domain([ 1, 2 ]) -> Domain([ 3, 4 ]) >,[128X[104X
+    [4X[28X  2 := <mapping: Domain([ 3, 4 ]) -> Domain([ 1, 2 ]) > )[128X[104X
+  [4X[32X[104X
+  

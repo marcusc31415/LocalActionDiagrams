@@ -4,5 +4,6 @@
 <#Include SYSTEM "_Chapter_RSGraphs.xml">
 <#Include SYSTEM "_Chapter_Local_Action_Diagrams.xml">
 <#Include SYSTEM "_Chapter_IO_Operations_and_Visualisation.xml">
-<#Include SYSTEM "_Chapter_Isomorphisms_and_Automorphisms.xml">
+<#Include SYSTEM "_Chapter_Iso.xml">
 <#Include SYSTEM "_Chapter_Enumeration.xml">
+<#Include SYSTEM "_Chapter_Extensions.xml">

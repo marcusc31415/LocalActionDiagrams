@@ -77,26 +77,26 @@
     [4X[25Xgap>[125X [27Xlabel_1 := Group((1,2));;[127X[104X
     [4X[25Xgap>[125X [27XSetPermGroupDomain(label_1, [1, 2, 3]);;[127X[104X
     [4X[25Xgap>[125X [27Xlabel_2 := Group((1,2,3));;[127X[104X
-    [4X[25Xgap>[125X [27Xvertex_labels := [label_1, label_2];[127X[104X
-    [4X[25Xgap>[125X [27Xarc_labels := [[1, 2], [3], [1,2,3]];[127X[104X
+    [4X[25Xgap>[125X [27Xvertex_labels := [label_1, label_2];;[127X[104X
+    [4X[25Xgap>[125X [27Xarc_labels := [[1, 2], [3], [1,2,3]];;[127X[104X
     [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);[127X[104X
     [4X[28X<LocalActionDiagram with 2 vertices and 3 arcs>[128X[104X
     [4X[25Xgap>[125X [27XPrint(lad);[127X[104X
     [4X[28XVertices = { 1, 2 }[128X[104X
     [4X[28XArcs = {[128X[104X
-    [4X[28X        1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
-    [4X[28X        2 = ( origin = 1, terminus = 2, inverse = 3 )[128X[104X
-    [4X[28X        3 = ( origin = 2, terminus = 1, inverse = 2 )[128X[104X
+    [4X[28X	1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X	2 = ( origin = 1, terminus = 2, inverse = 3 )[128X[104X
+    [4X[28X	3 = ( origin = 2, terminus = 1, inverse = 2 )[128X[104X
     [4X[28X}[128X[104X
     [4X[28XReverse Map = (2,3)[128X[104X
     [4X[28XVertex Labels = {[128X[104X
-    [4X[28X        1 = Group( [ (1,2) ] )[128X[104X
-    [4X[28X        2 = Group( [ (1,2,3) ] )[128X[104X
+    [4X[28X	1 = Group( [ (1,2) ] )[128X[104X
+    [4X[28X	2 = Group( [ (1,2,3) ] )[128X[104X
     [4X[28X}[128X[104X
     [4X[28XArc Labels = {[128X[104X
-    [4X[28X        1 = [ 1, 2 ][128X[104X
-    [4X[28X        2 = [ 3 ][128X[104X
-    [4X[28X        3 = [ 1, 2, 3 ][128X[104X
+    [4X[28X	1 = [ 1, 2 ][128X[104X
+    [4X[28X	2 = [ 3 ][128X[104X
+    [4X[28X	3 = [ 1, 2, 3 ][128X[104X
     [4X[28X}[128X[104X
   [4X[32X[104X
   
@@ -303,7 +303,7 @@
     [4X[25Xgap>[125X [27Xarc_labels := [[1], [1]];;[127X[104X
     [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;[127X[104X
     [4X[25Xgap>[125X [27XLocalActionDiagramScopos(lad);[127X[104X
-    [4X[28X[ [ ], [ 1 ], [ 2 ]][128X[104X
+    [4X[28X[ [  ], [ 1 ], [ 2 ] ][128X[104X
   [4X[32X[104X
   
   [1X2.2-17 LocalActionDiagramGroupType[101X
@@ -437,7 +437,24 @@
     [4X[28X<U(C2 x C2) (as a Local Action Diagram)>[128X[104X
   [4X[32X[104X
   
-  [1X2.2-22 LocalActionDiagramIsEndStabiliser[101X
+  [1X2.2-22 LocalActionDiagramIsSmithUniversalGroup[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramIsSmithUniversalGroup[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  of the local action diagram corresponds to a smith universal
+            group and [9Xfalse[109X otherwise.[133X
+  
+  [33X[0;0YThis  function  checks  if  the  local  action  diagram corresponds to a box
+  product  universal  group  (CITE  SMITH PAPER?). Such a local action diagram
+  consists  of a bipartite graph such that vertex labels in the same partition
+  are  conjugate (see (CITE COLIN-SIMON INTRO PAPER)). If the diagram has this
+  structure,  this  function returns [9Xtrue[109X and sets [2XLocalActionDiagramGroupName[102X
+  ([14X2.2-14[114X)  to  [10XU({G1},  {G2})[110X where [10XG1[110X and [10XG2[110X are one of the vertex labels in
+  each partition.[133X
+  
+  [33X[0;0YNote  that  this function requires the [5XDigraphs[105X to be loaded as it relies on
+  the isomorphism functions (see [10XIsomorphisms and Automorphisms[110X ([14X4[114X)).[133X
+  
+  [1X2.2-23 LocalActionDiagramIsEndStabiliser[101X
   
   [33X[1;0Y[29X[2XLocalActionDiagramIsEndStabiliser[102X( [3Xlad[103X ) [32X property[133X
   [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  if  the corresponding universal group is the stabiliser of a
@@ -465,7 +482,7 @@
     [4X[28X<Aut(T3)_omega (as a Local Action Diagram)>[128X[104X
   [4X[32X[104X
   
-  [1X2.2-23 LocalActionDiagramIsRegularTreeAutomorphismGroup[101X
+  [1X2.2-24 LocalActionDiagramIsRegularTreeAutomorphismGroup[101X
   
   [33X[1;0Y[29X[2XLocalActionDiagramIsRegularTreeAutomorphismGroup[102X( [3Xlad[103X ) [32X property[133X
   [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X if the corresponding universal group is the full automorphism
@@ -489,4 +506,22 @@
     [4X[25Xgap>[125X [27XView(lad);[127X[104X
     [4X[28X<Aut(T5) (as a Local Action Diagram)>[128X[104X
   [4X[32X[104X
+  
+  [1X2.2-25 LocalActionDiagramIsBipartitionPreservingGroup[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramIsBipartitionPreservingGroup[102X( [3Xlad[103X ) [32X property[133X
+  [6XReturns:[106X  [33X[0;10Y[9Xtrue[109X  of  the  local  action  diagram corresponds to a bipartition
+            preserving group and [9Xfalse[109X otherwise.[133X
+  
+  [33X[0;0YThis   function  checks  if  the  local  action  diagram  corresponds  to  a
+  bipartition preserving group group. Given a vertex transitive group [22XG[122X acting
+  on  a  regular  tree  [22XT[122X this group is the subgroup [22XG^∘ = {g ∈ G : ∀ v ∈ V(T)
+  d(v, gv) ≡ 0 mod 2}[122X. In words, its the maximal subgroup which partitions the
+  tree  into  two  vertex  orbits.  If  the  diagram  has this structure, this
+  function  returns  [9Xtrue[109X  and  sets  [2XLocalActionDiagramGroupName[102X  ([14X2.2-14[114X) to
+  [10X{base_name}^o[110X  where  [10X{base_name}[110X  is  the  name  of  the  underlying vertex
+  transitive group.[133X
+  
+  [33X[0;0YNote  that  this function requires the [5XDigraphs[105X to be loaded as it relies on
+  the isomorphism functions (see [10XIsomorphisms and Automorphisms[110X ([14X4[114X)).[133X
   
