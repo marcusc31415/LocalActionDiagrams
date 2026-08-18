@@ -357,7 +357,7 @@ function(D)
 		Print("File local_action_diagram.tex generated in the current working directory.");
 
 	elif Length(LocalActionDiagramVertices(D)) > 2 then	
-		Error("TiKZ code is currently only implemented for local action diagrams on up to one vertex.");
+		Error("TiKZ code is currently only implemented for local action diagrams on up to two vertices.");
 	fi;
 	
 end);
