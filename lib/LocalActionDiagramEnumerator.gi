@@ -317,8 +317,8 @@ function(degree, no_verts)
 end);
 
 # In order from least to most. Search through the smaller ones first. 
-BindGlobal("LAD_CheckOrder@", [[1, 1], [1, 2], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [3, 1], [4, 1], [3, 2], [5, 1], [3, 3], [6, 1],
-                               [4, 2], [7, 1], [3, 4], [8, 1], [5, 2], [3, 5], [9, 1], [4, 3], [10, 1], [11, 1], [12, 1], [13, 1]]);
+BindGlobal("LAD_CheckOrder@", [[1, 1], [1, 2], [2, 1], [3, 1], [4, 1], [3, 2], [5, 1], [3, 3], [6, 1], [4, 2], [7, 1], [3, 4],
+                               [8, 1], [5, 2], [3, 5], [9, 1], [4, 3], [10, 1], [11, 1], [12, 1], [13, 1]]);
 
 BindGlobal("LAD_DebugSearch@", false);
 
@@ -334,6 +334,19 @@ function(val)
 		MakeReadOnlyGlobal("LAD_DebugSearch@LocalActionDiagrams");
 	else
 		ErrorNoReturn("Argument must be \"true\" or \"false\".");
+	fi;
+end);
+
+BindGlobal("LAD_Degree2MaxSearch@", 10);
+
+BindGlobal("SetLocalActionDiagramDegreeTwoVertexBound",
+function(val)
+	if IsInt(val) then
+		MakeReadWriteGlobal("LAD_Degree2MaxSearch@LocalActionDiagrams");
+		LAD_Degree2MaxSearch@ := val;
+		MakeReadOnlyGlobal("LAD_Degree2MaxSearch@LocalActionDiagrams");
+	else
+		ErrorNoReturn("Argument must be an integer.");
 	fi;
 end);
 
@@ -389,12 +402,20 @@ function(args...)
 		fi;
 	od;
 
+
 	# Reduce candidate graphs up to isomorphism (based on the canonical certificates). 
 	canon_certs := List(candidate_graphs, graph -> RSGraphCanonicalLabelling(graph).canon_certificate);
 	unique_certs := Set(canon_certs);
 	positions := List(unique_certs, cert -> Position(canon_certs, cert)); # Get first occurrence of each certificate. 
 
 	candidate_graphs := candidate_graphs{positions}; # Reduces up to isomorphism. 
+
+	# The ones with 5 or less are covered by the other stored data. Any one with more than 5 is not in the existing
+	# stored data. They are all unique up to isomorphism so we don't need to calculate the canonical certificate. This
+	# means that this works without the digraphs package. 
+	for no_verts in [6..LAD_Degree2MaxSearch@] do
+		candidate_graphs := Concatenation(candidate_graphs, RSGraphFromLibrary(2, no_verts));
+	od;
 
 	new_graphs := [];
 
@@ -496,6 +517,11 @@ function(args...)
 			Info(InfoPerformance, 1, StringFormatted("Finished reading library data for degree={1}, number vertices={2}.", degree, no_verts));
 		fi;
 	od;
+
+	for no_verts in [1..LAD_Degree2MaxSearch@] do
+		candidate_lads := Concatenation(candidate_lads, LocalActionDiagramFromLibrary(2, no_verts));
+	od;
+
 
 	new_lads := [];
 

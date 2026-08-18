@@ -66,6 +66,18 @@ o^{-1}(a)</M> and such that <M>\Theta_{v}G(v)\Theta_{v}^{-1} = G'(v)</M>.
 
 @Chapter Enumeration
 
+Since there is a one-to-one correspondence between isomorphism classes of local action diagrams and conjugacy classes
+Of (P)-closed groups enumerating local action diagrams is the same as enumerating (P)-closed groups. By enumerating
+local action diagrams you can, for example, find the number of conjugacy classes of (P)-closed groups acting on a
+certain tree with a specified number of orbits. You can also find how many of these groups satisfy other properties,
+such as unimodularity. 
+
+We have developed algorithms to enumerate local action diagrams acting on a regular tree with a specified number of
+orbits. For the inputs we could run these algorithms on we have stored the results so they can be quickly accessed.
+Furthermore, we have implemented functions analogous to the <Package>Transitive Groups</Package> package for easily
+filtering the library of local action diagrams. 
+
+
 @Chapter Extensions
 
 We support converting between RSGraphs and digraphs from the <Package>Digraphs</Package> and graphs from the

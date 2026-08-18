@@ -1,5 +1,7 @@
 \begin{theindex}
 
+  \item \texttt  {AllLocalActionDiagrams}, \hyperpage{31}
+  \item \texttt  {AllRSGraphs}, \hyperpage{31}
   \item \texttt  {AutomorphismGroup}
     \subitem for an RSGraph, \hyperpage{25}
 
@@ -25,6 +27,7 @@
   \item \texttt  {LocalActionDiagramArcs}, \hyperpage{14}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Construct}\-\texttt  {Bipartition}\-\texttt  {Preserving}, 
 		\hyperpage{13}
+  \item \texttt  {LocalActionDiagramDebugSearch}, \hyperpage{33}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}, 
 		\hyperpage{12}
   \item \texttt  {LocalActionDiagramFromData}
@@ -33,6 +36,7 @@
   \item \texttt  {LocalActionDiagramFromDataNC}
     \subitem for an RSGraph, list or record of vertex labels, and list or record of arc labels, 
 		\hyperpage{11}
+  \item \texttt  {LocalActionDiagramFromLibrary}, \hyperpage{31}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Writable}\-\texttt  {String}
     \subitem for IsString, IsBool, \hyperpage{22}
   \item \texttt  {LocalActionDiagramGroupName}, \hyperpage{15}
@@ -66,6 +70,17 @@
 
   \indexspace
 
+  \item \texttt  {NumberLocalActionDiagrams}
+    \subitem for IsInt, IsInt, \hyperpage{31}
+  \item \texttt  {NumberRSGraphs}, \hyperpage{31}
+
+  \indexspace
+
+  \item \texttt  {OneLocalActionDiagram}, \hyperpage{33}
+  \item \texttt  {OneRSGraph}, \hyperpage{33}
+
+  \indexspace
+
   \item \texttt  {RSGraphAdjacencyMatrix}, \hyperpage{6}
   \item \texttt  {RSGraphArcIDs}, \hyperpage{5}
   \item \texttt  {RSGraphArcIterator}, \hyperpage{8}
@@ -81,6 +96,7 @@
     \subitem for a matrix, permutation[, and list], \hyperpage{4}
   \item \texttt  {RSGraphCanonicalLabelling}, \hyperpage{27}
   \item \texttt  {RSGraphDegree}, \hyperpage{7}
+  \item \texttt  {RSGraphFromLibrary}, \hyperpage{30}
   \item \texttt  {RSGraphFromWritableString}
     \subitem for IsString, \hyperpage{22}
   \item \texttt  {RSGraphHasParallelArcs}, \hyperpage{7}
@@ -105,5 +121,10 @@
     \subitem for IsRSGraph, \hyperpage{21}
   \item \texttt  {RSGraphVertexAutomorphism}, \hyperpage{26}
   \item \texttt  {RSGraphVertices}, \hyperpage{5}
+
+  \indexspace
+
+  \item \texttt  {Set}\-\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Degree}\-\texttt  {Two}\-\texttt  {Vertex}\-\texttt  {Bound}, 
+		\hyperpage{33}
 
 \end{theindex}

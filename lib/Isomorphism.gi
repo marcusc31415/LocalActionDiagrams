@@ -314,7 +314,7 @@ end);
 
 InstallMethod(RSGraphCanonicalLabelling, "Returns the map that sends RSGraph to its canonical RSGraph.", [IsRSGraph],
 function(graph)
-	local PermToMap, digraph_rec, digraph_canon_vert, digraph_arcs, digraph_arcs_mapped, digraph_canon_arc, new_rev_map, adj_mat, v_labels_mapped, vert_perm, perm_mat, canon_adj_mat, canon_cert, arc_id_rec, arc_id, moved_rev_points, standard_rev_map, idx_x, idx_y, arc_string, moved_arcs, idx, prev_arcs, current_arcs, lex_perm, all_moved_arcs, arc_id_list, aut_g, current_max, current_v_perm, current_a_perm, g_arc, g_vert, permed_arcs, max;
+	local PermToMap, digraph_rec, digraph_canon_vert, digraph_arcs, digraph_arcs_mapped, digraph_canon_arc, new_rev_map, adj_mat, v_labels_mapped, vert_perm, perm_mat, canon_adj_mat, canon_cert, arc_id_rec, arc_id, moved_rev_points, standard_rev_map, idx_x, idx_y, arc_string, moved_arcs, idx, prev_arcs, current_arcs, lex_perm, all_moved_arcs, arc_id_list, aut_g, current_max, current_v_perm, current_a_perm, g_arc, g_vert, permed_arcs, max, rev_arc_string;
 
 	PermToMap := function(perm, domain)
 		local dp_elms;
@@ -443,6 +443,7 @@ function(graph)
 			fi;
 
 			arc_string := StringFormatted("{1},{2}", idx_x, idx_y);
+			rev_arc_string := StringFormatted("{2},{1}", idx_x, idx_y);
 			# Get the arc ids for arcs from idx_x to idx_y. 
 			arc_id_rec.(arc_string) := List([1..canon_adj_mat[idx_x][idx_y]], x -> arc_id + x);
 
@@ -458,7 +459,7 @@ function(graph)
 				od;
 			elif idx_x > idx_y then 
 				# Not loops and have already seen arcs in the reverse direction. 
-				prev_arcs := arc_id_rec.(Reversed(arc_string));
+				prev_arcs := arc_id_rec.(rev_arc_string);
 				current_arcs := arc_id_rec.(arc_string);
 				for idx in [1..Size(current_arcs)] do
 					standard_rev_map := standard_rev_map*(prev_arcs[idx], current_arcs[idx]);
