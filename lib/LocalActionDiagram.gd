@@ -58,26 +58,26 @@ DeclareOperation("LocalActionDiagramFromDataNC", [IsRSGraph, IsList, IsList]);
 #! gap> label_1 := Group((1,2));;
 #! gap> SetPermGroupDomain(label_1, [1, 2, 3]);;
 #! gap> label_2 := Group((1,2,3));;
-#! gap> vertex_labels := [label_1, label_2];
-#! gap> arc_labels := [[1, 2], [3], [1,2,3]];
+#! gap> vertex_labels := [label_1, label_2];;
+#! gap> arc_labels := [[1, 2], [3], [1,2,3]];;
 #! gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);
 #! <LocalActionDiagram with 2 vertices and 3 arcs>
 #! gap> Print(lad);
 #! Vertices = { 1, 2 }
 #! Arcs = {
-#!         1 = ( origin = 1, terminus = 1, inverse = 1 )
-#!         2 = ( origin = 1, terminus = 2, inverse = 3 )
-#!         3 = ( origin = 2, terminus = 1, inverse = 2 )
+#! 	1 = ( origin = 1, terminus = 1, inverse = 1 )
+#! 	2 = ( origin = 1, terminus = 2, inverse = 3 )
+#! 	3 = ( origin = 2, terminus = 1, inverse = 2 )
 #! }
 #! Reverse Map = (2,3)
 #! Vertex Labels = {
-#!         1 = Group( [ (1,2) ] )
-#!         2 = Group( [ (1,2,3) ] )
+#! 	1 = Group( [ (1,2) ] )
+#! 	2 = Group( [ (1,2,3) ] )
 #! }
 #! Arc Labels = {
-#!         1 = [ 1, 2 ]
-#!         2 = [ 3 ]
-#!         3 = [ 1, 2, 3 ]
+#! 	1 = [ 1, 2 ]
+#! 	2 = [ 3 ]
+#! 	3 = [ 1, 2, 3 ]
 #! }
 #! @EndExampleSession
 
@@ -210,7 +210,7 @@ DeclareAttribute("LocalActionDiagramInArcs", IsLocalActionDiagram);
 #! Action Diagram)&gt;</C>. 
 DeclareAttribute("LocalActionDiagramGroupName", IsLocalActionDiagram, "mutable");
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
 #! gap> vertex_labels := [SymmetricGroup(3)];;
 #! gap> arc_labels := [[1,2,3]];;
@@ -219,7 +219,7 @@ DeclareAttribute("LocalActionDiagramGroupName", IsLocalActionDiagram, "mutable")
 #! gap> SetLocalActionDiagramGroupName(lad, "Aut(T_3)");
 #! gap> View(lad);
 #! <Aut(T_3) (as a Local Action Diagram)>
-#! @EndExampleSession
+#! @EndLogSession
 
 #! @Returns The degree of the regular tree the universal group acts on or <K>fail</K> if it does not act on one. 
 #! @Arguments lad
@@ -267,7 +267,7 @@ DeclareAttribute("LocalActionDiagramScopos", IsLocalActionDiagram);
 #! gap> arc_labels := [[1], [1]];;
 #! gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
 #! gap> LocalActionDiagramScopos(lad);
-#! [ [ ], [ 1 ], [ 2 ]]
+#! [ [  ], [ 1 ], [ 2 ] ]
 #! @EndExampleSession
 
 #! @Returns The type of the corresponding universal group. 
@@ -374,7 +374,7 @@ DeclareProperty("LocalActionDiagramIsUnimodular", IsLocalActionDiagram);
 #! <C>"U({vertex_label})"</C> where <C>{vertex_label}</C> is the name of the group labelling the vertex. 
 DeclareProperty("LocalActionDiagramIsBurgerMozesUniversalGroup", IsLocalActionDiagram);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1]], ());;
 #! gap> vertex_labels := [Group((1, 2), (3, 4))];;
 #! gap> SetName(vertex_labels[1], "C2 x C2");
@@ -386,12 +386,22 @@ DeclareProperty("LocalActionDiagramIsBurgerMozesUniversalGroup", IsLocalActionDi
 #! true
 #! gap> View(lad);
 #! <U(C2 x C2) (as a Local Action Diagram)>
-#! @EndExampleSession
+#! @EndLogSession
 
 
-
-# Not implemented in this file. Requires digraphs. Here for the library to access this data without needing digraphs. 
+#! @Returns <K>true</K> of the local action diagram corresponds to a smith universal group and <K>false</K> otherwise. 
+#! @Arguments lad
+#! @Label 
+#! @Description This function checks if the local action diagram corresponds to a box product universal group (CITE
+#! SMITH PAPER?). Such a local action diagram consists of a bipartite graph such that vertex labels in the same
+#! partition are conjugate (see (CITE COLIN-SIMON INTRO PAPER)). If the diagram has this structure, this function returns
+#! <K>true</K> and sets <Ref Func="LocalActionDiagramGroupName"/> to <C>U({G1}, {G2})</C> where <C>G1</C> and <C>G2</C>
+#! are one of the vertex labels in each partition.  
+#!
+#! Note that this function requires the <Package>Digraphs</Package> to be loaded as it relies on the isomorphism
+#! functions (see <C>Isomorphisms and Automorphisms</C> (<Ref Chap="Chapter_Iso" Style="Number"/>)).
 DeclareProperty("LocalActionDiagramIsSmithUniversalGroup", IsLocalActionDiagram);
+# Above not implemented in this file. Requires digraphs. Here for the library to access this data without needing digraphs. 
 
 #! @Returns <K>true</K> if the corresponding universal group is the stabiliser of a single end in the full automorphism
 #! group of a regular tree and <K>false</K> otherwise. 
@@ -404,7 +414,7 @@ DeclareProperty("LocalActionDiagramIsSmithUniversalGroup", IsLocalActionDiagram)
 #! satisfies this structure and <K>false</K> otherwise. It also sets <Ref Func="LocalActionDiagramGroupName"/> to <C>Aut(Td)_omega</C>.
 DeclareProperty("LocalActionDiagramIsEndStabiliser", IsLocalActionDiagram);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1]], (1, 2));;
 #! gap> vertex_labels := [SymmetricGroup(2)];;
 #! gap> SetPermGroupDomain(vertex_labels[1], [1,2,3]);;
@@ -416,7 +426,7 @@ DeclareProperty("LocalActionDiagramIsEndStabiliser", IsLocalActionDiagram);
 #! true
 #! gap> View(lad);
 #! <Aut(T3)_omega (as a Local Action Diagram)>
-#! @EndExampleSession
+#! @EndLogSession
 
 #! @Returns <K>true</K> if the corresponding universal group is the full automorphism group of a regular tree and
 #! <K>false</K> otherwise. 
@@ -428,7 +438,7 @@ DeclareProperty("LocalActionDiagramIsEndStabiliser", IsLocalActionDiagram);
 #! Func="LocalActionDiagramGroupName"/> to <C>Aut(Td)</C>.
 DeclareProperty("LocalActionDiagramIsRegularTreeAutomorphismGroup", IsLocalActionDiagram);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
 #! gap> vertex_labels := [SymmetricGroup(5)];;
 #! gap> arc_labels := [[1..5]];;
@@ -439,12 +449,24 @@ DeclareProperty("LocalActionDiagramIsRegularTreeAutomorphismGroup", IsLocalActio
 #! true
 #! gap> View(lad);
 #! <Aut(T5) (as a Local Action Diagram)>
-#! @EndExampleSession
+#! @EndLogSession
 
 
 
-# Not implemented in this file. Requires digraphs. Here for the library to access this data without needing digraphs. 
+#! @Returns <K>true</K> of the local action diagram corresponds to a bipartition preserving group and <K>false</K> otherwise. 
+#! @Arguments lad
+#! @Label 
+#! @Description This function checks if the local action diagram corresponds to a bipartition preserving group group.
+#! Given a vertex transitive group <M>G</M> acting on a regular tree <M>T</M> this group is the subgroup <M>G^{\circ} =
+#! \{g \in G : \forall\, v \in V(T)\, d(v, gv) \equiv 0 \pmod{2}\}</M>. In words, its the maximal subgroup which
+#! partitions the tree into two vertex orbits. If the diagram has this structure, this function returns <K>true</K> and
+#! sets <Ref Func="LocalActionDiagramGroupName"/> to <C>{base_name}^o</C> where <C>{base_name}</C> is the name of the
+#! underlying vertex transitive group.  
+#!
+#! Note that this function requires the <Package>Digraphs</Package> to be loaded as it relies on the isomorphism
+#! functions (see <C>Isomorphisms and Automorphisms</C> (<Ref Chap="Chapter_Iso" Style="Number"/>)).
 DeclareProperty("LocalActionDiagramIsBipartitionPreservingGroup", IsLocalActionDiagram);
+# Above not implemented in this file. Requires digraphs. Here for the library to access this data without needing digraphs. 
 
 # Arc iterator? 
 # --- Option for [arc_id, arc_rec, origin_label, terminus_label]

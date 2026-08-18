@@ -20,5 +20,10 @@ AutoDoc( rec(
         """ 
 		),
     ),
-    scaffold := true 
+    scaffold := true,
+	relativePath := true,
+    extract_examples := rec(
+		units := "Single",
+		subdir := "tst/manual_examples",
+	),
 ));

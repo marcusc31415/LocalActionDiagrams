@@ -15,22 +15,227 @@
 <body class="chap4"  onload="jscontent()">
 
 
-<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapInd.html">Ind</a>  </div>
+<div class="chlinktop"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chap6.html">6</a>  <a href="chapInd.html">Ind</a>  </div>
 
 <div class="chlinkprevnexttop">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap3.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap5.html">[Next Chapter]</a>&nbsp;  </div>
 
 <p id="mathjaxlink" class="pcenter"><a href="chap4_mj.html">[MathJax on]</a></p>
 <p><a id="X81F3496578EAA74E" name="X81F3496578EAA74E"></a></p>
 <div class="ChapSects"><a href="chap4.html#X81F3496578EAA74E">4 <span class="Heading">Isomorphisms and Automorphisms</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap4.html#X86AA0F1986938600">4.1 <span class="Heading">RSGraph Morphisms</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7A51B4607E812CAE">4.1-1 AutomorphismGroup</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7D78ED007EEF1CC8">4.1-2 IsomorphismRSGraphs</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7F06F0C77C950F4B">4.1-3 RSGraphVertexAutomorphism</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7B66D3CD86926BE7">4.1-4 RSGraphsVertexIsomorphism</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X7B98673B7967B1A8">4.1-5 RSGraphsIsomorphismsIterator</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X856847C681249C22">4.1-6 RSGraphCanonicalLabelling</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap4.html#X80737BB480F13959">4.1-7 IsomorphismLocalActionDiagrams</a></span>
+</div></div>
 </div>
 
 <h3>4 <span class="Heading">Isomorphisms and Automorphisms</span></h3>
+
+<p>We support calculating isomorphisms between RSGraphs, calculating the automorphism group of an RSGraph, and calculating isomorphisms between local action diagrams. This functionality relies on the isomorphism and automorphism functions from the <strong class="pkg">Digraphs</strong> and so is not available if the <strong class="pkg">Digraphs</strong> is not available. By default this makes use of <code class="code">Bliss</code> for calculating morphisms but it can use <code class="code">Nauty</code> if the <strong class="pkg">NautyTracesInterface</strong> is available.</p>
+
+<p>Given two RSGraphs <span class="SimpleMath">Γ_1</span> and <span class="SimpleMath">Γ_2</span> an <em>isomorphism</em> is a pair of bijective maps <span class="SimpleMath">Θ_V : V(Γ_1) -&gt; V(Γ_2)</span> and <span class="SimpleMath">Θ_A : A(Γ_1) -&gt; A(Γ_2)</span> that respect origin vertices and the arc reversal map. Explicitly, this means that <span class="SimpleMath">Θ_V(o(a)) = o(Θ_A(a))</span> and <span class="SimpleMath">overlineΘ_A(a) = Θ_A(overlinea)</span>. An automorphism is an isomorphism from an RSGraph to itself and the set of all automorphism of an RSGraph form a group under function composition.</p>
+
+<p>Given two local action diagrams <span class="SimpleMath">∆ = (Γ, (X_a), (G(v)))</span> and <span class="SimpleMath">∆' = (Γ', (X_a'), (G'(v)))</span> and isomorphism between <span class="SimpleMath">∆</span> and <span class="SimpleMath">∆'</span> consists of: - an isomorphism <span class="SimpleMath">Θ : Γ -&gt; Γ'</span> and - for each vertex <span class="SimpleMath">v ∈ V(Γ)</span> a bijection <span class="SimpleMath">Θ_v : X_v -&gt; X_Θ(v)</span> that restricts to a bijection from <span class="SimpleMath">X_a</span> to <span class="SimpleMath">X_Θ(a)</span> for each <span class="SimpleMath">a ∈ o^-1(a)</span> and such that <span class="SimpleMath">Θ_vG(v)Θ_v^-1 = G'(v)</span>.</p>
+
+<p><a id="X86AA0F1986938600" name="X86AA0F1986938600"></a></p>
+
+<h4>4.1 <span class="Heading">RSGraph Morphisms</span></h4>
+
+<p><a id="X7A51B4607E812CAE" name="X7A51B4607E812CAE"></a></p>
+
+<h5>4.1-1 AutomorphismGroup</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; AutomorphismGroup</code>( <var class="Arg">graph</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A permutation group.</p>
+
+<p>This function returns the automorphism group of the <var class="Arg">graph</var> as a permutation group. Each permutation in the group is an automorphism on the arcs of the graph. For each arc automorphism the corresponding vertex automorphism can be found with the <code class="func">RSGraphVertexAutomorphism</code> (<a href="chap4.html#X7F06F0C77C950F4B"><span class="RefLink">4.1-3</span></a>) function.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">AutomorphismGroup(graph);</span>
+Group([ (2,3) ])
+</pre></div>
+
+<p><a id="X7D78ED007EEF1CC8" name="X7D78ED007EEF1CC8"></a></p>
+
+<h5>4.1-2 IsomorphismRSGraphs</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsomorphismRSGraphs</code>( <var class="Arg">graph_1</var>, <var class="Arg">graph_2</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A permutation or general mapping if the graphs are isomorphic and <code class="keyw">fail</code> otherwise.</p>
+
+<p>If <var class="Arg">graph_1</var> and <var class="Arg">graph_2</var> are isomorphic then this function returns one arc isomorphism between them. If the graphs have the same arc ids then this isomorphism is returned as a permutation. If they have different arc ids then the isomorphism is returned as a constant access time general mapping.</p>
+
+<p>This isomorphism found is not necessarily unique. To get every isomorphism you can find the automorphism group of one of the graphs and compose these automorphisms with the isomorphism found (see <code class="func">RSGraphsIsomorphismsIterator</code> (<a href="chap4.html#X7B98673B7967B1A8"><span class="RefLink">4.1-5</span></a>). For each arc isomorphism you can get the corresponding vertex isomorphism with the <code class="func">RSGraphsVertexIsomorphism</code> (<a href="chap4.html#X7B66D3CD86926BE7"><span class="RefLink">4.1-4</span></a>) function.</p>
+
+<p>The isomorphisms are found by finding a "canonical form" of each graph (see <code class="func">RSGraphCanonicalLabelling</code> (<a href="chap4.html#X856847C681249C22"><span class="RefLink">4.1-6</span></a>)) and composing the mappings to the canonical form. This means that subsequent calls of this function on the same graphs have constant time complexity.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">IsomorphismRSGraphs(graph_1, graph_2);</span>
+(1,3,2)
+</pre></div>
+
+<p><a id="X7F06F0C77C950F4B" name="X7F06F0C77C950F4B"></a></p>
+
+<h5>4.1-3 RSGraphVertexAutomorphism</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphVertexAutomorphism</code>( <var class="Arg">graph</var>, <var class="Arg">arc_aut</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A permutation.</p>
+
+<p>Given an RSGraph and an automorphism of the arcs this function returns the corresponding automorphism of the vertices of the graph. The automorphism of the arcs is represented as a permutation. If the argument <var class="Arg">arc_aut</var> is not an automorphism of the graph's arcs then the behaviour of this function is undefined.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 2], [2, 1], [2, 2], [2, 2]], (3,4));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">aut_group := AutomorphismGroup(graph);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_aut := Elements(aut_group)[5];</span>
+(1,5)(2,6)(3,4)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vert_aut := RSGraphVertexAutomorphism(graph, arc_aut);</span>
+(1,2)
+</pre></div>
+
+<p><a id="X7B66D3CD86926BE7" name="X7B66D3CD86926BE7"></a></p>
+
+<h5>4.1-4 RSGraphsVertexIsomorphism</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphsVertexIsomorphism</code>( <var class="Arg">graph_1</var>, <var class="Arg">graph_2</var>, <var class="Arg">arc_iso</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A permutation or general mapping.</p>
+
+<p>Given two RSGraphs and an isomorphism of the arcs between them this function returns the corresponding isomorphism between the vertices of the graphs. The argument <var class="Arg">arc_iso</var> can either be a permutation or a general mapping. If the vertex ids of the two graphs are the same then the isomorphism will be returned as a permutation. Otherwise it will be returned as a general mapping. If the argument <var class="Arg">arc_iso</var> is not an isomorphism between the arcs of the two graphs then the behaviour of this function is undefined.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_2 := RSGraphByAdjacencyList([[2, 2], [2, 2], [2, 2]], (1,2), [2]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">arc_iso := IsomorphismRSGraphs(graph_1, graph_2);</span>
+(1,3,2)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">vert_iso := RSGraphsVertexIsomorphism(graph_1, graph_2, arc_iso);</span>
+&lt;general mapping: Domain([ 1 ]) -&gt; Domain([ 2 ]) &gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">1^vert_iso;</span>
+2
+</pre></div>
+
+<p><a id="X7B98673B7967B1A8" name="X7B98673B7967B1A8"></a></p>
+
+<h5>4.1-5 RSGraphsIsomorphismsIterator</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphsIsomorphismsIterator</code>( <var class="Arg">graph_1</var>, <var class="Arg">graph_2</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: An iterator over all permutations between two RSGraphs.</p>
+
+<p>This function returns an iterator over all isomorphisms between <var class="Arg">graph_1</var> and <var class="Arg">graph_2</var> composing every automorphism of <var class="Arg">graph_1</var> with a "base isomorphism" between <var class="Arg">graph_1</var> and <var class="Arg">graph_2</var>. Note that as the automorphism group is a stored attribute of each graph if the same graph is used for multiple calls of this function it should be used as the first argument to avoid calculating the automorphism group each time.</p>
+
+<p>The iterator returns the isomorphisms in the form <code class="code">[vertex_iso, arc_iso]</code>. The elements of this list will be either permutations are general mappings depending on whether or not the vertex/arc ids are the same between both graphs.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">for iso in RSGraphsIsomorphismsIterator(graph_1, graph_2) do </span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">   	Print(iso, "\n"); </span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">   od;</span>
+[ (), () ]
+[ (), (2,3) ]
+[ (), (1,3,2) ]
+[ (), (1,3) ]
+[ (), (1,2,3) ]
+[ (), (1,2) ]
+</pre></div>
+
+<p><a id="X856847C681249C22" name="X856847C681249C22"></a></p>
+
+<h5>4.1-6 RSGraphCanonicalLabelling</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphCanonicalLabelling</code>( <var class="Arg">graph</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A record to to identify the "canonical labelling" of the graph.</p>
+
+<p>Given a graph <span class="SimpleMath">Γ_1</span> a canonical form of <span class="SimpleMath">Γ_1</span> is a graph <span class="SimpleMath">ρ(Γ_1)</span> that is isomorphic to <span class="SimpleMath">Γ_1</span> and such that every graph isomorphic to <span class="SimpleMath">Γ_1</span> has Canonical form <span class="SimpleMath">ρ(Γ_1)</span>. This means that <span class="SimpleMath">Γ_1</span> and <span class="SimpleMath">Γ_2</span> are isomorphic if and only if <span class="SimpleMath">ρ(Γ_1) = ρ(Γ_2)</span>. Finding canonical labellings of a graph is how both <em>Bliss</em> and <em>Nauty</em> find graph isomorphisms.</p>
+
+<p>This function returns a record containing all information of the "canonical labelling" of the graph. The elements of the record are:</p>
+
+
+<ul>
+<li><p><code class="code">canon_certificate</code>: A string that represents the canonical form of the graph. Two graphs are isomorphic if and only if this string has the same value for both.</p>
+
+</li>
+<li><p><code class="code">arc_isomorphism</code>: This maps the arcs of the graph to the arcs of the canonical form of the graph. It does not take into account the reverse map.</p>
+
+</li>
+<li><p><code class="code">vertex_isomorphism</code>: This maps the vertices of the graph to the vertices of the canonical form of the graph.</p>
+
+</li>
+<li><p><code class="code">arc_standard_map</code>: This maps the arcs of the graph so that loops that are not self-reverse have smaller arc ids then self-reverse loops at the same vertex. This is needed to make sure the reverse map of the canonical forms for two graphs is the same if the graphs are isomorphic.</p>
+
+</li>
+<li><p><code class="code">reverse_map</code>: The reverse map of the canonical form of the graph.</p>
+
+</li>
+</ul>
+<p>Using this information it is possible to construct an isomorphism between two graphs by following the maps from the first graph to the canonical form and then taking the inverses maps to the second graph. This is how the <code class="func">IsomorphismRSGraphs</code> (<a href="chap4.html#X7D78ED007EEF1CC8"><span class="RefLink">4.1-2</span></a>) function works.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">canon_1 := RSGraphCanonicalLabelling(graph_1);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">canon_2 := RSGraphCanonicalLabelling(graph_2);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(canon_1);</span>
+rec(
+  arc_isomorphism := (),
+  arc_standard_map := (),
+  canon_certificate := "[ [ 3 ] ]2;",
+  reverse_map := (1,2),
+  vertex_isomorphism := () )
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_iso := canon_1.arc_isomorphism;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_iso := graph_iso*canon_1.arc_standard_map;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_iso := graph_iso*Inverse(canon_2.arc_standard_map);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_iso := graph_iso*Inverse(canon_2.arc_isomorphism);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(graph_iso);</span>
+(1,2,3)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(IsomorphismRSGraphs(graph_1, graph_2));</span>
+(1,2,3)
+</pre></div>
+
+<p><a id="X80737BB480F13959" name="X80737BB480F13959"></a></p>
+
+<h5>4.1-7 IsomorphismLocalActionDiagrams</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsomorphismLocalActionDiagrams</code>( <var class="Arg">lad_1</var>, <var class="Arg">lad_2</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A list containing the vertex and arc isomorphisms and record of bijective maps or <code class="keyw">fail</code> if there is no isomorphism.</p>
+
+<p>This function searches for a local action diagram isomorphism between two local action diagrams. It does this by iterating over every graph isomorphism between the two underlying graphs. It then searches through every possible bijection between the vertex label's domains based on where the vertices map to under the isomorphism. This search checks if the vertex labels are conjugate under each bijection. If it can find one for each vertex label then it has found a local action diagram isomorphism. If it can't and has exhausted all graph isomorphisms then the local action diagrams are not isomorphic.</p>
+
+<p>If the diagrams are isomorphic then this function returns the isomorphism found in the form <code class="code">[vert_iso, arc_iso, bijection_rec]</code>. The first two entries of this list are either permutations are bijections (see <code class="func">IsomorphismRSGraphs</code> (<a href="chap4.html#X7D78ED007EEF1CC8"><span class="RefLink">4.1-2</span></a>)). The final entry is a record where the names are the vertex ids of <var class="Arg">lad_1</var>. Each component contains the bijective map between the two domains which conjugates the groups. Specifically, if <code class="code">i</code> is a vertex label of <var class="Arg">lad_1</var> then <code class="code">bijection_rec.(i)</code> is a mapping from the domain of the group labelling vertex <code class="code">i</code> in <var class="Arg">lad_1</var> to the domain of the group labelling <code class="code">i^vert_iso</code> in <var class="Arg">lad_2</var>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad_1 := LocalActionDiagramFromData(graph, [Group((1,2)), Group((3,4))], \</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">                                       [[1, 2], [3, 4]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad_2 := LocalActionDiagramFromData(graph, [Group((3,4)), Group((1,2))], \</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">                                       [[3, 4], [1, 2]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">iso := IsomorphismLocalActionDiagrams(lad_1, lad_2);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">for elm in iso do Print(elm, "\n"); od;</span>
+()
+()
+rec(
+  1 := &lt;mapping: Domain([ 1, 2 ]) -&gt; Domain([ 3, 4 ]) &gt;,
+  2 := &lt;mapping: Domain([ 3, 4 ]) -&gt; Domain([ 1, 2 ]) &gt; )
+</pre></div>
 
 
 <div class="chlinkprevnextbot">&nbsp;<a href="chap0.html">[Top of Book]</a>&nbsp;  <a href="chap0.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap3.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chap5.html">[Next Chapter]</a>&nbsp;  </div>
 
 
-<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chapInd.html">Ind</a>  </div>
+<div class="chlinkbot"><span class="chlink1">Goto Chapter: </span><a href="chap0.html">Top</a>  <a href="chap1.html">1</a>  <a href="chap2.html">2</a>  <a href="chap3.html">3</a>  <a href="chap4.html">4</a>  <a href="chap5.html">5</a>  <a href="chap6.html">6</a>  <a href="chapInd.html">Ind</a>  </div>
 
 <hr />
 <p class="foot">generated by <a href="https://www.math.rwth-aachen.de/~Frank.Luebeck/GAPDoc">GAPDoc2HTML</a></p>

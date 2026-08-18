@@ -61,11 +61,11 @@
     [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1]], ());;[127X[104X
     [4X[25Xgap>[125X [27XRSGraphToWritableString(graph);[127X[104X
     [4X[28X"1|1,1,1|P"[128X[104X
-    [4X[28X[128X[104X
     [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;[127X[104X
     [4X[25Xgap>[125X [27XLocalActionDiagramGroupType(lad);;[127X[104X
     [4X[25Xgap>[125X [27XLocalActionDiagramToWritableString(lad);[127X[104X
-    [4X[28X"1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! "[128X[104X
+    [4X[28X"1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDia\[128X[104X
+    [4X[28XgramScopos! "[128X[104X
   [4X[32X[104X
   
   
@@ -98,23 +98,23 @@
     [4X[25Xgap>[125X [27XPrint(graph);[127X[104X
     [4X[28XVertices = { 1 }[128X[104X
     [4X[28XArcs = {[128X[104X
-    [4X[28X    1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X	1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
     [4X[28X}[128X[104X
     [4X[28XReverse Map = ()[128X[104X
-    [4X[28X[128X[104X
-    [4X[25Xgap>[125X [27Xlad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! ";;[127X[104X
-    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromWritableString(lad_string);[127X[104X
+    [4X[25Xgap>[125X [27Xlad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!Gene\[127X[104X
+    [4X[25X>[125X [27Xral|LocalActionDiagramScopos! ";;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromWritableString(lad_string);;[127X[104X
     [4X[25Xgap>[125X [27XPrint(lad);[127X[104X
     [4X[28XVertices = { 1 }[128X[104X
     [4X[28XArcs = {[128X[104X
-    [4X[28X    1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X	1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
     [4X[28X}[128X[104X
     [4X[28XReverse Map = ()[128X[104X
     [4X[28XVertex Labels = {[128X[104X
-    [4X[28X    1 = Group( [ (1,2) ] )[128X[104X
+    [4X[28X	1 = Group( [ (1,2) ] )[128X[104X
     [4X[28X}[128X[104X
     [4X[28XArc Labels = {[128X[104X
-    [4X[28X    1 = [ 1, 2 ][128X[104X
+    [4X[28X	1 = [ 1, 2 ][128X[104X
     [4X[28X}[128X[104X
     [4X[25Xgap>[125X [27XPrint("LocalActionDiagramScopos" in KnownAttributesOfObject(lad));[127X[104X
     [4X[28Xtrue[128X[104X
@@ -164,13 +164,20 @@
     [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[1, 1]], ());;[127X[104X
     [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;[127X[104X
     [4X[25Xgap>[125X [27Xlist := [graph, lad];[127X[104X
-    [4X[28X[ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ][128X[104X
+    [4X[28X[ <RSGraph with 1 vertex and 1 arc>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 1 vertex and 1 arc> ][128X[104X
     [4X[25Xgap>[125X [27Xfile := IO_File("test.pickle", "w");;[127X[104X
     [4X[25Xgap>[125X [27XIO_Pickle(file, list);[127X[104X
     [4X[28XIO_OK[128X[104X
     [4X[25Xgap>[125X [27XIO_Close(file);;[127X[104X
     [4X[25Xgap>[125X [27Xfile := IO_File("test.pickle", "r");;[127X[104X
     [4X[25Xgap>[125X [27XIO_Unpickle(file);[127X[104X
-    [4X[28X[ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ][128X[104X
+    [4X[28X[ <RSGraph with 1 vertex and 1 arc>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 1 vertex and 1 arc> ][128X[104X
   [4X[32X[104X
+  
+  
+  [1X3.2 [33X[0;0YVisualisation[133X[101X
+  
+  [33X[0;0Y[13XStephan to do.[113X[133X
   

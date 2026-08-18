@@ -1,25 +1,208 @@
-#DeclareAttribute("AutomorphismGroup", IsRSGraph);
+#DeclareAttribute("AutomorphismGroup", IsRSGraph); # Declared in another file.
+
+#! @Chapter Isomorphisms and Automorphisms
+#! @ChapterLabel Iso
+#! @Section RSGraph Morphisms
+
+#! <ManSection>
+#!     <Oper Name="AutomorphismGroup" Arg="graph" Label="for an RSGraph"/>
+#!     <Returns>A permutation group.</Returns>
+#!     <Description>
+#!         This function returns the automorphism group of the <A>graph</A> as a permutation group. Each permutation in
+#!         the group is an automorphism on the arcs of the graph. For each arc automorphism the corresponding vertex
+#!         automorphism can be found with the <Ref Func="RSGraphVertexAutomorphism"/> function. 
+#!     </Description>
+#! </ManSection>
+#!
+#! @BeginExampleSession
+#! gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
+#! gap> AutomorphismGroup(graph);
+#! Group([ (2,3) ])
+#! @EndExampleSession
 
 DeclareAttribute("LAD_RSGraphNonReverseAutomorphisms@", IsRSGraph);
 
+#! @Returns A permutation or general mapping if the graphs are isomorphic and <K>fail</K> otherwise. 
+#! @Arguments graph_1, graph_2
+#! @Label
+#! @Description If <A>graph_1</A> and <A>graph_2</A> are isomorphic then this function returns one arc isomorphism
+#! between them. If the graphs have the same arc ids then this isomorphism is returned as a permutation. If they have
+#! different arc ids then the isomorphism is returned as a constant access time general mapping. 
+#!
+#! This isomorphism found is not necessarily unique. To get every isomorphism you can find the automorphism group of one
+#! of the graphs and compose these automorphisms with the isomorphism found (see <Ref
+#! Func="RSGraphsIsomorphismsIterator"/>. For each arc isomorphism you can get the corresponding vertex isomorphism with
+#! the <Ref Func="RSGraphsVertexIsomorphism"/> function. 
+#!
+#! The isomorphisms are found by finding a "canonical form" of each graph (see <Ref Func="RSGraphCanonicalLabelling"/>)
+#! and composing the mappings to the canonical form. This means that subsequent calls of this function on the same
+#! graphs have constant time complexity. 
 DeclareOperation("IsomorphismRSGraphs", [IsRSGraph, IsRSGraph]);
 
+#! @BeginExampleSession
+#! gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
+#! gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;
+#! gap> IsomorphismRSGraphs(graph_1, graph_2);
+#! (1,3,2)
+#! @EndExampleSession
+
+
+#! @Returns A permutation. 
+#! @Arguments graph, arc_aut
+#! @Label
+#! @Description Given an RSGraph and an automorphism of the arcs this function returns the corresponding automorphism of
+#! the vertices of the graph. The automorphism of the arcs is represented as a permutation. If the argument
+#! <A>arc_aut</A> is not an automorphism of the graph's arcs then the behaviour of this function is undefined. 
 DeclareOperation("RSGraphVertexAutomorphism", [IsRSGraph, IsPerm]);
 
-DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsPerm]);
+#! @BeginExampleSession
+#! gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 2], [2, 1], [2, 2], [2, 2]], (3,4));;
+#! gap> aut_group := AutomorphismGroup(graph);;
+#! gap> arc_aut := Elements(aut_group)[5];
+#! (1,5)(2,6)(3,4)
+#! gap> vert_aut := RSGraphVertexAutomorphism(graph, arc_aut);
+#! (1,2)
+#! @EndExampleSession
 
+
+#! @Returns A permutation or general mapping.
+#! @Arguments graph_1, graph_2, arc_iso
+#! @Label
+#! @Description Given two RSGraphs and an isomorphism of the arcs between them this function returns the corresponding
+#! isomorphism between the vertices of the graphs. The argument <A>arc_iso</A> can either be a permutation or a general
+#! mapping. If the vertex ids of the two graphs are the same then the isomorphism will be returned as a permutation.
+#! Otherwise it will be returned as a general mapping. If the argument <A>arc_iso</A> is not an isomorphism between the
+#! arcs of the two graphs then the behaviour of this function is undefined.  
+DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsPerm]);
 DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsGeneralMapping]);
 
+#! @BeginExampleSession
+#! gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
+#! gap> graph_2 := RSGraphByAdjacencyList([[2, 2], [2, 2], [2, 2]], (1,2), [2]);;
+#! gap> arc_iso := IsomorphismRSGraphs(graph_1, graph_2);
+#! (1,3,2)
+#! gap> vert_iso := RSGraphsVertexIsomorphism(graph_1, graph_2, arc_iso);
+#! <general mapping: Domain([ 1 ]) -> Domain([ 2 ]) >
+#! gap> 1^vert_iso;
+#! 2
+#! @EndExampleSession
+
+
+
+#! @Returns An iterator over all permutations between two RSGraphs. 
+#! @Arguments graph_1, graph_2
+#! @Label
+#! @Description This function returns an iterator over all isomorphisms between <A>graph_1</A> and <A>graph_2</A>
+#! composing every automorphism of <A>graph_1</A> with a "base isomorphism" between <A>graph_1</A> and <A>graph_2</A>.
+#! Note that as the automorphism group is a stored attribute of each graph if the same graph is used for multiple calls
+#! of this function it should be used as the first argument to avoid calculating the automorphism group each time. 
+#!
+#! The iterator returns the isomorphisms in the form <C>[vertex_iso, arc_iso]</C>. The elements of this list will be
+#! either permutations are general mappings depending on whether or not the vertex/arc ids are the same between both
+#! graphs.
 DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 
-#DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph);
+#! @BeginExampleSession
+#! gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
+#! gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
+#! gap> for iso in RSGraphsIsomorphismsIterator(graph_1, graph_2) do 
+#! >    	Print(iso, "\n"); 
+#! >    od;
+#! [ (), () ]
+#! [ (), (2,3) ]
+#! [ (), (1,3,2) ]
+#! [ (), (1,3) ]
+#! [ (), (1,2,3) ]
+#! [ (), (1,2) ]
+#! @EndExampleSession
 
-DeclareAttribute("RSGraphCanonicalCertificate", IsRSGraph);
 
-DeclareOperation("IsIsomorphicRSGraphs", [IsRSGraph, IsRSGraph]);
+#DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph); # Declared in another file.
 
+#! <ManSection>
+#!     <Oper Name="RSGraphCanonicalLabelling" Arg="graph"/>
+#!     <Returns>A record to to identify the "canonical labelling" of the graph.</Returns>
+#!     <Description>
+#!         Given a graph <M>\Gamma_1</M> a canonical form of <M>\Gamma_1</M> is a graph <M>\rho(\Gamma_1)</M> that is
+#!         isomorphic to <M>\Gamma_1</M> and such that every graph isomorphic to <M>\Gamma_1</M> has Canonical form
+#!         <M>\rho(\Gamma_1)</M>. This means that <M>\Gamma_1</M> and <M>\Gamma_2</M> are isomorphic if and only if
+#!         <M>\rho(\Gamma_1) = \rho(\Gamma_2)</M>. Finding canonical labellings of a graph is how both <E>Bliss</E> and
+#!         <E>Nauty</E> find graph isomorphisms.
+#!
+#!         This function returns a record containing all information of the "canonical labelling" of the graph. The
+#!         elements of the record are:
+#!         - <C>canon_certificate</C>: A string that represents the canonical form of the graph. Two graphs are
+#!           isomorphic if and only if this string has the same value for both. 
+#!         - <C>arc_isomorphism</C>: This maps the arcs of the graph to the arcs of the canonical form of the graph. It
+#!           does not take into account the reverse map. 
+#!         - <C>vertex_isomorphism</C>: This maps the vertices of the graph to the vertices of the canonical form of the
+#!           graph. 
+#!         - <C>arc_standard_map</C>: This maps the arcs of the graph so that loops that are not self-reverse have
+#!           smaller arc ids then self-reverse loops at the same vertex. This is needed to make sure the reverse map of
+#!           the canonical forms for two graphs is the same if the graphs are isomorphic. 
+#!         - <C>reverse_map</C>: The reverse map of the canonical form of the graph. 
+#!
+#!         Using this information it is possible to construct an isomorphism between two graphs by following the maps
+#!         from the first graph to the canonical form and then taking the inverses maps to the second graph. This is how
+#!         the <Ref Func="IsomorphismRSGraphs"/> function works. 
+#!     </Description>
+#! </ManSection>
+
+#! @BeginLogSession
+#! gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;
+#! gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
+#! gap> canon_1 := RSGraphCanonicalLabelling(graph_1);;
+#! gap> canon_2 := RSGraphCanonicalLabelling(graph_2);;
+#! gap> Print(canon_1);
+#! rec(
+#!   arc_isomorphism := (),
+#!   arc_standard_map := (),
+#!   canon_certificate := "[ [ 3 ] ]2;",
+#!   reverse_map := (1,2),
+#!   vertex_isomorphism := () )
+#! gap> graph_iso := canon_1.arc_isomorphism;;
+#! gap> graph_iso := graph_iso*canon_1.arc_standard_map;;
+#! gap> graph_iso := graph_iso*Inverse(canon_2.arc_standard_map);;
+#! gap> graph_iso := graph_iso*Inverse(canon_2.arc_isomorphism);;
+#! gap> Print(graph_iso);
+#! (1,2,3)
+#! gap> Print(IsomorphismRSGraphs(graph_1, graph_2));
+#! (1,2,3)
+#! @EndLogSession
+
+
+#! @Returns A list containing the vertex and arc isomorphisms and record of bijective maps or <K>fail</K> if there is no
+#! isomorphism. 
+#! @Arguments lad_1, lad_2
+#! @Label
+#! @Description This function searches for a local action diagram isomorphism between two local action diagrams. It does
+#! this by iterating over every graph isomorphism between the two underlying graphs. It then searches through every
+#! possible bijection between the vertex label's domains based on where the vertices map to under the isomorphism. This
+#! search checks if the vertex labels are conjugate under each bijection. If it can find one for each vertex label then
+#! it has found a local action diagram isomorphism. If it can't and has exhausted all graph isomorphisms then the local 
+#! action diagrams are not isomorphic. 
+#!
+#! If the diagrams are isomorphic then this function returns the isomorphism found in the form <C>[vert_iso, arc_iso,
+#! bijection_rec]</C>. The first two entries of this list are either permutations are bijections (see <Ref
+#! Func="IsomorphismRSGraphs"/>). The final entry is a record where the names are the vertex ids of <A>lad_1</A>. Each
+#! component contains the bijective map between the two domains which conjugates the groups. Specifically, if <C>i</C>
+#! is a vertex label of <A>lad_1</A> then <C>bijection_rec.(i)</C> is a mapping from the domain of the group labelling
+#! vertex <C>i</C> in <A>lad_1</A> to the domain of the group labelling <C>i^vert_iso</C> in <A>lad_2</A>. 
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
 
-#DeclareOperation("LAD_Internal_AllLocalActionDiagrams@", [IsInt, IsInt]);
+#! @BeginExampleSession
+#! gap> graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;
+#! gap> lad_1 := LocalActionDiagramFromData(graph, [Group((1,2)), Group((3,4))], \
+#! >                                        [[1, 2], [3, 4]]);;
+#! gap> lad_2 := LocalActionDiagramFromData(graph, [Group((3,4)), Group((1,2))], \
+#! >                                        [[3, 4], [1, 2]]);;
+#! gap> iso := IsomorphismLocalActionDiagrams(lad_1, lad_2);;
+#! gap> for elm in iso do Print(elm, "\n"); od;
+#! ()
+#! ()
+#! rec(
+#!   1 := <mapping: Domain([ 1, 2 ]) -> Domain([ 3, 4 ]) >,
+#!   2 := <mapping: Domain([ 3, 4 ]) -> Domain([ 1, 2 ]) > )
+#! @EndExampleSession
 
-#DeclareOperation("LAD_Internal_AllRSGraphs@", [IsInt, IsInt]);
+

@@ -216,11 +216,10 @@ reverse map is valid, and that each arc has an associated reverse arc. }
   !gapprompt@gap>| !gapinput@rev_map := (1,2)(3,4);;|
   !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList(adj_list, rev_map);|
   <RSGraph with 2 vertices and 5 arcs>
-  
   !gapprompt@gap>| !gapinput@adj_list2 := [[2, 2]];;|
   !gapprompt@gap>| !gapinput@rev_map2 := ();;|
   !gapprompt@gap>| !gapinput@vertex_ids := [2];;|
-  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);|
+  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList(adj_list2, rev_map2, vertex_ids);|
   <RSGraph with 1 vertex and 1 arc>
 \end{Verbatim}
  
@@ -264,18 +263,17 @@ reverse map is valid, and that each arc has an associated reverse arc. }
 \begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
   !gapprompt@gap>| !gapinput@adj_mat := [[1, 2], [2, 0]];;|
   !gapprompt@gap>| !gapinput@rev_map := (2, 4)(3,5);;|
-  !gapprompt@gap>| !gapinput@vertex_ids := [2,3];;|
-  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyMatrix(adj_list, rev_map, vertex_ids);|
+  !gapprompt@gap>| !gapinput@vertex_ids := [2, 3];;|
+  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyMatrix(adj_mat, rev_map, vertex_ids);|
   <RSGraph with 2 vertices and 5 arcs>
-  
   !gapprompt@gap>| !gapinput@Print(graph);|
   Vertices = { 2, 3 }
   Arcs = {
-          1 = ( origin = 2, terminus = 2, inverse = 1 )
-          2 = ( origin = 2, terminus = 3, inverse = 4 )
-          3 = ( origin = 2, terminus = 3, inverse = 5 )
-          4 = ( origin = 3, terminus = 2, inverse = 2 )
-          5 = ( origin = 3, terminus = 2, inverse = 3 )
+  	1 = ( origin = 2, terminus = 2, inverse = 1 )
+  	2 = ( origin = 2, terminus = 3, inverse = 4 )
+  	3 = ( origin = 2, terminus = 3, inverse = 5 )
+  	4 = ( origin = 3, terminus = 2, inverse = 2 )
+  	5 = ( origin = 3, terminus = 2, inverse = 3 )
   }
   Reverse Map = (2,4)(3,5)
 \end{Verbatim}
@@ -524,7 +522,6 @@ loops. }
   <RSGraph with 3 vertices and 4 arcs>
   !gapprompt@gap>| !gapinput@RSGraphBipartition(graph);|
   [ [ 1 ], [ 2, 3 ] ]
-  
   !gapprompt@gap>| !gapinput@adj_list := [[1, 2], [2, 1], [2, 2], [2, 2]];;|
   !gapprompt@gap>| !gapinput@rev_map := (1,2)(3,4);;|
   !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList(adj_list, rev_map);|
@@ -634,9 +631,9 @@ An iterator which iterates over the arcs of \mbox{\texttt{\mdseries\slshape grap
   !gapprompt@gap>| !gapinput@rev_map := (1,2);;|
   !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList(adj_list, rev_map);;|
   !gapprompt@gap>| !gapinput@for arc in RSGraphArcIterator(graph) do|
-  !gapprompt@gap>| !gapinput@    View(arc); |
-  !gapprompt@gap>| !gapinput@    Print("\n");|
-  !gapprompt@gap>| !gapinput@od; |
+  !gapprompt@>| !gapinput@    View(arc);|
+  !gapprompt@>| !gapinput@    Print("\n");|
+  !gapprompt@>| !gapinput@od;|
   [ 1, rec( inverse := 2, origin := 1, terminus := 2 ) ]
   [ 2, rec( inverse := 1, origin := 2, terminus := 1 ) ]
   [ 3, rec( inverse := 3, origin := 2, terminus := 2 ) ]
@@ -680,20 +677,21 @@ inclusion of arc reversals. }
   !gapprompt@gap>| !gapinput@Print(graph);|
   Vertices = { 1, 2 }
   Arcs = {
-          1 = ( origin = 1, terminus = 2, inverse = 2 )
-          2 = ( origin = 2, terminus = 1, inverse = 1 )
-          3 = ( origin = 1, terminus = 2, inverse = 4 )
-          4 = ( origin = 2, terminus = 1, inverse = 3 )
-          5 = ( origin = 2, terminus = 2, inverse = 5 )
+  	1 = ( origin = 1, terminus = 2, inverse = 2 )
+  	2 = ( origin = 2, terminus = 1, inverse = 1 )
+  	3 = ( origin = 1, terminus = 2, inverse = 4 )
+  	4 = ( origin = 2, terminus = 1, inverse = 3 )
+  	5 = ( origin = 2, terminus = 2, inverse = 5 )
   }
   Reverse Map = (1,2)(3,4)
   !gapprompt@gap>| !gapinput@subgraph := RSGraphSubgraph(graph, [1,2,5]);|
-  Print(subgraph);
+  <RSGraph with 2 vertices and 3 arcs>
+  !gapprompt@gap>| !gapinput@Print(subgraph);|
   Vertices = { 1, 2 }
   Arcs = {
-          1 = ( origin = 1, terminus = 2, inverse = 2 )
-          2 = ( origin = 2, terminus = 1, inverse = 1 )
-          5 = ( origin = 2, terminus = 2, inverse = 5 )
+  	1 = ( origin = 1, terminus = 2, inverse = 2 )
+  	2 = ( origin = 2, terminus = 1, inverse = 1 )
+  	5 = ( origin = 2, terminus = 2, inverse = 5 )
   }
   Reverse Map = (1,2)(3,4)
 \end{Verbatim}
@@ -733,30 +731,30 @@ graph.
 \begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
   !gapprompt@gap>| !gapinput@adj_list := [[2, 3], [3, 2], [2, 3], [3, 2], [3, 3]];;|
   !gapprompt@gap>| !gapinput@rev_map := (1,2)(3,4);;|
-  !gapprompt@gap>| !gapinput@verrtex_ids := [2, 3];;|
+  !gapprompt@gap>| !gapinput@vertex_ids := [2, 3];;|
   !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList(adj_list, rev_map, vertex_ids);;|
   !gapprompt@gap>| !gapinput@Print(graph);|
   Vertices = { 2, 3 }
   Arcs = {
-          1 = ( origin = 2, terminus = 3, inverse = 2 )
-          2 = ( origin = 3, terminus = 2, inverse = 1 )
-          3 = ( origin = 2, terminus = 3, inverse = 4 )
-          4 = ( origin = 3, terminus = 2, inverse = 3 )
-          5 = ( origin = 3, terminus = 2, inverse = 5 )
+  	1 = ( origin = 2, terminus = 3, inverse = 2 )
+  	2 = ( origin = 3, terminus = 2, inverse = 1 )
+  	3 = ( origin = 2, terminus = 3, inverse = 4 )
+  	4 = ( origin = 3, terminus = 2, inverse = 3 )
+  	5 = ( origin = 3, terminus = 3, inverse = 5 )
   }
   Reverse Map = (1,2)(3,4)
   !gapprompt@gap>| !gapinput@standard_rec := RSGraphToStandardForm(graph);;|
   !gapprompt@gap>| !gapinput@Print(standard_rec.graph);|
   Vertices = { 1, 2 }
   Arcs = {
-          1 = ( origin = 1, terminus = 2, inverse = 3 )
-          2 = ( origin = 1, terminus = 2, inverse = 4 )
-          3 = ( origin = 2, terminus = 1, inverse = 1 )
-          4 = ( origin = 2, terminus = 1, inverse = 2 )
-          5 = ( origin = 2, terminus = 2, inverse = 5 )
+  	1 = ( origin = 1, terminus = 2, inverse = 3 )
+  	2 = ( origin = 1, terminus = 2, inverse = 4 )
+  	3 = ( origin = 2, terminus = 1, inverse = 1 )
+  	4 = ( origin = 2, terminus = 1, inverse = 2 )
+  	5 = ( origin = 2, terminus = 2, inverse = 5 )
   }
   Reverse Map = (1,3)(2,4)
-  !gapprompt@gap>| !gapinput@Print(2^standard_rec.arc_id_map);|
+  !gapprompt@gap>| !gapinput@Print(2^standard_rec.arc_id_map = 3);|
   3
 \end{Verbatim}
  
@@ -783,31 +781,31 @@ search. }
  
 \begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
   !gapprompt@gap>| !gapinput@adj_list := [[1, 2], [2, 1], [1, 3], [3, 1], [1, 4], [4, 1], \|
-  !gapprompt@gap>| !gapinput@             [2, 3], [3, 2], [3, 4], [4, 3]];;|
+  !gapprompt@>| !gapinput@                [2, 3], [3, 2], [3, 4], [4, 3]];;|
   !gapprompt@gap>| !gapinput@rev_map := (1,2)(3,4)(5,6)(7,8)(9,10);;|
   !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList(adj_list, rev_map);;|
   !gapprompt@gap>| !gapinput@tree_bfs := RSGraphSpanningTree(graph);;|
   !gapprompt@gap>| !gapinput@Print(tree_bfs);|
   Vertices = { 1, 2, 3, 4 }
   Arcs = {
-          1 = ( origin = 1, terminus = 2, inverse = 2 )
-          2 = ( origin = 2, terminus = 1, inverse = 1 )
-          3 = ( origin = 1, terminus = 3, inverse = 4 )
-          4 = ( origin = 3, terminus = 1, inverse = 3 )
-          5 = ( origin = 1, terminus = 4, inverse = 6 )
-          6 = ( origin = 4, terminus = 1, inverse = 5 )
+  	1 = ( origin = 1, terminus = 2, inverse = 2 )
+  	2 = ( origin = 2, terminus = 1, inverse = 1 )
+  	3 = ( origin = 1, terminus = 3, inverse = 4 )
+  	4 = ( origin = 3, terminus = 1, inverse = 3 )
+  	5 = ( origin = 1, terminus = 4, inverse = 6 )
+  	6 = ( origin = 4, terminus = 1, inverse = 5 )
   }
   Reverse Map = (1,2)(3,4)(5,6)(7,8)(9,10)
   !gapprompt@gap>| !gapinput@tree_dfs := RSGraphSpanningTree(graph, "dfs");;|
   !gapprompt@gap>| !gapinput@Print(tree_dfs);|
   Vertices = { 1, 2, 3, 4 }
   Arcs = {
-          1 = ( origin = 1, terminus = 2, inverse = 2 )
-          2 = ( origin = 2, terminus = 1, inverse = 1 )
-          7 = ( origin = 2, terminus = 3, inverse = 8 )
-          8 = ( origin = 3, terminus = 2, inverse = 7 )
-          9 = ( origin = 3, terminus = 4, inverse = 10 )
-          10 = ( origin = 4, terminus = 3, inverse = 9 )
+  	1 = ( origin = 1, terminus = 2, inverse = 2 )
+  	2 = ( origin = 2, terminus = 1, inverse = 1 )
+  	7 = ( origin = 2, terminus = 3, inverse = 8 )
+  	8 = ( origin = 3, terminus = 2, inverse = 7 )
+  	9 = ( origin = 3, terminus = 4, inverse = 10 )
+  	10 = ( origin = 4, terminus = 3, inverse = 9 )
   }
   Reverse Map = (1,2)(3,4)(5,6)(7,8)(9,10)
 \end{Verbatim}
@@ -910,26 +908,26 @@ with the arc labels. }
   !gapprompt@gap>| !gapinput@label_1 := Group((1,2));;|
   !gapprompt@gap>| !gapinput@SetPermGroupDomain(label_1, [1, 2, 3]);;|
   !gapprompt@gap>| !gapinput@label_2 := Group((1,2,3));;|
-  !gapprompt@gap>| !gapinput@vertex_labels := [label_1, label_2];|
-  !gapprompt@gap>| !gapinput@arc_labels := [[1, 2], [3], [1,2,3]];|
+  !gapprompt@gap>| !gapinput@vertex_labels := [label_1, label_2];;|
+  !gapprompt@gap>| !gapinput@arc_labels := [[1, 2], [3], [1,2,3]];;|
   !gapprompt@gap>| !gapinput@lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);|
   <LocalActionDiagram with 2 vertices and 3 arcs>
   !gapprompt@gap>| !gapinput@Print(lad);|
   Vertices = { 1, 2 }
   Arcs = {
-          1 = ( origin = 1, terminus = 1, inverse = 1 )
-          2 = ( origin = 1, terminus = 2, inverse = 3 )
-          3 = ( origin = 2, terminus = 1, inverse = 2 )
+  	1 = ( origin = 1, terminus = 1, inverse = 1 )
+  	2 = ( origin = 1, terminus = 2, inverse = 3 )
+  	3 = ( origin = 2, terminus = 1, inverse = 2 )
   }
   Reverse Map = (2,3)
   Vertex Labels = {
-          1 = Group( [ (1,2) ] )
-          2 = Group( [ (1,2,3) ] )
+  	1 = Group( [ (1,2) ] )
+  	2 = Group( [ (1,2,3) ] )
   }
   Arc Labels = {
-          1 = [ 1, 2 ]
-          2 = [ 3 ]
-          3 = [ 1, 2, 3 ]
+  	1 = [ 1, 2 ]
+  	2 = [ 3 ]
+  	3 = [ 1, 2, 3 ]
   }
 \end{Verbatim}
  
@@ -1281,7 +1279,7 @@ empty set is a scopo and this is represented as the empty list. }
   !gapprompt@gap>| !gapinput@arc_labels := [[1], [1]];;|
   !gapprompt@gap>| !gapinput@lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;|
   !gapprompt@gap>| !gapinput@LocalActionDiagramScopos(lad);|
-  [ [ ], [ 1 ], [ 2 ]]
+  [ [  ], [ 1 ], [ 2 ] ]
 \end{Verbatim}
  
 
@@ -1446,8 +1444,30 @@ also sets \texttt{LocalActionDiagramGroupName} (\ref{LocalActionDiagramGroupName
 \end{Verbatim}
  
 
-\subsection{\textcolor{Chapter }{LocalActionDiagramIsEndStabiliser}}
+\subsection{\textcolor{Chapter }{LocalActionDiagramIsSmithUniversalGroup}}
 \logpage{[ 2, 2, 22 ]}\nobreak
+\hyperdef{L}{X7E10FAC07E757B5A}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramIsSmithUniversalGroup({\mdseries\slshape lad})\index{LocalActionDiagramIsSmithUniversalGroup@\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{Is}\-\texttt{Smith}\-\texttt{Universal}\-\texttt{Group}}
+\label{LocalActionDiagramIsSmithUniversalGroup}
+}\hfill{\scriptsize (property)}}\\
+\textbf{\indent Returns:\ }
+\texttt{true} of the local action diagram corresponds to a smith universal group and \texttt{false} otherwise. 
+
+
+
+ This function checks if the local action diagram corresponds to a box product
+universal group (CITE SMITH PAPER?). Such a local action diagram consists of a
+bipartite graph such that vertex labels in the same partition are conjugate
+(see (CITE COLIN\texttt{\symbol{45}}SIMON INTRO PAPER)). If the diagram has
+this structure, this function returns \texttt{true} and sets \texttt{LocalActionDiagramGroupName} (\ref{LocalActionDiagramGroupName}) to \texttt{U(\texttt{\symbol{123}}G1\texttt{\symbol{125}},
+\texttt{\symbol{123}}G2\texttt{\symbol{125}})} where \texttt{G1} and \texttt{G2} are one of the vertex labels in each partition. 
+
+ Note that this function requires the \textsf{Digraphs} to be loaded as it relies on the isomorphism functions (see \texttt{Isomorphisms and Automorphisms} (\ref{Chapter_Iso})). }
+
+ 
+
+\subsection{\textcolor{Chapter }{LocalActionDiagramIsEndStabiliser}}
+\logpage{[ 2, 2, 23 ]}\nobreak
 \hyperdef{L}{X8443CE477DC98586}{}
 {\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramIsEndStabiliser({\mdseries\slshape lad})\index{LocalActionDiagramIsEndStabiliser@\texttt{LocalActionDiagramIsEndStabiliser}}
 \label{LocalActionDiagramIsEndStabiliser}
@@ -1478,7 +1498,7 @@ and the vertex is labelled by $S_{d-1}$ acting on $\{1, 2, \dots, d\}$ then the 
  
 
 \subsection{\textcolor{Chapter }{LocalActionDiagramIsRegularTreeAutomorphismGroup}}
-\logpage{[ 2, 2, 23 ]}\nobreak
+\logpage{[ 2, 2, 24 ]}\nobreak
 \hyperdef{L}{X829A07D678914E89}{}
 {\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramIsRegularTreeAutomorphismGroup({\mdseries\slshape lad})\index{LocalActionDiagramIsRegularTreeAutomorphismGroup@\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{Is}\-\texttt{Regular}\-\texttt{Tree}\-\texttt{Automorphism}\-\texttt{Group}}
 \label{LocalActionDiagramIsRegularTreeAutomorphismGroup}
@@ -1505,6 +1525,25 @@ self\texttt{\symbol{45}}reverse loop and the vertex is labelled by $S_d$ then th
   !gapprompt@gap>| !gapinput@View(lad);|
   <Aut(T5) (as a Local Action Diagram)>
 \end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{LocalActionDiagramIsBipartitionPreservingGroup}}
+\logpage{[ 2, 2, 25 ]}\nobreak
+\hyperdef{L}{X8318441080B8020B}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramIsBipartitionPreservingGroup({\mdseries\slshape lad})\index{LocalActionDiagramIsBipartitionPreservingGroup@\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{Is}\-\texttt{Bipartition}\-\texttt{Preserving}\-\texttt{Group}}
+\label{LocalActionDiagramIsBipartitionPreservingGroup}
+}\hfill{\scriptsize (property)}}\\
+\textbf{\indent Returns:\ }
+\texttt{true} of the local action diagram corresponds to a bipartition preserving group and \texttt{false} otherwise. 
+
+
+
+ This function checks if the local action diagram corresponds to a bipartition
+preserving group group. Given a vertex transitive group $G$ acting on a regular tree $T$ this group is the subgroup $G^{\circ} = \{g \in G : \forall\, v \in V(T)\, d(v, gv) \equiv 0 \pmod{2}\}$. In words, its the maximal subgroup which partitions the tree into two vertex
+orbits. If the diagram has this structure, this function returns \texttt{true} and sets \texttt{LocalActionDiagramGroupName} (\ref{LocalActionDiagramGroupName}) to \texttt{\texttt{\symbol{123}}base{\textunderscore}name\texttt{\symbol{125}}\texttt{\symbol{94}}o} where \texttt{\texttt{\symbol{123}}base{\textunderscore}name\texttt{\symbol{125}}} is the name of the underlying vertex transitive group. 
+
+ Note that this function requires the \textsf{Digraphs} to be loaded as it relies on the isomorphism functions (see \texttt{Isomorphisms and Automorphisms} (\ref{Chapter_Iso})). }
+
  }
 
  }
@@ -1587,11 +1626,11 @@ RSGraph are known then they are also stored.
   @gappromptCgap>E @gapinputCgraph := RSGraphByAdjacencyList([[1, 1]], ());;E
   @gappromptCgap>E @gapinputCRSGraphToWritableString(graph);E
   "1|1,1,1|P"
-  
   @gappromptCgap>E @gapinputClad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;E
   @gappromptCgap>E @gapinputCLocalActionDiagramGroupType(lad);;E
   @gappromptCgap>E @gapinputCLocalActionDiagramToWritableString(lad);E
-  "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! "
+  "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDia\
+  gramScopos! "
 \end{Verbatim}
  
 \subsection{\textcolor{Chapter }{Reading From A String}}\label{AutoDoc_generated_group2}
@@ -1629,23 +1668,23 @@ stored in the objects created by these functions without needing the \textsf{Dig
   @gappromptBgap>C @gapinputBPrint(graph);C
   Vertices = { 1 }
   Arcs = {
-      1 = ( origin = 1, terminus = 1, inverse = 1 )
+  	1 = ( origin = 1, terminus = 1, inverse = 1 )
   }
   Reverse Map = ()
-  
-  @gappromptBgap>C @gapinputBlad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! ";;C
-  @gappromptBgap>C @gapinputBlad := LocalActionDiagramFromWritableString(lad_string);C
+  @gappromptBgap>C @gapinputBlad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!Gene\C
+  @gappromptB>C @gapinputBral|LocalActionDiagramScopos! ";;C
+  @gappromptBgap>C @gapinputBlad := LocalActionDiagramFromWritableString(lad_string);;C
   @gappromptBgap>C @gapinputBPrint(lad);C
   Vertices = { 1 }
   Arcs = {
-      1 = ( origin = 1, terminus = 1, inverse = 1 )
+  	1 = ( origin = 1, terminus = 1, inverse = 1 )
   }
   Reverse Map = ()
   Vertex Labels = {
-      1 = Group( [ (1,2) ] )
+  	1 = Group( [ (1,2) ] )
   }
   Arc Labels = {
-      1 = [ 1, 2 ]
+  	1 = [ 1, 2 ]
   }
   @gappromptBgap>C @gapinputBPrint("LocalActionDiagramScopos" in KnownAttributesOfObject(lad));C
   true
@@ -1699,25 +1738,308 @@ pickled with the "magic values" \texttt{RSGO} and \texttt{LADO} respectively. }
   !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList([[1, 1]], ());;|
   !gapprompt@gap>| !gapinput@lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;|
   !gapprompt@gap>| !gapinput@list := [graph, lad];|
-  [ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ]
+  [ <RSGraph with 1 vertex and 1 arc>, 
+    <LocalActionDiagram with 1 vertex and 1 arc> ]
   !gapprompt@gap>| !gapinput@file := IO_File("test.pickle", "w");;|
   !gapprompt@gap>| !gapinput@IO_Pickle(file, list);|
   IO_OK
   !gapprompt@gap>| !gapinput@IO_Close(file);;|
   !gapprompt@gap>| !gapinput@file := IO_File("test.pickle", "r");;|
   !gapprompt@gap>| !gapinput@IO_Unpickle(file);|
-  [ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ]
+  [ <RSGraph with 1 vertex and 1 arc>, 
+    <LocalActionDiagram with 1 vertex and 1 arc> ]
 \end{Verbatim}
  }
+
+ 
+\section{\textcolor{Chapter }{Visualisation}}\label{Chapter_IO_Operations_and_Visualisation_Section_Visualisation}
+\logpage{[ 3, 2, 0 ]}
+\hyperdef{L}{X840B14248593388B}{}
+{
+  
+
+ \emph{Stephan to do.} }
 
  }
 
    
-\chapter{\textcolor{Chapter }{Isomorphisms and Automorphisms}}\label{Chapter_Isomorphisms_and_Automorphisms}
+\chapter{\textcolor{Chapter }{Isomorphisms and Automorphisms}}\label{Chapter_Iso}
 \logpage{[ 4, 0, 0 ]}
 \hyperdef{L}{X81F3496578EAA74E}{}
 {
   
+
+ We support calculating isomorphisms between RSGraphs, calculating the
+automorphism group of an RSGraph, and calculating isomorphisms between local
+action diagrams. This functionality relies on the isomorphism and automorphism
+functions from the \textsf{Digraphs} and so is not available if the \textsf{Digraphs} is not available. By default this makes use of \texttt{Bliss} for calculating morphisms but it can use \texttt{Nauty} if the \textsf{NautyTracesInterface} is available. 
+
+ Given two RSGraphs $\Gamma_1$ and $\Gamma_2$ an \emph{isomorphism} is a pair of bijective maps $\Theta_{V} : V(\Gamma_1) \to V(\Gamma_2)$ and $\Theta_{A} : A(\Gamma_1) \to A(\Gamma_2)$ that respect origin vertices and the arc reversal map. Explicitly, this means
+that $\Theta_{V}(o(a)) = o(\Theta_{A}(a))$ and $\overline{\Theta_{A}(a)} = \Theta_{A}(\overline{a})$. An automorphism is an isomorphism from an RSGraph to itself and the set of
+all automorphism of an RSGraph form a group under function composition. 
+
+ Given two local action diagrams $\Delta = (\Gamma, (X_{a}), (G(v)))$ and $\Delta' = (\Gamma', (X_{a}'), (G'(v)))$ and isomorphism between $\Delta$ and $\Delta'$ consists of: \texttt{\symbol{45}} an isomorphism $\Theta : \Gamma \to \Gamma'$ and \texttt{\symbol{45}} for each vertex $v \in V(\Gamma)$ a bijection $\Theta_{v} : X_{v} \to X_{\Theta(v)}$ that restricts to a bijection from $X_{a}$ to $X_{\Theta(a)}$ for each $a \in o^{-1}(a)$ and such that $\Theta_{v}G(v)\Theta_{v}^{-1} = G'(v)$. 
+
+ 
+\section{\textcolor{Chapter }{RSGraph Morphisms}}\label{Chapter_Isomorphisms_and_Automorphisms_Section_RSGraph_Morphisms}
+\logpage{[ 4, 1, 0 ]}
+\hyperdef{L}{X86AA0F1986938600}{}
+{
+  
+
+\subsection{\textcolor{Chapter }{AutomorphismGroup (for an RSGraph)}}
+\logpage{[ 4, 1, 1 ]}\nobreak
+\hyperdef{L}{X7A51B4607E812CAE}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{AutomorphismGroup({\mdseries\slshape graph})\index{AutomorphismGroup@\texttt{AutomorphismGroup}!for an RSGraph}
+\label{AutomorphismGroup:for an RSGraph}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A permutation group.
+
+
+
+ This function returns the automorphism group of the \mbox{\texttt{\mdseries\slshape graph}} as a permutation group. Each permutation in the group is an automorphism on
+the arcs of the graph. For each arc automorphism the corresponding vertex
+automorphism can be found with the \texttt{RSGraphVertexAutomorphism} (\ref{RSGraphVertexAutomorphism}) function. }
+
+ 
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;|
+  !gapprompt@gap>| !gapinput@AutomorphismGroup(graph);|
+  Group([ (2,3) ])
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{IsomorphismRSGraphs}}
+\logpage{[ 4, 1, 2 ]}\nobreak
+\hyperdef{L}{X7D78ED007EEF1CC8}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{IsomorphismRSGraphs({\mdseries\slshape graph{\textunderscore}1, graph{\textunderscore}2})\index{IsomorphismRSGraphs@\texttt{IsomorphismRSGraphs}}
+\label{IsomorphismRSGraphs}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A permutation or general mapping if the graphs are isomorphic and \texttt{fail} otherwise. 
+
+
+
+ If \mbox{\texttt{\mdseries\slshape graph{\textunderscore}1}} and \mbox{\texttt{\mdseries\slshape graph{\textunderscore}2}} are isomorphic then this function returns one arc isomorphism between them. If
+the graphs have the same arc ids then this isomorphism is returned as a
+permutation. If they have different arc ids then the isomorphism is returned
+as a constant access time general mapping. 
+
+ This isomorphism found is not necessarily unique. To get every isomorphism you
+can find the automorphism group of one of the graphs and compose these
+automorphisms with the isomorphism found (see \texttt{RSGraphsIsomorphismsIterator} (\ref{RSGraphsIsomorphismsIterator}). For each arc isomorphism you can get the corresponding vertex isomorphism
+with the \texttt{RSGraphsVertexIsomorphism} (\ref{RSGraphsVertexIsomorphism}) function. 
+
+ The isomorphisms are found by finding a "canonical form" of each graph (see \texttt{RSGraphCanonicalLabelling} (\ref{RSGraphCanonicalLabelling})) and composing the mappings to the canonical form. This means that subsequent
+calls of this function on the same graphs have constant time complexity. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;|
+  !gapprompt@gap>| !gapinput@graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;|
+  !gapprompt@gap>| !gapinput@IsomorphismRSGraphs(graph_1, graph_2);|
+  (1,3,2)
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{RSGraphVertexAutomorphism}}
+\logpage{[ 4, 1, 3 ]}\nobreak
+\hyperdef{L}{X7F06F0C77C950F4B}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphVertexAutomorphism({\mdseries\slshape graph, arc{\textunderscore}aut})\index{RSGraphVertexAutomorphism@\texttt{RSGraphVertexAutomorphism}}
+\label{RSGraphVertexAutomorphism}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A permutation. 
+
+
+
+ Given an RSGraph and an automorphism of the arcs this function returns the
+corresponding automorphism of the vertices of the graph. The automorphism of
+the arcs is represented as a permutation. If the argument \mbox{\texttt{\mdseries\slshape arc{\textunderscore}aut}} is not an automorphism of the graph's arcs then the behaviour of this function
+is undefined. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 2], [2, 1], [2, 2], [2, 2]], (3,4));;|
+  !gapprompt@gap>| !gapinput@aut_group := AutomorphismGroup(graph);;|
+  !gapprompt@gap>| !gapinput@arc_aut := Elements(aut_group)[5];|
+  (1,5)(2,6)(3,4)
+  !gapprompt@gap>| !gapinput@vert_aut := RSGraphVertexAutomorphism(graph, arc_aut);|
+  (1,2)
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{RSGraphsVertexIsomorphism}}
+\logpage{[ 4, 1, 4 ]}\nobreak
+\hyperdef{L}{X7B66D3CD86926BE7}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphsVertexIsomorphism({\mdseries\slshape graph{\textunderscore}1, graph{\textunderscore}2, arc{\textunderscore}iso})\index{RSGraphsVertexIsomorphism@\texttt{RSGraphsVertexIsomorphism}}
+\label{RSGraphsVertexIsomorphism}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A permutation or general mapping. 
+
+
+
+ Given two RSGraphs and an isomorphism of the arcs between them this function
+returns the corresponding isomorphism between the vertices of the graphs. The
+argument \mbox{\texttt{\mdseries\slshape arc{\textunderscore}iso}} can either be a permutation or a general mapping. If the vertex ids of the two
+graphs are the same then the isomorphism will be returned as a permutation.
+Otherwise it will be returned as a general mapping. If the argument \mbox{\texttt{\mdseries\slshape arc{\textunderscore}iso}} is not an isomorphism between the arcs of the two graphs then the behaviour of
+this function is undefined. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;|
+  !gapprompt@gap>| !gapinput@graph_2 := RSGraphByAdjacencyList([[2, 2], [2, 2], [2, 2]], (1,2), [2]);;|
+  !gapprompt@gap>| !gapinput@arc_iso := IsomorphismRSGraphs(graph_1, graph_2);|
+  (1,3,2)
+  !gapprompt@gap>| !gapinput@vert_iso := RSGraphsVertexIsomorphism(graph_1, graph_2, arc_iso);|
+  <general mapping: Domain([ 1 ]) -> Domain([ 2 ]) >
+  !gapprompt@gap>| !gapinput@1^vert_iso;|
+  2
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{RSGraphsIsomorphismsIterator}}
+\logpage{[ 4, 1, 5 ]}\nobreak
+\hyperdef{L}{X7B98673B7967B1A8}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphsIsomorphismsIterator({\mdseries\slshape graph{\textunderscore}1, graph{\textunderscore}2})\index{RSGraphsIsomorphismsIterator@\texttt{RSGraphsIsomorphismsIterator}}
+\label{RSGraphsIsomorphismsIterator}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+An iterator over all permutations between two RSGraphs. 
+
+
+
+ This function returns an iterator over all isomorphisms between \mbox{\texttt{\mdseries\slshape graph{\textunderscore}1}} and \mbox{\texttt{\mdseries\slshape graph{\textunderscore}2}} composing every automorphism of \mbox{\texttt{\mdseries\slshape graph{\textunderscore}1}} with a "base isomorphism" between \mbox{\texttt{\mdseries\slshape graph{\textunderscore}1}} and \mbox{\texttt{\mdseries\slshape graph{\textunderscore}2}}. Note that as the automorphism group is a stored attribute of each graph if
+the same graph is used for multiple calls of this function it should be used
+as the first argument to avoid calculating the automorphism group each time. 
+
+ The iterator returns the isomorphisms in the form \texttt{[vertex{\textunderscore}iso, arc{\textunderscore}iso]}. The elements of this list will be either permutations are general mappings
+depending on whether or not the vertex/arc ids are the same between both
+graphs. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;|
+  !gapprompt@gap>| !gapinput@graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;|
+  !gapprompt@gap>| !gapinput@for iso in RSGraphsIsomorphismsIterator(graph_1, graph_2) do |
+  !gapprompt@>| !gapinput@   	Print(iso, "\n"); |
+  !gapprompt@>| !gapinput@   od;|
+  [ (), () ]
+  [ (), (2,3) ]
+  [ (), (1,3,2) ]
+  [ (), (1,3) ]
+  [ (), (1,2,3) ]
+  [ (), (1,2) ]
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{RSGraphCanonicalLabelling}}
+\logpage{[ 4, 1, 6 ]}\nobreak
+\hyperdef{L}{X856847C681249C22}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphCanonicalLabelling({\mdseries\slshape graph})\index{RSGraphCanonicalLabelling@\texttt{RSGraphCanonicalLabelling}}
+\label{RSGraphCanonicalLabelling}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A record to to identify the "canonical labelling" of the graph.
+
+
+
+ Given a graph $\Gamma_1$ a canonical form of $\Gamma_1$ is a graph $\rho(\Gamma_1)$ that is isomorphic to $\Gamma_1$ and such that every graph isomorphic to $\Gamma_1$ has Canonical form $\rho(\Gamma_1)$. This means that $\Gamma_1$ and $\Gamma_2$ are isomorphic if and only if $\rho(\Gamma_1) = \rho(\Gamma_2)$. Finding canonical labellings of a graph is how both \emph{Bliss} and \emph{Nauty} find graph isomorphisms. 
+
+ This function returns a record containing all information of the "canonical
+labelling" of the graph. The elements of the record are: 
+\begin{itemize}
+\item  \texttt{canon{\textunderscore}certificate}: A string that represents the canonical form of the graph. Two graphs are
+isomorphic if and only if this string has the same value for both. 
+\item  \texttt{arc{\textunderscore}isomorphism}: This maps the arcs of the graph to the arcs of the canonical form of the
+graph. It does not take into account the reverse map. 
+\item  \texttt{vertex{\textunderscore}isomorphism}: This maps the vertices of the graph to the vertices of the canonical form of
+the graph. 
+\item  \texttt{arc{\textunderscore}standard{\textunderscore}map}: This maps the arcs of the graph so that loops that are not
+self\texttt{\symbol{45}}reverse have smaller arc ids then
+self\texttt{\symbol{45}}reverse loops at the same vertex. This is needed to
+make sure the reverse map of the canonical forms for two graphs is the same if
+the graphs are isomorphic. 
+\item  \texttt{reverse{\textunderscore}map}: The reverse map of the canonical form of the graph. 
+\end{itemize}
+ 
+
+ Using this information it is possible to construct an isomorphism between two
+graphs by following the maps from the first graph to the canonical form and
+then taking the inverses maps to the second graph. This is how the \texttt{IsomorphismRSGraphs} (\ref{IsomorphismRSGraphs}) function works. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;|
+  !gapprompt@gap>| !gapinput@graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;|
+  !gapprompt@gap>| !gapinput@canon_1 := RSGraphCanonicalLabelling(graph_1);;|
+  !gapprompt@gap>| !gapinput@canon_2 := RSGraphCanonicalLabelling(graph_2);;|
+  !gapprompt@gap>| !gapinput@Print(canon_1);|
+  rec(
+    arc_isomorphism := (),
+    arc_standard_map := (),
+    canon_certificate := "[ [ 3 ] ]2;",
+    reverse_map := (1,2),
+    vertex_isomorphism := () )
+  !gapprompt@gap>| !gapinput@graph_iso := canon_1.arc_isomorphism;;|
+  !gapprompt@gap>| !gapinput@graph_iso := graph_iso*canon_1.arc_standard_map;;|
+  !gapprompt@gap>| !gapinput@graph_iso := graph_iso*Inverse(canon_2.arc_standard_map);;|
+  !gapprompt@gap>| !gapinput@graph_iso := graph_iso*Inverse(canon_2.arc_isomorphism);;|
+  !gapprompt@gap>| !gapinput@Print(graph_iso);|
+  (1,2,3)
+  !gapprompt@gap>| !gapinput@Print(IsomorphismRSGraphs(graph_1, graph_2));|
+  (1,2,3)
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{IsomorphismLocalActionDiagrams}}
+\logpage{[ 4, 1, 7 ]}\nobreak
+\hyperdef{L}{X80737BB480F13959}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{IsomorphismLocalActionDiagrams({\mdseries\slshape lad{\textunderscore}1, lad{\textunderscore}2})\index{IsomorphismLocalActionDiagrams@\texttt{IsomorphismLocalActionDiagrams}}
+\label{IsomorphismLocalActionDiagrams}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A list containing the vertex and arc isomorphisms and record of bijective maps
+or \texttt{fail} if there is no isomorphism. 
+
+
+
+ This function searches for a local action diagram isomorphism between two
+local action diagrams. It does this by iterating over every graph isomorphism
+between the two underlying graphs. It then searches through every possible
+bijection between the vertex label's domains based on where the vertices map
+to under the isomorphism. This search checks if the vertex labels are
+conjugate under each bijection. If it can find one for each vertex label then
+it has found a local action diagram isomorphism. If it can't and has exhausted
+all graph isomorphisms then the local action diagrams are not isomorphic. 
+
+ If the diagrams are isomorphic then this function returns the isomorphism
+found in the form \texttt{[vert{\textunderscore}iso, arc{\textunderscore}iso,
+bijection{\textunderscore}rec]}. The first two entries of this list are either permutations are bijections
+(see \texttt{IsomorphismRSGraphs} (\ref{IsomorphismRSGraphs})). The final entry is a record where the names are the vertex ids of \mbox{\texttt{\mdseries\slshape lad{\textunderscore}1}}. Each component contains the bijective map between the two domains which
+conjugates the groups. Specifically, if \texttt{i} is a vertex label of \mbox{\texttt{\mdseries\slshape lad{\textunderscore}1}} then \texttt{bijection{\textunderscore}rec.(i)} is a mapping from the domain of the group labelling vertex \texttt{i} in \mbox{\texttt{\mdseries\slshape lad{\textunderscore}1}} to the domain of the group labelling \texttt{i\texttt{\symbol{94}}vert{\textunderscore}iso} in \mbox{\texttt{\mdseries\slshape lad{\textunderscore}2}}. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;|
+  !gapprompt@gap>| !gapinput@lad_1 := LocalActionDiagramFromData(graph, [Group((1,2)), Group((3,4))], \|
+  !gapprompt@>| !gapinput@                                       [[1, 2], [3, 4]]);;|
+  !gapprompt@gap>| !gapinput@lad_2 := LocalActionDiagramFromData(graph, [Group((3,4)), Group((1,2))], \|
+  !gapprompt@>| !gapinput@                                       [[3, 4], [1, 2]]);;|
+  !gapprompt@gap>| !gapinput@iso := IsomorphismLocalActionDiagrams(lad_1, lad_2);;|
+  !gapprompt@gap>| !gapinput@for elm in iso do Print(elm, "\n"); od;|
+  ()
+  ()
+  rec(
+    1 := <mapping: Domain([ 1, 2 ]) -> Domain([ 3, 4 ]) >,
+    2 := <mapping: Domain([ 3, 4 ]) -> Domain([ 1, 2 ]) > )
+\end{Verbatim}
+ }
 
  }
 
@@ -1728,7 +2050,293 @@ pickled with the "magic values" \texttt{RSGO} and \texttt{LADO} respectively. }
 {
   
 
+ Since there is a one\texttt{\symbol{45}}to\texttt{\symbol{45}}one
+correspondence between isomorphism classes of local action diagrams and
+conjugacy classes Of (P)\texttt{\symbol{45}}closed groups enumerating local
+action diagrams is the same as enumerating (P)\texttt{\symbol{45}}closed
+groups. By enumerating local action diagrams you can, for example, find the
+number of conjugacy classes of (P)\texttt{\symbol{45}}closed groups acting on
+a certain tree with a specified number of orbits. You can also find how many
+of these groups satisfy other properties, such as unimodularity. 
+
+ We have developed algorithms to enumerate local action diagrams acting on a
+regular tree with a specified number of orbits. For the inputs we could run
+these algorithms on we have stored the results so they can be quickly
+accessed. Furthermore, we have implemented functions analogous to the \textsf{Transitive Groups} package for easily filtering the library of local action diagrams. 
+
+ 
+\section{\textcolor{Chapter }{Enumerating RSGraphs and Local Action Diagrams}}\label{Chapter_Enumeration_Section_Enumerating_RSGraphs_and_Local_Action_Diagrams}
+\logpage{[ 5, 1, 0 ]}
+\hyperdef{L}{X7863275F7EC54ADE}{}
+{
+  
+
+\subsection{\textcolor{Chapter }{RSGraphFromLibrary}}
+\logpage{[ 5, 1, 1 ]}\nobreak
+\label{AutoDoc_generated_group3}
+\hyperdef{L}{X8505A9FA7D9A9517}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphFromLibrary({\mdseries\slshape degree, no{\textunderscore}verts[, idx]})\index{RSGraphFromLibrary@\texttt{RSGraphFromLibrary}}
+\label{RSGraphFromLibrary}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A list of RSGraphs or a specific element from this list. 
+
+
+
+ This function returns a list of RSGraphs such that each vertex has degree less
+than or equal to \mbox{\texttt{\mdseries\slshape degree}} and the graph has exactly \mbox{\texttt{\mdseries\slshape no{\textunderscore}verts}} vertices. Each graph in the list is unique up to isomorphism. If the optional
+argument \mbox{\texttt{\mdseries\slshape idx}} is provided then it will return the RSGraph in that position of the list. This
+is analogous to the \texttt{TransitiveGroup} function from the \textsf{Transitive Groups} package. 
+
+ There are two ways this function can get the list of RSGraphs. If the data for
+the given degree and number of vertices is stored on the disk then it will be
+read from the disk. If the data is not stored on the disk then the RSGraph
+enumeration algorithm will be run instead. An information message is displayed
+if the enumeration algorithm is used. 
+
+ Note that the \textsf{Digraphs} is required for the enumeration algorithm to run. If it is not loaded then the
+function will return an error if it needs to run the enumeration algorithm.
+The \textsf{Digraphs} is NOT needed if the data is stored on the disk. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph_list := RSGraphFromLibrary(3, 2);;|
+  !gapprompt@gap>| !gapinput@graph := graph_list[4];|
+  <RSGraph with 2 vertices and 3 arcs>
+  !gapprompt@gap>| !gapinput@graph_2 := RSGraphFromLibrary(3, 2, 4);;|
+  !gapprompt@gap>| !gapinput@IsomorphismRSGraphs(graph, graph_2);|
+  ()
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{LocalActionDiagramFromLibrary}}
+\logpage{[ 5, 1, 2 ]}\nobreak
+\label{AutoDoc_generated_group4}
+\hyperdef{L}{X79B525E37F27C003}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramFromLibrary({\mdseries\slshape degree, no{\textunderscore}verts[, idx]})\index{LocalActionDiagramFromLibrary@\texttt{LocalActionDiagramFromLibrary}}
+\label{LocalActionDiagramFromLibrary}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A list of local action diagrams or a specific element from this list. 
+
+
+
+ This function returns a list of local action diagrams such that each vertex
+label has degree equal to \mbox{\texttt{\mdseries\slshape degree}} and the graph has exactly \mbox{\texttt{\mdseries\slshape no{\textunderscore}verts}} vertices. Each local action diagram in the list is unique up to isomorphism.
+If the optional argument \mbox{\texttt{\mdseries\slshape idx}} is provided then it will return the local action diagram in that position of
+the list. This is analogous to the \texttt{TransitiveGroup} function from the \textsf{Transitive Groups} package. 
+
+ There are two ways this function can get the list of local action diagrams. If
+the data for the given degree and number of vertices is stored on the disk
+then it will be read from the disk. If the data is not stored on the disk then
+the local action diagram enumeration algorithm will be run instead. An
+information message is displayed if the enumeration algorithm is used. 
+
+ Note that the \textsf{Digraphs} is required for the enumeration algorithm to run. If it is not loaded then the
+function will return an error if it needs to run the enumeration algorithm.
+The \textsf{Digraphs} is NOT needed if the data is stored on the disk. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@lad_list := LocalActionDiagramFromLibrary(3, 2);;|
+  !gapprompt@gap>| !gapinput@lad := lad_list[4];|
+  <LocalActionDiagram with 2 vertices and 4 arcs>
+  !gapprompt@gap>| !gapinput@lad_2 := LocalActionDiagramFromLibrary(3, 2, 4);;|
+  !gapprompt@gap>| !gapinput@IsomorphismLocalActionDiagrams(lad, lad_2);|
+  [ (), (), rec( 1 := <mapping: Domain([ 1, 2, 3 ]) -> Domain([ 1, 2, 3 ]) >, 
+        2 := <mapping: Domain([ 4, 5, 6 ]) -> Domain([ 4, 5, 6 ]) > ) ]
+\end{Verbatim}
+ 
+\subsection{\textcolor{Chapter }{Number of RSGraphs/Local Action Diagrams}}\label{AutoDoc_generated_group5}
+\logpage{[ 5, 1, 3 ]}
+\hyperdef{L}{X8129286D81FF0D3F}{}
+{
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{NumberRSGraphs({\mdseries\slshape degree, no{\textunderscore}verts})\index{NumberRSGraphs@\texttt{NumberRSGraphs}}
+\label{NumberRSGraphs}
+}\hfill{\scriptsize (operation)}}\\
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{NumberLocalActionDiagrams({\mdseries\slshape degree, no{\textunderscore}verts})\index{NumberLocalActionDiagrams@\texttt{NumberLocalActionDiagrams}!for IsInt, IsInt}
+\label{NumberLocalActionDiagrams:for IsInt, IsInt}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+The number of RSGraphs or Local Action Diagrams with a specified degree and
+number of vertices. 
+
+
+
+ These functions returns the number of RSGraphs or Local Action Diagrams with
+degree \mbox{\texttt{\mdseries\slshape degree}} and \mbox{\texttt{\mdseries\slshape no{\textunderscore}verts}} vertices. They are a shorthand for \texttt{Size(RSGraphFromLibrary(\mbox{\texttt{\mdseries\slshape degree}}, \mbox{\texttt{\mdseries\slshape no{\textunderscore}verts}})} and \texttt{Size(LocalActionDiagramFromLibrary(\mbox{\texttt{\mdseries\slshape degree}}, \mbox{\texttt{\mdseries\slshape no{\textunderscore}verts}})}. They are included to be analogous to the \texttt{NrTransitiveGroups} function from th \textsf{Transitive Groups} library. 
+
  }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@lad_list := LocalActionDiagramFromLibrary(3, 3);;|
+  !gapprompt@gap>| !gapinput@Size(lad_list);|
+  78
+  !gapprompt@gap>| !gapinput@NumberLocalActionDiagrams(3, 3);|
+  78
+\end{Verbatim}
+ }
+
+ 
+\section{\textcolor{Chapter }{Searching The Library}}\label{Chapter_Enumeration_Section_Searching_The_Library}
+\logpage{[ 5, 2, 0 ]}
+\hyperdef{L}{X7A147BAA879758A4}{}
+{
+  
+\subsection{\textcolor{Chapter }{AllRSGraphs/AllLocalActionDiagrams}}\logpage{[ 5, 2, 1 ]}
+\hyperdef{L}{X7D2E67EE805F00BE}{}
+{
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{AllRSGraphs({\mdseries\slshape [function{\textunderscore}1, value{\textunderscore}1, ...]})\index{AllRSGraphs@\texttt{AllRSGraphs}!}
+\label{AllRSGraphs:}
+}\hfill{\scriptsize (operation)}}\\
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{AllLocalActionDiagrams({\mdseries\slshape [function{\textunderscore}1, value{\textunderscore}1, ...]})\index{AllLocalActionDiagrams@\texttt{AllLocalActionDiagrams}!}
+\label{AllLocalActionDiagrams:}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+All RSGraphs or Local Action Diagrams satisfying the conditions given as
+arguments.
+
+
+
+ These functions return a list of RSGraphs or Local Action Diagrams satisfying
+the conditions specified. The functions take an even number of inputs which
+alternate between functions and values. Each function must have a single
+argument as input which is either an RSGraph or local action diagram. The
+output of \mbox{\texttt{\mdseries\slshape function{\textunderscore}i}} must be comparable with the equality operation to \mbox{\texttt{\mdseries\slshape value{\textunderscore}i}}. The functions are analogous to the \texttt{AllTransitiveGroups} function from the \textsf{Transitive Groups} package. 
+
+ These functions work by first starting with a list of every RSGraph or Local
+Action Diagram stored on the disk. Each function supplied as an argument is
+applied to every element of this list and the result of applying this function
+is compared with the provided value. If it matches the value then the element
+is kept in the list; otherwise it is discarded. After this process is done for
+every argument the final list is returned. Note that it can be an empty list
+if there are no elements satisfying all conditions. 
+
+ If any of the functions provided are properties or attribute of RSGraphs or
+Local Action Diagrams then these functions are prioritised for evaluation.
+This means that any function which is not a property or attribute will be
+evaluated after each property and attribute is. The reason for this is that
+properties and attributes Are known the by "easy" to calculate or are stored
+in the library data and so this can speed up the search by reducing the search
+space for the potentially "harder" functions. 
+
+ The first time one of these functions is called the entire library is read
+into the GAP sessions memory. Information messages are displayed during this
+process as this can take some time. Subsequent calls to this function do not
+need to read the library files. 
+
+ If no arguments are provided then a complete list of RSGraphs or local action
+diagrams is returned. Furthermore, every degree two RSGraph and local action
+diagram can be quickly manually constructed. By default, this function only
+includes those with up to ten vertices. This can be changed with the \texttt{SetLocalActionDiagramDegreeTwoVertexBound} (\ref{SetLocalActionDiagramDegreeTwoVertexBound:}) function. }
+
+ 
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@TestFunction := function(lad)|
+  !gapprompt@>| !gapinput@   	return LocalActionDiagramVertexLabels(lad).(1);|
+  !gapprompt@>| !gapinput@   end;|
+  function( lad ) ... end
+  !gapprompt@gap>| !gapinput@lad_list := AllLocalActionDiagrams(TestFunction, Group((1,2)), \ |
+  !gapprompt@>| !gapinput@                                      LocalActionDiagramIsUnimodular, \ |
+  !gapprompt@>| !gapinput@                                      true);|
+  [ <LocalActionDiagram with 1 vertex and 1 arc>, 
+    <LocalActionDiagram with 1 vertex and 6 arcs>, 
+    <LocalActionDiagram with 1 vertex and 6 arcs>, 
+    <LocalActionDiagram with 1 vertex and 6 arcs>, 
+    <LocalActionDiagram with 1 vertex and 1 arc>, 
+    <LocalActionDiagram with 2 vertices and 2 arcs>, 
+    <LocalActionDiagram with 3 vertices and 4 arcs>, 
+    <LocalActionDiagram with 4 vertices and 6 arcs>, 
+    <LocalActionDiagram with 5 vertices and 8 arcs>, 
+    <LocalActionDiagram with 6 vertices and 10 arcs>, 
+    <LocalActionDiagram with 7 vertices and 12 arcs>, 
+    <LocalActionDiagram with 8 vertices and 14 arcs>, 
+    <LocalActionDiagram with 9 vertices and 16 arcs>, 
+    <LocalActionDiagram with 10 vertices and 18 arcs> ]
+  !gapprompt@gap>| !gapinput@Print(lad_list[3]);|
+  Vertices = { 1 }
+  Arcs = {
+  	1 = ( origin = 1, terminus = 1, inverse = 1 )
+  	2 = ( origin = 1, terminus = 1, inverse = 2 )
+  	3 = ( origin = 1, terminus = 1, inverse = 3 )
+  	4 = ( origin = 1, terminus = 1, inverse = 4 )
+  	5 = ( origin = 1, terminus = 1, inverse = 6 )
+  	6 = ( origin = 1, terminus = 1, inverse = 5 )
+  }
+  Reverse Map = (5,6)
+  Vertex Labels = {
+  	1 = Group( [ (1,2) ] )
+  }
+  Arc Labels = {
+  	1 = [ 1, 2 ]
+  	2 = [ 3 ]
+  	3 = [ 4 ]
+  	4 = [ 5 ]
+  	5 = [ 6 ]
+  	6 = [ 7 ]
+  }
+\end{Verbatim}
+ 
+\subsection{\textcolor{Chapter }{OneRSGraph/OneLocalActionDiagram}}\logpage{[ 5, 2, 2 ]}
+\hyperdef{L}{X843733827AF9A33E}{}
+{
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{OneRSGraph({\mdseries\slshape [function{\textunderscore}1, value{\textunderscore}1, ...]})\index{OneRSGraph@\texttt{OneRSGraph}!}
+\label{OneRSGraph:}
+}\hfill{\scriptsize (operation)}}\\
+\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{OneLocalActionDiagram({\mdseries\slshape [function{\textunderscore}1, value{\textunderscore}1, ...]})\index{OneLocalActionDiagram@\texttt{OneLocalActionDiagram}!}
+\label{OneLocalActionDiagram:}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+One RSGraphs or Local Action Diagrams satisfying the conditions given as
+arguments or \texttt{fail} if there are none satisfying them.
+
+
+
+ These functions are a shorthand for \texttt{AllRSGraphs([\mbox{\texttt{\mdseries\slshape function{\textunderscore}1}}, \mbox{\texttt{\mdseries\slshape function{\textunderscore}2}}, ...])[1]} and \texttt{AllLocalActionDiagrams([\mbox{\texttt{\mdseries\slshape function{\textunderscore}1}}, \mbox{\texttt{\mdseries\slshape function{\textunderscore}2}}, ...])[1]}. They are analogous to the \texttt{OneTransitiveGroup} function from the \textsf{Transitive Groups} package. Note that they do not offer any speed improvements to running the "\texttt{All}" variants of the function. }
+
+ 
+
+\subsection{\textcolor{Chapter }{SetLocalActionDiagramDegreeTwoVertexBound ()}}
+\logpage{[ 5, 2, 3 ]}\nobreak
+\hyperdef{L}{X82DA1445782FFD9C}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{SetLocalActionDiagramDegreeTwoVertexBound({\mdseries\slshape bound})\index{SetLocalActionDiagramDegreeTwoVertexBound@\texttt{Set}\-\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{Degree}\-\texttt{Two}\-\texttt{Vertex}\-\texttt{Bound}!}
+\label{SetLocalActionDiagramDegreeTwoVertexBound:}
+}\hfill{\scriptsize (operation)}}\\
+
+
+ Since any RSGraph and Local action diagram of degree two can be quickly
+manually constructed there needs to be a bound on the amount to use for the
+search functions (\texttt{AllRSGraphs} (\ref{AllRSGraphs:}), \texttt{AllLocalActionDiagrams} (\ref{AllLocalActionDiagrams:})). By default this value is \texttt{10}. This can be changed using this function to \mbox{\texttt{\mdseries\slshape bound}}. }
+
+ 
+
+\subsection{\textcolor{Chapter }{LocalActionDiagramDebugSearch ()}}
+\logpage{[ 5, 2, 4 ]}\nobreak
+\hyperdef{L}{X82F92FF07B9BEA8A}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramDebugSearch({\mdseries\slshape debug})\index{LocalActionDiagramDebugSearch@\texttt{LocalActionDiagramDebugSearch}!}
+\label{LocalActionDiagramDebugSearch:}
+}\hfill{\scriptsize (operation)}}\\
+
+
+ If \mbox{\texttt{\mdseries\slshape debug}} is \texttt{true} then if there is an error in the search functions (\texttt{AllRSGraphs} (\ref{AllRSGraphs:}), \texttt{AllLocalActionDiagrams} (\ref{AllLocalActionDiagrams:})) this will cause the error message to say which function and argument caused
+this error. It will not say what the error is. }
+
+ }
+
+ }
+
+   
+\chapter{\textcolor{Chapter }{Extensions}}\label{Chapter_Extensions}
+\logpage{[ 6, 0, 0 ]}
+\hyperdef{L}{X8236AD927A5A0E5A}{}
+{
+  
+
+ We support converting between RSGraphs and digraphs from the \textsf{Digraphs} and graphs from the \textsf{GRAPE}. Converting from an RSGraph returns both the (di)graph and all data needed to
+convert back to the original RSGraph. }
 
  \def\indexname{Index\logpage{[ "Ind", 0, 0 ]}
 \hyperdef{L}{X83A0356F839C696F}{}

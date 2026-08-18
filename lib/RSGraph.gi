@@ -576,6 +576,7 @@ function(graph, type)
 
 		subgraph_data.arcs := arc_records;
 		subgraph_data.reverse_map := RSGraphReverseMap(graph);
+		subgraph_data.has_parallel := false;
 
 		LAD_RSGraphConsCheck@(subgraph_data.arcs, subgraph_data.reverse_map, subgraph_data.vertices, subgraph_data.arc_ids);
 

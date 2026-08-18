@@ -1,13 +1,22 @@
 \begin{theindex}
 
+  \item \texttt  {AllLocalActionDiagrams}, \hyperpage{31}
+  \item \texttt  {AllRSGraphs}, \hyperpage{31}
+  \item \texttt  {AutomorphismGroup}
+    \subitem for an RSGraph, \hyperpage{25}
+
+  \indexspace
+
   \item \texttt  {IO{\textunderscore }Pickle}
     \subitem for [an IO File and] a Local Action Diagram, 
-		\hyperpage{22}
-    \subitem for [an IO File and] an RSGraph, \hyperpage{22}
+		\hyperpage{23}
+    \subitem for [an IO File and] an RSGraph, \hyperpage{23}
   \item \texttt  {IO{\textunderscore }Unpickle}
-    \subitem for an IO File or String, \hyperpage{22}
+    \subitem for an IO File or String, \hyperpage{23}
   \item \texttt  {IsLocalActionDiagram}
     \subitem for an object, \hyperpage{11}
+  \item \texttt  {IsomorphismLocalActionDiagrams}, \hyperpage{28}
+  \item \texttt  {IsomorphismRSGraphs}, \hyperpage{25}
   \item \texttt  {IsRSGraph}
     \subitem for an object, \hyperpage{3}
 
@@ -18,6 +27,7 @@
   \item \texttt  {LocalActionDiagramArcs}, \hyperpage{14}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Construct}\-\texttt  {Bipartition}\-\texttt  {Preserving}, 
 		\hyperpage{13}
+  \item \texttt  {LocalActionDiagramDebugSearch}, \hyperpage{33}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}, 
 		\hyperpage{12}
   \item \texttt  {LocalActionDiagramFromData}
@@ -26,18 +36,23 @@
   \item \texttt  {LocalActionDiagramFromDataNC}
     \subitem for an RSGraph, list or record of vertex labels, and list or record of arc labels, 
 		\hyperpage{11}
+  \item \texttt  {LocalActionDiagramFromLibrary}, \hyperpage{31}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Writable}\-\texttt  {String}
-    \subitem for IsString, IsBool, \hyperpage{21}
+    \subitem for IsString, IsBool, \hyperpage{22}
   \item \texttt  {LocalActionDiagramGroupName}, \hyperpage{15}
   \item \texttt  {LocalActionDiagramGroupType}, \hyperpage{16}
   \item \texttt  {LocalActionDiagramInArcs}, \hyperpage{15}
   \item \texttt  {LocalActionDiagramInNeighbours}, \hyperpage{14}
+  \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Bipartition}\-\texttt  {Preserving}\-\texttt  {Group}, 
+		\hyperpage{19}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}, 
 		\hyperpage{18}
   \item \texttt  {LocalActionDiagramIsDiscrete}, \hyperpage{16}
-  \item \texttt  {LocalActionDiagramIsEndStabiliser}, \hyperpage{18}
+  \item \texttt  {LocalActionDiagramIsEndStabiliser}, \hyperpage{19}
   \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Regular}\-\texttt  {Tree}\-\texttt  {Automorphism}\-\texttt  {Group}, 
 		\hyperpage{19}
+  \item \texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Smith}\-\texttt  {Universal}\-\texttt  {Group}, 
+		\hyperpage{18}
   \item \texttt  {LocalActionDiagramIsUnimodular}, \hyperpage{17}
   \item \texttt  {LocalActionDiagramIsUniscalar}, \hyperpage{17}
   \item \texttt  {LocalActionDiagramNumberArcs}, \hyperpage{14}
@@ -49,9 +64,20 @@
   \item \texttt  {LocalActionDiagramRSGraph}, \hyperpage{13}
   \item \texttt  {LocalActionDiagramScopos}, \hyperpage{15}
   \item \texttt  {LocalActionDiagramToWritableString}
-    \subitem for IsLocalActionDiagram, \hyperpage{20}
+    \subitem for IsLocalActionDiagram, \hyperpage{21}
   \item \texttt  {LocalActionDiagramVertexLabels}, \hyperpage{13}
   \item \texttt  {LocalActionDiagramVertices}, \hyperpage{13}
+
+  \indexspace
+
+  \item \texttt  {NumberLocalActionDiagrams}
+    \subitem for IsInt, IsInt, \hyperpage{31}
+  \item \texttt  {NumberRSGraphs}, \hyperpage{31}
+
+  \indexspace
+
+  \item \texttt  {OneLocalActionDiagram}, \hyperpage{33}
+  \item \texttt  {OneRSGraph}, \hyperpage{33}
 
   \indexspace
 
@@ -68,10 +94,12 @@
     \subitem for a matrix, permutation[, and list], \hyperpage{4}
   \item \texttt  {RSGraphByAdjacencyMatrixNC}
     \subitem for a matrix, permutation[, and list], \hyperpage{4}
+  \item \texttt  {RSGraphCanonicalLabelling}, \hyperpage{27}
   \item \texttt  {RSGraphDegree}, \hyperpage{7}
+  \item \texttt  {RSGraphFromLibrary}, \hyperpage{30}
   \item \texttt  {RSGraphFromWritableString}
-    \subitem for IsString, \hyperpage{21}
-  \item \texttt  {RSGraphHasParallelArcs}, \hyperpage{8}
+    \subitem for IsString, \hyperpage{22}
+  \item \texttt  {RSGraphHasParallelArcs}, \hyperpage{7}
   \item \texttt  {RSGraphInArcs}, \hyperpage{6}
   \item \texttt  {RSGraphInNeighbours}, \hyperpage{6}
   \item \texttt  {RSGraphIsBipartite}, \hyperpage{7}
@@ -80,15 +108,23 @@
   \item \texttt  {RSGraphNumberVertices}, \hyperpage{5}
   \item \texttt  {RSGraphOutArcs}, \hyperpage{6}
   \item \texttt  {RSGraphOutNeighbours}, \hyperpage{6}
-  \item \texttt  {RSGraphReverseMap}, \hyperpage{6}
+  \item \texttt  {RSGraphReverseMap}, \hyperpage{5}
+  \item \texttt  {RSGraphsIsomorphismsIterator}, \hyperpage{27}
   \item \texttt  {RSGraphSpanningTree}, \hyperpage{10}
   \item \texttt  {RSGraphSubgraph}
     \subitem for an RSGraph and List of arcs, \hyperpage{8}
   \item \texttt  {RSGraphSubgraphNC}
     \subitem for an RSGraph and List of arcs, \hyperpage{8}
+  \item \texttt  {RSGraphsVertexIsomorphism}, \hyperpage{26}
   \item \texttt  {RSGraphToStandardForm}, \hyperpage{9}
   \item \texttt  {RSGraphToWritableString}
-    \subitem for IsRSGraph, \hyperpage{20}
+    \subitem for IsRSGraph, \hyperpage{21}
+  \item \texttt  {RSGraphVertexAutomorphism}, \hyperpage{26}
   \item \texttt  {RSGraphVertices}, \hyperpage{5}
+
+  \indexspace
+
+  \item \texttt  {Set}\-\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Degree}\-\texttt  {Two}\-\texttt  {Vertex}\-\texttt  {Bound}, 
+		\hyperpage{33}
 
 \end{theindex}

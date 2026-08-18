@@ -43,7 +43,43 @@ when a local action diagram is finite, we can represent the diagram in &GAP; and
 @Chapter IO Operations and Visualisation 
 
 @Chapter Isomorphisms and Automorphisms
+@ChapterLabel Iso
+
+
+We support calculating isomorphisms between RSGraphs, calculating the automorphism group of an RSGraph, and
+calculating isomorphisms between local action diagrams. This functionality relies on the isomorphism and automorphism
+functions from the <Package>Digraphs</Package> and so is not available if the <Package>Digraphs</Package> is not
+available. By default this makes use of <C>Bliss</C> for calculating morphisms but it can use <C>Nauty</C> if the
+<Package>NautyTracesInterface</Package> is available.  
+
+Given two RSGraphs <M>\Gamma_1</M> and <M>\Gamma_2</M> an <E>isomorphism</E> is a pair of bijective maps
+<M>\Theta_{V} : V(\Gamma_1) \to V(\Gamma_2)</M> and <M>\Theta_{A} : A(\Gamma_1) \to A(\Gamma_2)</M> that respect
+origin vertices and the arc reversal map. Explicitly, this means that <M>\Theta_{V}(o(a)) = o(\Theta_{A}(a))</M> and
+<M>\overline{\Theta_{A}(a)} = \Theta_{A}(\overline{a})</M>. An automorphism is an isomorphism from an RSGraph to
+itself and the set of all automorphism of an RSGraph form a group under function composition.
+
+Given two local action diagrams <M>\Delta = (\Gamma, (X_{a}), (G(v)))</M> and <M>\Delta' = (\Gamma', (X_{a}'),
+(G'(v)))</M> and isomorphism between <M>\Delta</M> and <M>\Delta'</M> consists of: - an isomorphism <M>\Theta :
+\Gamma \to \Gamma'</M> and - for each vertex <M>v \in V(\Gamma)</M> a bijection <M>\Theta_{v} : X_{v} \to
+X_{\Theta(v)}</M> that restricts to a bijection from <M>X_{a}</M> to <M>X_{\Theta(a)}</M> for each <M>a \in
+o^{-1}(a)</M> and such that <M>\Theta_{v}G(v)\Theta_{v}^{-1} = G'(v)</M>. 
 
 @Chapter Enumeration
 
+Since there is a one-to-one correspondence between isomorphism classes of local action diagrams and conjugacy classes
+Of (P)-closed groups enumerating local action diagrams is the same as enumerating (P)-closed groups. By enumerating
+local action diagrams you can, for example, find the number of conjugacy classes of (P)-closed groups acting on a
+certain tree with a specified number of orbits. You can also find how many of these groups satisfy other properties,
+such as unimodularity. 
+
+We have developed algorithms to enumerate local action diagrams acting on a regular tree with a specified number of
+orbits. For the inputs we could run these algorithms on we have stored the results so they can be quickly accessed.
+Furthermore, we have implemented functions analogous to the <Package>Transitive Groups</Package> package for easily
+filtering the library of local action diagrams. 
+
+
 @Chapter Extensions
+
+We support converting between RSGraphs and digraphs from the <Package>Digraphs</Package> and graphs from the
+<Package>GRAPE</Package>. Converting from an RSGraph returns both the (di)graph and all data needed to convert back
+to the original RSGraph. 

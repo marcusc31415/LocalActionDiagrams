@@ -91,15 +91,36 @@
       2.2-19 LocalActionDiagramIsUniscalar
       2.2-20 LocalActionDiagramIsUnimodular
       2.2-21 LocalActionDiagramIsBurgerMozesUniversalGroup
-      2.2-22 LocalActionDiagramIsEndStabiliser
-      2.2-23 LocalActionDiagramIsRegularTreeAutomorphismGroup
+      2.2-22 LocalActionDiagramIsSmithUniversalGroup
+      2.2-23 LocalActionDiagramIsEndStabiliser
+      2.2-24 LocalActionDiagramIsRegularTreeAutomorphismGroup
+      2.2-25 LocalActionDiagramIsBipartitionPreservingGroup
   3 [33X[0;0YIO Operations and Visualisation[133X
     3.1 [33X[0;0YIO Operations[133X
       3.1-1 [33X[0;0YWriting To A String[133X
       3.1-2 [33X[0;0YReading From A String[133X
       3.1-3 [33X[0;0YIO Pickling/Unpickling[133X
+    3.2 [33X[0;0YVisualisation[133X
   4 [33X[0;0YIsomorphisms and Automorphisms[133X
+    4.1 [33X[0;0YRSGraph Morphisms[133X
+      4.1-1 AutomorphismGroup
+      4.1-2 IsomorphismRSGraphs
+      4.1-3 RSGraphVertexAutomorphism
+      4.1-4 RSGraphsVertexIsomorphism
+      4.1-5 RSGraphsIsomorphismsIterator
+      4.1-6 RSGraphCanonicalLabelling
+      4.1-7 IsomorphismLocalActionDiagrams
   5 [33X[0;0YEnumeration[133X
+    5.1 [33X[0;0YEnumerating RSGraphs and Local Action Diagrams[133X
+      5.1-1 RSGraphFromLibrary
+      5.1-2 LocalActionDiagramFromLibrary
+      5.1-3 [33X[0;0YNumber of RSGraphs/Local Action Diagrams[133X
+    5.2 [33X[0;0YSearching The Library[133X
+      5.2-1 [33X[0;0YAllRSGraphs/AllLocalActionDiagrams[133X
+      5.2-2 [33X[0;0YOneRSGraph/OneLocalActionDiagram[133X
+      5.2-3 SetLocalActionDiagramDegreeTwoVertexBound
+      5.2-4 LocalActionDiagramDebugSearch
+  6 [33X[0;0YExtensions[133X
   
   
   [32X

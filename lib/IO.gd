@@ -43,11 +43,11 @@ DeclareOperation("LocalActionDiagramToWritableString", [IsLocalActionDiagram]);
 #! gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
 #! gap> RSGraphToWritableString(graph);
 #! "1|1,1,1|P"
-#!
 #! gap> lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;
 #! gap> LocalActionDiagramGroupType(lad);;
 #! gap> LocalActionDiagramToWritableString(lad);
-#! "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! "
+#! "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDia\
+#! gramScopos! "
 #! @EndExampleSession
 
 #! @EndGroup
@@ -76,35 +76,35 @@ DeclareOperation("LocalActionDiagramFromWritableString", [IsString, IsBool]);
 DeclareOperation("LocalActionDiagramFromWritableString", [IsString]);
 
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph_string := "1|1,1,1|P";;
 #! gap> graph := RSGraphFromWritableString(graph_string);;
 #! gap> Print(graph);
 #! Vertices = { 1 }
 #! Arcs = {
-#!     1 = ( origin = 1, terminus = 1, inverse = 1 )
+#! 	1 = ( origin = 1, terminus = 1, inverse = 1 )
 #! }
 #! Reverse Map = ()
-#!
-#! gap> lad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDiagramScopos! ";;
-#! gap> lad := LocalActionDiagramFromWritableString(lad_string);
+#! gap> lad_string := "1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!Gene\
+#! > ral|LocalActionDiagramScopos! ";;
+#! gap> lad := LocalActionDiagramFromWritableString(lad_string);;
 #! gap> Print(lad);
 #! Vertices = { 1 }
 #! Arcs = {
-#!     1 = ( origin = 1, terminus = 1, inverse = 1 )
+#! 	1 = ( origin = 1, terminus = 1, inverse = 1 )
 #! }
 #! Reverse Map = ()
 #! Vertex Labels = {
-#!     1 = Group( [ (1,2) ] )
+#! 	1 = Group( [ (1,2) ] )
 #! }
 #! Arc Labels = {
-#!     1 = [ 1, 2 ]
+#! 	1 = [ 1, 2 ]
 #! }
 #! gap> Print("LocalActionDiagramScopos" in KnownAttributesOfObject(lad));
 #! true
 #! gap> Print("LocalActionDiagramIsDiscrete" in KnownAttributesOfObject(lad));
 #! false
-#! @EndExampleSession
+#! @EndLogSession
 
 
 #! @EndGroup
@@ -141,20 +141,24 @@ DeclareOperation("LocalActionDiagramFromWritableString", [IsString]);
 #!     </Description>
 #! </ManSection>
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
 #! gap> lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;
 #! gap> list := [graph, lad];
-#! [ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ]
+#! [ <RSGraph with 1 vertex and 1 arc>, 
+#!   <LocalActionDiagram with 1 vertex and 1 arc> ]
 #! gap> file := IO_File("test.pickle", "w");;
 #! gap> IO_Pickle(file, list);
 #! IO_OK
 #! gap> IO_Close(file);;
 #! gap> file := IO_File("test.pickle", "r");;
 #! gap> IO_Unpickle(file);
-#! [ <RSGraph with 1 vertex and 1 arc>, <LocalActionDiagram with 1 vertex and 1 arc> ]
-#! @EndExampleSession
+#! [ <RSGraph with 1 vertex and 1 arc>, 
+#!   <LocalActionDiagram with 1 vertex and 1 arc> ]
+#! @EndLogSession
 
 
 
 #! @Section Visualisation
+#!
+#! <E>Stephan to do.</E>

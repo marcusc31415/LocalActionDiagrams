@@ -1,3 +1,235 @@
   
   [1X5 [33X[0;0YEnumeration[133X[101X
   
+  [33X[0;0YSince  there  is  a one-to-one correspondence between isomorphism classes of
+  local action diagrams and conjugacy classes Of (P)-closed groups enumerating
+  local  action  diagrams  is  the  same  as enumerating (P)-closed groups. By
+  enumerating  local  action diagrams you can, for example, find the number of
+  conjugacy  classes  of  (P)-closed  groups  acting  on a certain tree with a
+  specified  number  of  orbits.  You  can  also find how many of these groups
+  satisfy other properties, such as unimodularity.[133X
+  
+  [33X[0;0YWe  have developed algorithms to enumerate local action diagrams acting on a
+  regular  tree with a specified number of orbits. For the inputs we could run
+  these  algorithms  on  we  have  stored  the  results so they can be quickly
+  accessed.  Furthermore,  we  have  implemented  functions  analogous  to the
+  [5XTransitive  Groups[105X  package for easily filtering the library of local action
+  diagrams.[133X
+  
+  
+  [1X5.1 [33X[0;0YEnumerating RSGraphs and Local Action Diagrams[133X[101X
+  
+  [1X5.1-1 RSGraphFromLibrary[101X
+  
+  [33X[1;0Y[29X[2XRSGraphFromLibrary[102X( [3Xdegree[103X, [3Xno_verts[103X[, [3Xidx[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA list of RSGraphs or a specific element from this list.[133X
+  
+  [33X[0;0YThis  function  returns  a list of RSGraphs such that each vertex has degree
+  less  than  or  equal to [3Xdegree[103X and the graph has exactly [3Xno_verts[103X vertices.
+  Each graph in the list is unique up to isomorphism. If the optional argument
+  [3Xidx[103X  is  provided  then  it  will return the RSGraph in that position of the
+  list.  This is analogous to the [10XTransitiveGroup[110X function from the [5XTransitive
+  Groups[105X package.[133X
+  
+  [33X[0;0YThere  are  two ways this function can get the list of RSGraphs. If the data
+  for  the  given  degree and number of vertices is stored on the disk then it
+  will  be  read from the disk. If the data is not stored on the disk then the
+  RSGraph enumeration algorithm will be run instead. An information message is
+  displayed if the enumeration algorithm is used.[133X
+  
+  [33X[0;0YNote  that the [5XDigraphs[105X is required for the enumeration algorithm to run. If
+  it  is  not loaded then the function will return an error if it needs to run
+  the  enumeration algorithm. The [5XDigraphs[105X is NOT needed if the data is stored
+  on the disk.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph_list := RSGraphFromLibrary(3, 2);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := graph_list[4];[127X[104X
+    [4X[28X<RSGraph with 2 vertices and 3 arcs>[128X[104X
+    [4X[25Xgap>[125X [27Xgraph_2 := RSGraphFromLibrary(3, 2, 4);;[127X[104X
+    [4X[25Xgap>[125X [27XIsomorphismRSGraphs(graph, graph_2);[127X[104X
+    [4X[28X()[128X[104X
+  [4X[32X[104X
+  
+  [1X5.1-2 LocalActionDiagramFromLibrary[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramFromLibrary[102X( [3Xdegree[103X, [3Xno_verts[103X[, [3Xidx[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA  list  of  local action diagrams or a specific element from this
+            list.[133X
+  
+  [33X[0;0YThis  function returns a list of local action diagrams such that each vertex
+  label  has  degree  equal  to  [3Xdegree[103X  and  the  graph  has exactly [3Xno_verts[103X
+  vertices. Each local action diagram in the list is unique up to isomorphism.
+  If  the  optional  argument  [3Xidx[103X  is  provided then it will return the local
+  action  diagram  in  that  position  of  the  list. This is analogous to the
+  [10XTransitiveGroup[110X function from the [5XTransitive Groups[105X package.[133X
+  
+  [33X[0;0YThere  are two ways this function can get the list of local action diagrams.
+  If  the  data  for  the given degree and number of vertices is stored on the
+  disk  then  it  will be read from the disk. If the data is not stored on the
+  disk  then  the  local  action  diagram  enumeration  algorithm  will be run
+  instead. An information message is displayed if the enumeration algorithm is
+  used.[133X
+  
+  [33X[0;0YNote  that the [5XDigraphs[105X is required for the enumeration algorithm to run. If
+  it  is  not loaded then the function will return an error if it needs to run
+  the  enumeration algorithm. The [5XDigraphs[105X is NOT needed if the data is stored
+  on the disk.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xlad_list := LocalActionDiagramFromLibrary(3, 2);;[127X[104X
+    [4X[25Xgap>[125X [27Xlad := lad_list[4];[127X[104X
+    [4X[28X<LocalActionDiagram with 2 vertices and 4 arcs>[128X[104X
+    [4X[25Xgap>[125X [27Xlad_2 := LocalActionDiagramFromLibrary(3, 2, 4);;[127X[104X
+    [4X[25Xgap>[125X [27XIsomorphismLocalActionDiagrams(lad, lad_2);[127X[104X
+    [4X[28X[ (), (), rec( 1 := <mapping: Domain([ 1, 2, 3 ]) -> Domain([ 1, 2, 3 ]) >, [128X[104X
+    [4X[28X      2 := <mapping: Domain([ 4, 5, 6 ]) -> Domain([ 4, 5, 6 ]) > ) ][128X[104X
+  [4X[32X[104X
+  
+  
+  [1X5.1-3 [33X[0;0YNumber of RSGraphs/Local Action Diagrams[133X[101X
+  
+  [33X[1;0Y[29X[2XNumberRSGraphs[102X( [3Xdegree[103X, [3Xno_verts[103X ) [32X operation[133X
+  [33X[1;0Y[29X[2XNumberLocalActionDiagrams[102X( [3Xdegree[103X, [3Xno_verts[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YThe  number  of RSGraphs or Local Action Diagrams with a specified
+            degree and number of vertices.[133X
+  
+  [33X[0;0YThese functions returns the number of RSGraphs or Local Action Diagrams with
+  degree   [3Xdegree[103X   and   [3Xno_verts[103X   vertices.   They   are  a  shorthand  for
+  [10XSize(RSGraphFromLibrary([3Xdegree[103X[10X,                 [3Xno_verts[103X[10X)[110X                and
+  [10XSize(LocalActionDiagramFromLibrary([3Xdegree[103X[10X,  [3Xno_verts[103X[10X)[110X.  They are included to
+  be  analogous  to  the [10XNrTransitiveGroups[110X function from th [5XTransitive Groups[105X
+  library.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xlad_list := LocalActionDiagramFromLibrary(3, 3);;[127X[104X
+    [4X[25Xgap>[125X [27XSize(lad_list);[127X[104X
+    [4X[28X78[128X[104X
+    [4X[25Xgap>[125X [27XNumberLocalActionDiagrams(3, 3);[127X[104X
+    [4X[28X78[128X[104X
+  [4X[32X[104X
+  
+  
+  [1X5.2 [33X[0;0YSearching The Library[133X[101X
+  
+  
+  [1X5.2-1 [33X[0;0YAllRSGraphs/AllLocalActionDiagrams[133X[101X
+  
+  [33X[1;0Y[29X[2XAllRSGraphs[102X( [[3Xfunction_1[103X, [3Xvalue_1[103X, [3X...[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XAllLocalActionDiagrams[102X( [[3Xfunction_1[103X, [3Xvalue_1[103X, [3X...[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAll  RSGraphs  or  Local Action Diagrams satisfying the conditions
+            given as arguments.[133X
+  
+  [33X[0;0YThese  functions  return  a  list  of  RSGraphs  or  Local  Action  Diagrams
+  satisfying  the  conditions  specified. The functions take an even number of
+  inputs which alternate between functions and values. Each function must have
+  a  single  argument  as  input  which  is  either an RSGraph or local action
+  diagram.  The  output  of  [3Xfunction_i[103X  must  be comparable with the equality
+  operation to [3Xvalue_i[103X. The functions are analogous to the [10XAllTransitiveGroups[110X
+  function from the [5XTransitive Groups[105X package.[133X
+  
+  [33X[0;0YThese functions work by first starting with a list of every RSGraph or Local
+  Action  Diagram stored on the disk. Each function supplied as an argument is
+  applied  to  every  element  of  this  list  and the result of applying this
+  function  is  compared with the provided value. If it matches the value then
+  the  element  is  kept  in  the  list; otherwise it is discarded. After this
+  process  is done for every argument the final list is returned. Note that it
+  can be an empty list if there are no elements satisfying all conditions.[133X
+  
+  [33X[0;0YIf  any of the functions provided are properties or attribute of RSGraphs or
+  Local  Action  Diagrams then these functions are prioritised for evaluation.
+  This  means  that  any function which is not a property or attribute will be
+  evaluated  after each property and attribute is. The reason for this is that
+  properties and attributes Are known the by "easy" to calculate or are stored
+  in  the  library  data  and  so this can speed up the search by reducing the
+  search space for the potentially "harder" functions.[133X
+  
+  [33X[0;0YThe  first  time one of these functions is called the entire library is read
+  into the GAP sessions memory. Information messages are displayed during this
+  process as this can take some time. Subsequent calls to this function do not
+  need to read the library files.[133X
+  
+  [33X[0;0YIf  no  arguments  are  provided  then  a complete list of RSGraphs or local
+  action diagrams is returned. Furthermore, every degree two RSGraph and local
+  action  diagram  can  be  quickly  manually  constructed.  By  default, this
+  function  only  includes  those with up to ten vertices. This can be changed
+  with the [2XSetLocalActionDiagramDegreeTwoVertexBound[102X ([14X5.2-3[114X) function.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XTestFunction := function(lad)[127X[104X
+    [4X[25X>[125X [27X   	return LocalActionDiagramVertexLabels(lad).(1);[127X[104X
+    [4X[25X>[125X [27X   end;[127X[104X
+    [4X[28Xfunction( lad ) ... end[128X[104X
+    [4X[25Xgap>[125X [27Xlad_list := AllLocalActionDiagrams(TestFunction, Group((1,2)), \ [127X[104X
+    [4X[25X>[125X [27X                                      LocalActionDiagramIsUnimodular, \ [127X[104X
+    [4X[25X>[125X [27X                                      true);[127X[104X
+    [4X[28X[ <LocalActionDiagram with 1 vertex and 1 arc>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 1 vertex and 6 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 1 vertex and 6 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 1 vertex and 6 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 1 vertex and 1 arc>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 2 vertices and 2 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 3 vertices and 4 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 4 vertices and 6 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 5 vertices and 8 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 6 vertices and 10 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 7 vertices and 12 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 8 vertices and 14 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 9 vertices and 16 arcs>, [128X[104X
+    [4X[28X  <LocalActionDiagram with 10 vertices and 18 arcs> ][128X[104X
+    [4X[25Xgap>[125X [27XPrint(lad_list[3]);[127X[104X
+    [4X[28XVertices = { 1 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X	1 = ( origin = 1, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X	2 = ( origin = 1, terminus = 1, inverse = 2 )[128X[104X
+    [4X[28X	3 = ( origin = 1, terminus = 1, inverse = 3 )[128X[104X
+    [4X[28X	4 = ( origin = 1, terminus = 1, inverse = 4 )[128X[104X
+    [4X[28X	5 = ( origin = 1, terminus = 1, inverse = 6 )[128X[104X
+    [4X[28X	6 = ( origin = 1, terminus = 1, inverse = 5 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (5,6)[128X[104X
+    [4X[28XVertex Labels = {[128X[104X
+    [4X[28X	1 = Group( [ (1,2) ] )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XArc Labels = {[128X[104X
+    [4X[28X	1 = [ 1, 2 ][128X[104X
+    [4X[28X	2 = [ 3 ][128X[104X
+    [4X[28X	3 = [ 4 ][128X[104X
+    [4X[28X	4 = [ 5 ][128X[104X
+    [4X[28X	5 = [ 6 ][128X[104X
+    [4X[28X	6 = [ 7 ][128X[104X
+    [4X[28X}[128X[104X
+  [4X[32X[104X
+  
+  
+  [1X5.2-2 [33X[0;0YOneRSGraph/OneLocalActionDiagram[133X[101X
+  
+  [33X[1;0Y[29X[2XOneRSGraph[102X( [[3Xfunction_1[103X, [3Xvalue_1[103X, [3X...[103X] ) [32X operation[133X
+  [33X[1;0Y[29X[2XOneLocalActionDiagram[102X( [[3Xfunction_1[103X, [3Xvalue_1[103X, [3X...[103X] ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YOne  RSGraphs  or  Local Action Diagrams satisfying the conditions
+            given as arguments or [9Xfail[109X if there are none satisfying them.[133X
+  
+  [33X[0;0YThese  functions  are  a  shorthand for [10XAllRSGraphs([[3Xfunction_1[103X[10X, [3Xfunction_2[103X[10X,
+  ...])[1][110X  and [10XAllLocalActionDiagrams([[3Xfunction_1[103X[10X, [3Xfunction_2[103X[10X, ...])[1][110X. They
+  are  analogous to the [10XOneTransitiveGroup[110X function from the [5XTransitive Groups[105X
+  package.  Note  that they do not offer any speed improvements to running the
+  "[10XAll[110X" variants of the function.[133X
+  
+  [1X5.2-3 SetLocalActionDiagramDegreeTwoVertexBound[101X
+  
+  [33X[1;0Y[29X[2XSetLocalActionDiagramDegreeTwoVertexBound[102X( [3Xbound[103X ) [32X operation[133X
+  
+  [33X[0;0YSince  any  RSGraph  and  Local  action diagram of degree two can be quickly
+  manually  constructed there needs to be a bound on the amount to use for the
+  search  functions  ([2XAllRSGraphs[102X ([14X5.2-1[114X), [2XAllLocalActionDiagrams[102X ([14X5.2-1[114X)). By
+  default this value is [10X10[110X. This can be changed using this function to [3Xbound[103X.[133X
+  
+  [1X5.2-4 LocalActionDiagramDebugSearch[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramDebugSearch[102X( [3Xdebug[103X ) [32X operation[133X
+  
+  [33X[0;0YIf  [3Xdebug[103X  is  [9Xtrue[109X  then  if  there  is  an  error  in the search functions
+  ([2XAllRSGraphs[102X  ([14X5.2-1[114X),  [2XAllLocalActionDiagrams[102X  ([14X5.2-1[114X)) this will cause the
+  error  message to say which function and argument caused this error. It will
+  not say what the error is.[133X
+  
