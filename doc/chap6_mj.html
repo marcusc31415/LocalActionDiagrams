@@ -25,11 +25,113 @@
 <p id="mathjaxlink" class="pcenter"><a href="chap6.html">[MathJax off]</a></p>
 <p><a id="X8236AD927A5A0E5A" name="X8236AD927A5A0E5A"></a></p>
 <div class="ChapSects"><a href="chap6_mj.html#X8236AD927A5A0E5A">6 <span class="Heading">Extensions</span></a>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap6_mj.html#X798D4F6378B9B419">6.1 <span class="Heading">Digraphs Conversion</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6_mj.html#X7AE6CDC57C4422D5">6.1-1 RSGraphToDigraph</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6_mj.html#X7F3D31CC84ECB33D">6.1-2 RSGraphFromDigraph</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6_mj.html#X7F3D31CC84ECB33D">6.1-3 RSGraphFromDigraph</a></span>
+</div></div>
 </div>
 
 <h3>6 <span class="Heading">Extensions</span></h3>
 
 <p>We support converting between RSGraphs and digraphs from the <strong class="pkg">Digraphs</strong> and graphs from the <strong class="pkg">GRAPE</strong>. Converting from an RSGraph returns both the (di)graph and all data needed to convert back to the original RSGraph.</p>
+
+<p><a id="X798D4F6378B9B419" name="X798D4F6378B9B419"></a></p>
+
+<h4>6.1 <span class="Heading">Digraphs Conversion</span></h4>
+
+<p><a id="X7AE6CDC57C4422D5" name="X7AE6CDC57C4422D5"></a></p>
+
+<h5>6.1-1 RSGraphToDigraph</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphToDigraph</code>( <var class="Arg">rsgraph</var> )</td><td class="tdright">(&nbsp;attribute&nbsp;)</td></tr></table></div>
+<p>Returns: A record containing the digraph and all data needed to reconstruct the RSGraph.</p>
+
+<p>Given an RSGraph this function converts is to a digraph from the <strong class="pkg">Digraphs</strong> package. A record is returned containing both the digraph and all data needed to reconstruct the original RSGraph. The record returned contains the elements:</p>
+
+
+<ul>
+<li><p><code class="code">digraph</code>: a digraph representing the graph structure (an object in the category <code class="code">IsDigraph</code>.)</p>
+
+</li>
+<li><p><code class="code">reverse_map</code>: the reverse map of the original RSGraph.</p>
+
+</li>
+<li><p><code class="code">vertex_id_map</code>: a bijective map from the vertices of the original RSGraph to the vertices of the digraph which determines the vertex correspondence between the RSGraph and digraph.</p>
+
+</li>
+<li><p><code class="code">arc_id_map</code>: a bijective map from the arcs of the original RSGraph to the edges of the digraph which determines the arc correspondence between the RSGraph and digraph.</p>
+
+</li>
+</ul>
+<p>As an example, if <code class="code">2</code> is a vertex in the RSGraph then <code class="code">2^vertex_id_map</code> is the corresponding vertex in the digraph. All digraphs returned by this function have vertices labelled from <span class="SimpleMath">\(1\)</span> to <span class="SimpleMath">\(n\)</span> where <span class="SimpleMath">\(n\)</span> is the number of vertices in the RSGraph. Arc <code class="code">i</code> in the digraph is the arc in the <code class="code">i</code>th position of <code class="code">DigraphEdges(digraph)</code> --- i.e. <code class="code">DigraphEdges(digraph)[i]</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">digraph_rec := RSGraphToDigraph(graph);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">digraph_rec.digraph;</span>
+&lt;immutable digraph with 2 vertices, 2 edges&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">2^digraph_rec.vertex_id_map;</span>
+1
+</pre></div>
+
+<p><a id="X7F3D31CC84ECB33D" name="X7F3D31CC84ECB33D"></a></p>
+
+<h5>6.1-2 RSGraphFromDigraph</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphFromDigraph</code>( <var class="Arg">digraph_rec</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: An RSGraph corresponding to the data in the input record.</p>
+
+<p>Given the output from the function <code class="func">RSGraphToDigraph</code> (<a href="chap6_mj.html#X7AE6CDC57C4422D5"><span class="RefLink">6.1-1</span></a>) (<var class="Arg">digraph_rec</var>) this function returns the corresponding RSGraph. This returns an RSGraph that is exactly the same as the original RSGraph. If the data input to this function is not fro the <code class="code">RSGraphToDigraph</code> function then there is no guarantee that this function will run correctly.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">digraph_rec := RSGraphToDigraph(graph);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">new_graph := RSGraphFromDigraph(digraph_rec);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(graph);</span>
+Vertices = { 2, 3 }
+Arcs = {
+	1 = ( origin = 2, terminus = 3, inverse = 2 )
+	2 = ( origin = 3, terminus = 2, inverse = 1 )
+}
+Reverse Map = (1,2)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(new_graph);</span>
+Vertices = { 2, 3 }
+Arcs = {
+	1 = ( origin = 2, terminus = 3, inverse = 2 )
+	2 = ( origin = 3, terminus = 2, inverse = 1 )
+}
+Reverse Map = (1,2)
+</pre></div>
+
+<p><a id="X7F3D31CC84ECB33D" name="X7F3D31CC84ECB33D"></a></p>
+
+<h5>6.1-3 RSGraphFromDigraph</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphFromDigraph</code>( <var class="Arg">digraph</var>, <var class="Arg">reverse_map</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: An RSGraph.</p>
+
+<p>Given a <var class="Arg">digraph</var> and a <var class="Arg">reverse_map</var> defined on the edges of the digraph this function returns an RSGraph with the same structure as the digraph and with the reverse map provided. This function works by using the adjacency listing of the digraph given by <code class="code">DigraphEdges(<var class="Arg">digraph</var>)</code>. This means that the reverse map must be compatible with the order of the edges given by this adjacency listing.</p>
+
+<p>All normal checks for an RSGraph construction are applied when using this function. In particular, this means that the digraph must be connected and must have a reverse arc for every arc in the digraph.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">digraph := DigraphByEdges([[1, 1], [1, 2], [2, 1]]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphFromDigraph(digraph, (2, 3));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(graph);</span>
+Vertices = { 1, 2 }
+Arcs = {
+	1 = ( origin = 1, terminus = 1, inverse = 1 )
+	2 = ( origin = 1, terminus = 2, inverse = 3 )
+	3 = ( origin = 2, terminus = 1, inverse = 2 )
+}
+Reverse Map = (2,3)
+</pre></div>
 
 
 <div class="chlinkprevnextbot">&nbsp;<a href="chap0_mj.html">[Top of Book]</a>&nbsp;  <a href="chap0_mj.html#contents">[Contents]</a>&nbsp;  &nbsp;<a href="chap5_mj.html">[Previous Chapter]</a>&nbsp;  &nbsp;<a href="chapInd_mj.html">[Next Chapter]</a>&nbsp;  </div>

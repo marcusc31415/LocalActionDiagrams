@@ -60,6 +60,7 @@
   [2XRSGraphByAdjacencyMatrixNC[102X, for a matrix, permutation[, and list] 1.1-3 
   [2XRSGraphCanonicalLabelling[102X 4.1-6 
   [2XRSGraphDegree[102X 1.2-13 
+  [2XRSGraphFromDigraph[102X 6.1-2  6.1-3 
   [2XRSGraphFromLibrary[102X 5.1-1 
   [2XRSGraphFromWritableString[102X, for IsString 3.1-2 
   [2XRSGraphHasParallelArcs[102X 1.2-16 
@@ -77,6 +78,7 @@
   [2XRSGraphSubgraph[102X, for an RSGraph and List of arcs 1.3-2 
   [2XRSGraphSubgraphNC[102X, for an RSGraph and List of arcs 1.3-2 
   [2XRSGraphsVertexIsomorphism[102X 4.1-4 
+  [2XRSGraphToDigraph[102X 6.1-1 
   [2XRSGraphToStandardForm[102X 1.3-3 
   [2XRSGraphToWritableString[102X, for IsRSGraph 3.1-1 
   [2XRSGraphVertexAutomorphism[102X 4.1-3 

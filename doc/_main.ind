@@ -96,6 +96,7 @@
     \subitem for a matrix, permutation[, and list], \hyperpage{4}
   \item \texttt  {RSGraphCanonicalLabelling}, \hyperpage{27}
   \item \texttt  {RSGraphDegree}, \hyperpage{7}
+  \item \texttt  {RSGraphFromDigraph}, \hyperpage{35}
   \item \texttt  {RSGraphFromLibrary}, \hyperpage{30}
   \item \texttt  {RSGraphFromWritableString}
     \subitem for IsString, \hyperpage{22}
@@ -116,6 +117,7 @@
   \item \texttt  {RSGraphSubgraphNC}
     \subitem for an RSGraph and List of arcs, \hyperpage{8}
   \item \texttt  {RSGraphsVertexIsomorphism}, \hyperpage{26}
+  \item \texttt  {RSGraphToDigraph}, \hyperpage{34}
   \item \texttt  {RSGraphToStandardForm}, \hyperpage{9}
   \item \texttt  {RSGraphToWritableString}
     \subitem for IsRSGraph, \hyperpage{21}

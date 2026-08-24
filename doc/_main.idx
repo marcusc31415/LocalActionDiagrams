@@ -78,3 +78,6 @@
 \indexentry{OneLocalActionDiagram@\texttt  {OneLocalActionDiagram}!|hyperpage}{33}
 \indexentry{SetLocalActionDiagramDegreeTwoVertexBound@\texttt  {Set}\-\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Degree}\-\texttt  {Two}\-\texttt  {Vertex}\-\texttt  {Bound}!|hyperpage}{33}
 \indexentry{LocalActionDiagramDebugSearch@\texttt  {LocalActionDiagramDebugSearch}!|hyperpage}{33}
+\indexentry{RSGraphToDigraph@\texttt  {RSGraphToDigraph}|hyperpage}{34}
+\indexentry{RSGraphFromDigraph@\texttt  {RSGraphFromDigraph}|hyperpage}{35}
+\indexentry{RSGraphFromDigraph@\texttt  {RSGraphFromDigraph}|hyperpage}{35}

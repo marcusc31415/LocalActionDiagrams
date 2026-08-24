@@ -8,5 +8,107 @@
 We support converting between RSGraphs and digraphs from the <Package>Digraphs</Package> and graphs from the
 <Package>GRAPE</Package>. Converting from an RSGraph returns both the (di)graph and all data needed to convert back
 to the original RSGraph. 
+<Section Label="Chapter_Extensions_Section_Digraphs_Conversion">
+<Heading>Digraphs Conversion</Heading>
+
+<ManSection>
+  <Attr Arg="rsgraph" Name="RSGraphToDigraph" />
+ <Returns>A record containing the digraph and all data needed to reconstruct the  RSGraph.
+</Returns>
+ <Description>
+Given an RSGraph this function converts is to a digraph from the
+ <Package>Digraphs</Package> package. A record is returned containing both the
+ digraph and all data needed to reconstruct the original RSGraph. The record
+ returned contains the elements:
+<List>
+<Item>
+<C>digraph</C>: a digraph representing the graph structure (an object in the category <C>IsDigraph</C>.)
+</Item>
+<Item>
+<C>reverse_map</C>: the reverse map of the original RSGraph.
+</Item>
+<Item>
+<C>vertex_id_map</C>: a bijective map from the vertices of the original RSGraph to the vertices of the digraph which determines the vertex correspondence between the RSGraph and digraph. 
+</Item>
+<Item>
+<C>arc_id_map</C>: a bijective map from the arcs of the original RSGraph to the edges of the digraph which determines the arc correspondence between the RSGraph and digraph. 
+</Item>
+</List>
+<P/>
+ As an example, if <C>2</C> is a vertex in the RSGraph then <C>2^vertex_id_map</C> is the corresponding vertex in the digraph. All digraphs returned by this function have vertices labelled from <M>1</M> to <M>n</M> where <M>n</M> is the number of vertices in the RSGraph. Arc <C>i</C> in the digraph is the arc in the <C>i</C>th position of <C>DigraphEdges(digraph)</C> --- i.e. <C>DigraphEdges(digraph)[i]</C>. 
+ </Description>
+</ManSection>
+
+<Log><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;
+gap> digraph_rec := RSGraphToDigraph(graph);;
+gap> digraph_rec.digraph;
+<immutable digraph with 2 vertices, 2 edges>
+gap> 2^digraph_rec.vertex_id_map;
+1
+]]></Log>
+
+<ManSection>
+  <Oper Arg="digraph_rec" Name="RSGraphFromDigraph" />
+ <Returns>An RSGraph corresponding to the data in the input record.
+</Returns>
+ <Description>
+Given the output from the function <Ref Func="RSGraphToDigraph"/> (<A>digraph_rec</A>) this function returns the corresponding RSGraph. This returns an RSGraph that is exactly the same as the original RSGraph. If the data input to this function is not fro the <C>RSGraphToDigraph</C> function then there is no guarantee that this function will run correctly.
+ </Description>
+</ManSection>
+
+<Log><![CDATA[
+gap> graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;
+gap> digraph_rec := RSGraphToDigraph(graph);;
+gap> new_graph := RSGraphFromDigraph(digraph_rec);;
+gap> Print(graph);
+Vertices = { 2, 3 }
+Arcs = {
+	1 = ( origin = 2, terminus = 3, inverse = 2 )
+	2 = ( origin = 3, terminus = 2, inverse = 1 )
+}
+Reverse Map = (1,2)
+gap> Print(new_graph);
+Vertices = { 2, 3 }
+Arcs = {
+	1 = ( origin = 2, terminus = 3, inverse = 2 )
+	2 = ( origin = 3, terminus = 2, inverse = 1 )
+}
+Reverse Map = (1,2)
+]]></Log>
+
+<ManSection>
+  <Oper Arg="digraph, reverse_map" Name="RSGraphFromDigraph" />
+ <Returns>An RSGraph.
+</Returns>
+ <Description>
+Given a <A>digraph</A> and a <A>reverse_map</A> defined on the edges
+ of the digraph this function returns an RSGraph with the same structure as the 
+ digraph and with the reverse map provided. This function works by using the 
+ adjacency listing of the digraph given by <C>DigraphEdges(<A>digraph</A>)</C>. This
+ means that the reverse map must be compatible with the order of the edges given
+ by this adjacency listing. 
+<P/>
+ All normal checks for an RSGraph construction are applied when using this function.
+ In particular, this means that the digraph must be connected and must have a reverse
+ arc for every arc in the digraph. 
+ </Description>
+</ManSection>
+
+<Log><![CDATA[
+gap> digraph := DigraphByEdges([[1, 1], [1, 2], [2, 1]]);;
+gap> graph := RSGraphFromDigraph(digraph, (2, 3));;
+gap> Print(graph);
+Vertices = { 1, 2 }
+Arcs = {
+	1 = ( origin = 1, terminus = 1, inverse = 1 )
+	2 = ( origin = 1, terminus = 2, inverse = 3 )
+	3 = ( origin = 2, terminus = 1, inverse = 2 )
+}
+Reverse Map = (2,3)
+]]></Log>
+
+</Section>
+
 </Chapter>
 

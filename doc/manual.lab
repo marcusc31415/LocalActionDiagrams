@@ -19,6 +19,7 @@
 \makelabel{localactiondiagrams:Enumerating RSGraphs and Local Action Diagrams}{5.1}{X7863275F7EC54ADE}
 \makelabel{localactiondiagrams:Searching The Library}{5.2}{X7A147BAA879758A4}
 \makelabel{localactiondiagrams:Extensions}{6}{X8236AD927A5A0E5A}
+\makelabel{localactiondiagrams:Digraphs Conversion}{6.1}{X798D4F6378B9B419}
 \makelabel{localactiondiagrams:Index}{Ind}{X83A0356F839C696F}
 \makelabel{localactiondiagrams:IsRSGraph for an object}{1.1.1}{X7D238B008758C147}
 \makelabel{localactiondiagrams:RSGraphByAdjacencyList for a list, permutation[, and list]}{1.1.2}{X794620DB807A22B3}
@@ -100,3 +101,6 @@
 \makelabel{localactiondiagrams:OneLocalActionDiagram}{5.2.2}{X843733827AF9A33E}
 \makelabel{localactiondiagrams:SetLocalActionDiagramDegreeTwoVertexBound}{5.2.3}{X82DA1445782FFD9C}
 \makelabel{localactiondiagrams:LocalActionDiagramDebugSearch}{5.2.4}{X82F92FF07B9BEA8A}
+\makelabel{localactiondiagrams:RSGraphToDigraph}{6.1.1}{X7AE6CDC57C4422D5}
+\makelabel{localactiondiagrams:RSGraphFromDigraph}{6.1.2}{X7F3D31CC84ECB33D}
+\makelabel{localactiondiagrams:RSGraphFromDigraph}{6.1.3}{X7F3D31CC84ECB33D}

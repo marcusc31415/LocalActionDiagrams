@@ -121,6 +121,10 @@
       5.2-3 SetLocalActionDiagramDegreeTwoVertexBound
       5.2-4 LocalActionDiagramDebugSearch
   6 [33X[0;0YExtensions[133X
+    6.1 [33X[0;0YDigraphs Conversion[133X
+      6.1-1 RSGraphToDigraph
+      6.1-2 RSGraphFromDigraph
+      6.1-3 RSGraphFromDigraph
   
   
   [32X
