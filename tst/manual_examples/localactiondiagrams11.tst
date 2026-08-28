@@ -10,18 +10,9 @@
 #
 gap> START_TEST("localactiondiagrams11.tst");
 
-# doc/_Chapter_Local_Action_Diagrams.xml:309-321
-gap> graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;
-gap> vertex_labels := [SymmetricGroup(3), Group((1,2,3))];;
-gap> arc_labels := [[1,2,3], [1,2,3]];;
-gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
-gap> LocalActionDiagramRegularTree(lad);
-3
-gap> vertex_labels_2 := [SymmetricGroup(3), Group((1,2))];;
-gap> arc_labels_2 := [[1,2,3], [1,2]];;
-gap> lad_2 := LocalActionDiagramFromData(graph, vertex_labels_2, arc_labels_2);;
-gap> LocalActionDiagramRegularTree(lad_2);
-fail
+# doc/_Chapter_Local_Action_Diagrams.xml:144-147
+gap> lad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1,2)(3,4)));
+<U(Group( [ (1,2)(3,4) ] )) (as a Local Action Diagram)>
 
 #
 gap> STOP_TEST("localactiondiagrams11.tst", 1);

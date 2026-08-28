@@ -10,10 +10,15 @@
 #
 gap> START_TEST("localactiondiagrams18.tst");
 
-# doc/_Chapter_Iso.xml:39-43
-gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
-gap> AutomorphismGroup(graph);
-Group([ (2,3) ])
+# doc/_Chapter_IO_Operations_and_Visualisation.xml:82-91
+gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
+gap> RSGraphToWritableString(graph);
+"1|1,1,1|P"
+gap> lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;
+gap> LocalActionDiagramGroupType(lad);;
+gap> LocalActionDiagramToWritableString(lad);
+"1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDia\
+gramScopos! "
 
 #
 gap> STOP_TEST("localactiondiagrams18.tst", 1);

@@ -10,15 +10,21 @@
 #
 gap> START_TEST("localactiondiagrams17.tst");
 
-# doc/_Chapter_IO_Operations_and_Visualisation.xml:82-91
-gap> graph := RSGraphByAdjacencyList([[1, 1]], ());;
-gap> RSGraphToWritableString(graph);
-"1|1,1,1|P"
-gap> lad := LocalActionDiagramFromData(graph, [Group((1,2))], [[1,2]]);;
-gap> LocalActionDiagramGroupType(lad);;
-gap> LocalActionDiagramToWritableString(lad);
-"1|1,1,1|P/1:P2,1:1,2|1:1,2|LocalActionDiagramGroupType!General|LocalActionDia\
-gramScopos! "
+# doc/_Chapter_Local_Action_Diagrams.xml:471-486
+gap> adj_list := [[1, 2], [2, 1], [2, 3], [3, 2], [3, 1], [1, 3], [1, 1]];;
+gap> graph := RSGraphByAdjacencyList(adj_list, (1,2)(3,4)(5,6));;
+gap> vertex_labels := [];;
+gap> Add(vertex_labels, Group((1, 2, 3), (4,5), (6,7)));;
+gap> Add(vertex_labels, Group((1, 2), (3, 4, 5)));;
+gap> Add(vertex_labels, Group((1, 2), (3, 4)));;
+gap> arc_labels := [[1, 2, 3], [3, 4, 5], [1, 2], [1, 2], [3,4], [4,5], [6,7]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
+gap> LocalActionDiagramIsDiscrete(lad);
+false
+gap> LocalActionDiagramIsUniscalar(lad);
+false
+gap> LocalActionDiagramIsUnimodular(lad);
+true
 
 #
 gap> STOP_TEST("localactiondiagrams17.tst", 1);

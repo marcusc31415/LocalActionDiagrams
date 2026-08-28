@@ -15,11 +15,11 @@
   [2XLocalActionDiagramArcIDs[102X 2.2-6 
   [2XLocalActionDiagramArcLabels[102X 2.2-3 
   [2XLocalActionDiagramArcs[102X 2.2-5 
-  [2XLocalActionDiagramConstructBipartitionPreserving[102X 2.1-4 
+  [2XLocalActionDiagramConstructBipartitionPreserving[102X 2.1-5 
   [2XLocalActionDiagramDebugSearch[102X 5.2-4 
-  [2XLocalActionDiagramFromBurgerMozesUniversalGroup[102X 2.1-3 
-  [2XLocalActionDiagramFromData[102X, for an RSGraph, list or record of vertex labels, and list or record of arc labels 2.1-2 
-  [2XLocalActionDiagramFromDataNC[102X, for an RSGraph, list or record of vertex labels, and list or record of arc labels 2.1-2 
+  [2XLocalActionDiagramFromBurgerMozesUniversalGroup[102X 2.1-4 
+  [2XLocalActionDiagramFromData[102X, for an RSGraph, list or record of vertex labels, and list or record of arc labels 2.1-3 
+  [2XLocalActionDiagramFromDataNC[102X, for an RSGraph, list or record of vertex labels, and list or record of arc labels 2.1-3 
   [2XLocalActionDiagramFromLibrary[102X 5.1-2 
   [2XLocalActionDiagramFromWritableString[102X, for IsString, IsBool 3.1-2 
   [2XLocalActionDiagramGroupName[102X 2.2-14 
@@ -42,6 +42,7 @@
   [2XLocalActionDiagramReverseMap[102X 2.2-9 
   [2XLocalActionDiagramRSGraph[102X 2.2-1 
   [2XLocalActionDiagramScopos[102X 2.2-16 
+  [2XLocalActionDiagramToUGALY[102X 6.3-1 
   [2XLocalActionDiagramToWritableString[102X, for IsLocalActionDiagram 3.1-1 
   [2XLocalActionDiagramVertexLabels[102X 2.2-2 
   [2XLocalActionDiagramVertices[102X 2.2-4 
@@ -49,6 +50,7 @@
   [2XNumberRSGraphs[102X 5.1-3 
   [2XOneLocalActionDiagram[102X 5.2-2 
   [2XOneRSGraph[102X 5.2-2 
+  [2XPermGroupDomain[102X, for a Permutation Group 2.1-2 
   [2XRSGraphAdjacencyMatrix[102X 1.2-7 
   [2XRSGraphArcIDs[102X 1.2-5 
   [2XRSGraphArcIterator[102X 1.3-1 
@@ -61,6 +63,7 @@
   [2XRSGraphCanonicalLabelling[102X 4.1-6 
   [2XRSGraphDegree[102X 1.2-13 
   [2XRSGraphFromDigraph[102X 6.1-2  6.1-3 
+  [2XRSGraphFromGRAPE[102X 6.2-2  6.2-3 
   [2XRSGraphFromLibrary[102X 5.1-1 
   [2XRSGraphFromWritableString[102X, for IsString 3.1-2 
   [2XRSGraphHasParallelArcs[102X 1.2-16 
@@ -79,6 +82,7 @@
   [2XRSGraphSubgraphNC[102X, for an RSGraph and List of arcs 1.3-2 
   [2XRSGraphsVertexIsomorphism[102X 4.1-4 
   [2XRSGraphToDigraph[102X 6.1-1 
+  [2XRSGraphToGRAPE[102X 6.2-1 
   [2XRSGraphToStandardForm[102X 1.3-3 
   [2XRSGraphToWritableString[102X, for IsRSGraph 3.1-1 
   [2XRSGraphVertexAutomorphism[102X 4.1-3 

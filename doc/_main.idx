@@ -25,35 +25,36 @@
 \indexentry{RSGraphToStandardForm@\texttt  {RSGraphToStandardForm}|hyperpage}{9}
 \indexentry{RSGraphSpanningTree@\texttt  {RSGraphSpanningTree}|hyperpage}{10}
 \indexentry{IsLocalActionDiagram@\texttt  {IsLocalActionDiagram}!for an object|hyperpage}{11}
-\indexentry{LocalActionDiagramFromData@\texttt  {LocalActionDiagramFromData}!for an RSGraph, list or record of vertex labels, and list or record of arc labels|hyperpage}{11}
-\indexentry{LocalActionDiagramFromDataNC@\texttt  {LocalActionDiagramFromDataNC}!for an RSGraph, list or record of vertex labels, and list or record of arc labels|hyperpage}{11}
-\indexentry{LocalActionDiagramFromBurgerMozesUniversalGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}|hyperpage}{12}
+\indexentry{PermGroupDomain@\texttt  {PermGroupDomain}!for a Permutation Group|hyperpage}{11}
+\indexentry{LocalActionDiagramFromData@\texttt  {LocalActionDiagramFromData}!for an RSGraph, list or record of vertex labels, and list or record of arc labels|hyperpage}{12}
+\indexentry{LocalActionDiagramFromDataNC@\texttt  {LocalActionDiagramFromDataNC}!for an RSGraph, list or record of vertex labels, and list or record of arc labels|hyperpage}{12}
+\indexentry{LocalActionDiagramFromBurgerMozesUniversalGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {From}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}|hyperpage}{13}
 \indexentry{LocalActionDiagramConstructBipartitionPreserving@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Construct}\-\texttt  {Bipartition}\-\texttt  {Preserving}|hyperpage}{13}
-\indexentry{LocalActionDiagramRSGraph@\texttt  {LocalActionDiagramRSGraph}|hyperpage}{13}
-\indexentry{LocalActionDiagramVertexLabels@\texttt  {LocalActionDiagramVertexLabels}|hyperpage}{13}
-\indexentry{LocalActionDiagramArcLabels@\texttt  {LocalActionDiagramArcLabels}|hyperpage}{13}
-\indexentry{LocalActionDiagramVertices@\texttt  {LocalActionDiagramVertices}|hyperpage}{13}
+\indexentry{LocalActionDiagramRSGraph@\texttt  {LocalActionDiagramRSGraph}|hyperpage}{14}
+\indexentry{LocalActionDiagramVertexLabels@\texttt  {LocalActionDiagramVertexLabels}|hyperpage}{14}
+\indexentry{LocalActionDiagramArcLabels@\texttt  {LocalActionDiagramArcLabels}|hyperpage}{14}
+\indexentry{LocalActionDiagramVertices@\texttt  {LocalActionDiagramVertices}|hyperpage}{14}
 \indexentry{LocalActionDiagramArcs@\texttt  {LocalActionDiagramArcs}|hyperpage}{14}
 \indexentry{LocalActionDiagramArcIDs@\texttt  {LocalActionDiagramArcIDs}|hyperpage}{14}
 \indexentry{LocalActionDiagramNumberVertices@\texttt  {LocalActionDiagramNumberVertices}|hyperpage}{14}
 \indexentry{LocalActionDiagramNumberArcs@\texttt  {LocalActionDiagramNumberArcs}|hyperpage}{14}
-\indexentry{LocalActionDiagramReverseMap@\texttt  {LocalActionDiagramReverseMap}|hyperpage}{14}
-\indexentry{LocalActionDiagramOutNeighbours@\texttt  {LocalActionDiagramOutNeighbours}|hyperpage}{14}
-\indexentry{LocalActionDiagramInNeighbours@\texttt  {LocalActionDiagramInNeighbours}|hyperpage}{14}
-\indexentry{LocalActionDiagramOutArcs@\texttt  {LocalActionDiagramOutArcs}|hyperpage}{14}
+\indexentry{LocalActionDiagramReverseMap@\texttt  {LocalActionDiagramReverseMap}|hyperpage}{15}
+\indexentry{LocalActionDiagramOutNeighbours@\texttt  {LocalActionDiagramOutNeighbours}|hyperpage}{15}
+\indexentry{LocalActionDiagramInNeighbours@\texttt  {LocalActionDiagramInNeighbours}|hyperpage}{15}
+\indexentry{LocalActionDiagramOutArcs@\texttt  {LocalActionDiagramOutArcs}|hyperpage}{15}
 \indexentry{LocalActionDiagramInArcs@\texttt  {LocalActionDiagramInArcs}|hyperpage}{15}
 \indexentry{LocalActionDiagramGroupName@\texttt  {LocalActionDiagramGroupName}|hyperpage}{15}
-\indexentry{LocalActionDiagramRegularTree@\texttt  {LocalActionDiagramRegularTree}|hyperpage}{15}
-\indexentry{LocalActionDiagramScopos@\texttt  {LocalActionDiagramScopos}|hyperpage}{15}
-\indexentry{LocalActionDiagramGroupType@\texttt  {LocalActionDiagramGroupType}|hyperpage}{16}
-\indexentry{LocalActionDiagramIsDiscrete@\texttt  {LocalActionDiagramIsDiscrete}|hyperpage}{16}
+\indexentry{LocalActionDiagramRegularTree@\texttt  {LocalActionDiagramRegularTree}|hyperpage}{16}
+\indexentry{LocalActionDiagramScopos@\texttt  {LocalActionDiagramScopos}|hyperpage}{16}
+\indexentry{LocalActionDiagramGroupType@\texttt  {LocalActionDiagramGroupType}|hyperpage}{17}
+\indexentry{LocalActionDiagramIsDiscrete@\texttt  {LocalActionDiagramIsDiscrete}|hyperpage}{17}
 \indexentry{LocalActionDiagramIsUniscalar@\texttt  {LocalActionDiagramIsUniscalar}|hyperpage}{17}
-\indexentry{LocalActionDiagramIsUnimodular@\texttt  {LocalActionDiagramIsUnimodular}|hyperpage}{17}
+\indexentry{LocalActionDiagramIsUnimodular@\texttt  {LocalActionDiagramIsUnimodular}|hyperpage}{18}
 \indexentry{LocalActionDiagramIsBurgerMozesUniversalGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Burger}\-\texttt  {Mozes}\-\texttt  {Universal}\-\texttt  {Group}|hyperpage}{18}
-\indexentry{LocalActionDiagramIsSmithUniversalGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Smith}\-\texttt  {Universal}\-\texttt  {Group}|hyperpage}{18}
+\indexentry{LocalActionDiagramIsSmithUniversalGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Smith}\-\texttt  {Universal}\-\texttt  {Group}|hyperpage}{19}
 \indexentry{LocalActionDiagramIsEndStabiliser@\texttt  {LocalActionDiagramIsEndStabiliser}|hyperpage}{19}
-\indexentry{LocalActionDiagramIsRegularTreeAutomorphismGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Regular}\-\texttt  {Tree}\-\texttt  {Automorphism}\-\texttt  {Group}|hyperpage}{19}
-\indexentry{LocalActionDiagramIsBipartitionPreservingGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Bipartition}\-\texttt  {Preserving}\-\texttt  {Group}|hyperpage}{19}
+\indexentry{LocalActionDiagramIsRegularTreeAutomorphismGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Regular}\-\texttt  {Tree}\-\texttt  {Automorphism}\-\texttt  {Group}|hyperpage}{20}
+\indexentry{LocalActionDiagramIsBipartitionPreservingGroup@\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Is}\-\texttt  {Bipartition}\-\texttt  {Preserving}\-\texttt  {Group}|hyperpage}{20}
 \indexentry{RSGraphToWritableString@\texttt  {RSGraphToWritableString}!for IsRSGraph|hyperpage}{21}
 \indexentry{LocalActionDiagramToWritableString@\texttt  {LocalActionDiagramToWritableString}!for IsLocalActionDiagram|hyperpage}{21}
 \indexentry{RSGraphFromWritableString@\texttt  {RSGraphFromWritableString}!for IsString|hyperpage}{22}
@@ -76,8 +77,12 @@
 \indexentry{AllLocalActionDiagrams@\texttt  {AllLocalActionDiagrams}!|hyperpage}{31}
 \indexentry{OneRSGraph@\texttt  {OneRSGraph}!|hyperpage}{33}
 \indexentry{OneLocalActionDiagram@\texttt  {OneLocalActionDiagram}!|hyperpage}{33}
-\indexentry{SetLocalActionDiagramDegreeTwoVertexBound@\texttt  {Set}\-\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Degree}\-\texttt  {Two}\-\texttt  {Vertex}\-\texttt  {Bound}!|hyperpage}{33}
-\indexentry{LocalActionDiagramDebugSearch@\texttt  {LocalActionDiagramDebugSearch}!|hyperpage}{33}
+\indexentry{SetLocalActionDiagramDegreeTwoVertexBound@\texttt  {Set}\-\texttt  {Local}\-\texttt  {Action}\-\texttt  {Diagram}\-\texttt  {Degree}\-\texttt  {Two}\-\texttt  {Vertex}\-\texttt  {Bound}|hyperpage}{33}
+\indexentry{LocalActionDiagramDebugSearch@\texttt  {LocalActionDiagramDebugSearch}|hyperpage}{33}
 \indexentry{RSGraphToDigraph@\texttt  {RSGraphToDigraph}|hyperpage}{34}
 \indexentry{RSGraphFromDigraph@\texttt  {RSGraphFromDigraph}|hyperpage}{35}
 \indexentry{RSGraphFromDigraph@\texttt  {RSGraphFromDigraph}|hyperpage}{35}
+\indexentry{RSGraphToGRAPE@\texttt  {RSGraphToGRAPE}|hyperpage}{36}
+\indexentry{RSGraphFromGRAPE@\texttt  {RSGraphFromGRAPE}|hyperpage}{36}
+\indexentry{RSGraphFromGRAPE@\texttt  {RSGraphFromGRAPE}|hyperpage}{37}
+\indexentry{LocalActionDiagramToUGALY@\texttt  {LocalActionDiagramToUGALY}|hyperpage}{37}

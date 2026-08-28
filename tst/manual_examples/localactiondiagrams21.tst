@@ -10,15 +10,13 @@
 #
 gap> START_TEST("localactiondiagrams21.tst");
 
-# doc/_Chapter_Iso.xml:105-114
-gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
-gap> graph_2 := RSGraphByAdjacencyList([[2, 2], [2, 2], [2, 2]], (1,2), [2]);;
-gap> arc_iso := IsomorphismRSGraphs(graph_1, graph_2);
-(1,3,2)
-gap> vert_iso := RSGraphsVertexIsomorphism(graph_1, graph_2, arc_iso);
-<general mapping: Domain([ 1 ]) -> Domain([ 2 ]) >
-gap> 1^vert_iso;
-2
+# doc/_Chapter_Iso.xml:83-90
+gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 2], [2, 1], [2, 2], [2, 2]], (3,4));;
+gap> aut_group := AutomorphismGroup(graph);;
+gap> arc_aut := Elements(aut_group)[5];
+(1,5)(2,6)(3,4)
+gap> vert_aut := RSGraphVertexAutomorphism(graph, arc_aut);
+(1,2)
 
 #
 gap> STOP_TEST("localactiondiagrams21.tst", 1);

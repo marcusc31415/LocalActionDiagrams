@@ -10,19 +10,18 @@
 #
 gap> START_TEST("localactiondiagrams23.tst");
 
-# doc/_Chapter_Iso.xml:229-242
-gap> graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;
-gap> lad_1 := LocalActionDiagramFromData(graph, [Group((1,2)), Group((3,4))], \
->                                        [[1, 2], [3, 4]]);;
-gap> lad_2 := LocalActionDiagramFromData(graph, [Group((3,4)), Group((1,2))], \
->                                        [[3, 4], [1, 2]]);;
-gap> iso := IsomorphismLocalActionDiagrams(lad_1, lad_2);;
-gap> for elm in iso do Print(elm, "\n"); od;
-()
-()
-rec(
-  1 := <mapping: Domain([ 1, 2 ]) -> Domain([ 3, 4 ]) >,
-  2 := <mapping: Domain([ 3, 4 ]) -> Domain([ 1, 2 ]) > )
+# doc/_Chapter_Iso.xml:132-144
+gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
+gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
+gap> for iso in RSGraphsIsomorphismsIterator(graph_1, graph_2) do 
+>    	Print(iso, "\n"); 
+>    od;
+[ (), () ]
+[ (), (2,3) ]
+[ (), (1,3,2) ]
+[ (), (1,3) ]
+[ (), (1,2,3) ]
+[ (), (1,2) ]
 
 #
 gap> STOP_TEST("localactiondiagrams23.tst", 1);

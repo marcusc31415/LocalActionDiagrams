@@ -107,3 +107,140 @@
     [4X[28XReverse Map = (2,3)[128X[104X
   [4X[32X[104X
   
+  
+  [1X6.2 [33X[0;0YGRAPE Conversion[133X[101X
+  
+  [33X[0;0YFor  the  sake  of clarity, if an object in the following section is a graph
+  from the [5XGRAPE[105X package then it is referred to as a GRAPE graph.[133X
+  
+  [1X6.2-1 RSGraphToGRAPE[101X
+  
+  [33X[1;0Y[29X[2XRSGraphToGRAPE[102X( [3Xrsgraph[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA  record  containing  the  GRAPE  graph  and  all  data needed to
+            reconstruct the RSGraph.[133X
+  
+  [33X[0;0YGiven  an  RSGraph  this  function converts is to a GRAPE graph. A record is
+  returned  containing both the GRAPE graph and all data needed to reconstruct
+  the  original RSGraph. The record returned contains the elements: - [10Xgraph[110X: a
+  GRAPE  graph  representing  the graph structure (an object for which [10XIsGraph[110X
+  returns  true.)  -  [10Xreverse_map[110X:  the reverse map of the original RSGraph. -
+  [10Xvertex_id_map[110X:  a bijective map from the vertices of the original RSGraph to
+  the  vertices  of the GRAPE graph which determines the vertex correspondence
+  between  the RSGraph and GRAPE graph. - [10Xarc_id_map[110X: a bijective map from the
+  arcs  of  the  original  RSGraph  to  the  edges  of  the  GRAPE graph which
+  determines the arc correspondence between the RSGraph and GRAPE graph.[133X
+  
+  [33X[0;0YAs  an  example, if [10X2[110X is a vertex in the RSGraph then [10X2^vertex_id_map[110X is the
+  corresponding  vertex  in  the GRAPE graph. All GRAPE graph returned by this
+  function  have  vertices  labelled  from  [22X1[122X  to  [22Xn[122X  where [22Xn[122X is the number of
+  vertices in the RSGraph. Arc [10Xi[110X in the digraph is the arc in the [10Xi[110Xth position
+  of [10XDirectedEdges(graph)[110X --- i.e. [10XDirectedEdges(graph)[i][110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_rec := RSGraphToGRAPE(graph);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_rec.graph;;[127X[104X
+    [4X[25Xgap>[125X [27X2^graph_rec.vertex_id_map;[127X[104X
+    [4X[28X1[128X[104X
+  [4X[32X[104X
+  
+  [1X6.2-2 RSGraphFromGRAPE[101X
+  
+  [33X[1;0Y[29X[2XRSGraphFromGRAPE[102X( [3Xgraph_rec[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAn RSGraph corresponding to the data in [3Xgraph_rec[103X.[133X
+  
+  [33X[0;0YGiven  the  output from the function [2XRSGraphToGRAPE[102X ([14X6.2-1[114X) ([3Xgraph_rec[103X) this
+  function  returns the corresponding RSGraph. This returns an RSGraph that is
+  exactly the same as the original RSGraph. If the data input to this function
+  is  not fro the [10XRSGraphToGRAPE[110X function then there is no guarantee that this
+  function will run correctly.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph_rec := RSGraphToGRAPE(graph);;[127X[104X
+    [4X[25Xgap>[125X [27Xnew_graph := RSGraphFromGRAPE(graph_rec);;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(graph);[127X[104X
+    [4X[28XVertices = { 2, 3 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X	1 = ( origin = 2, terminus = 3, inverse = 2 )[128X[104X
+    [4X[28X	2 = ( origin = 3, terminus = 2, inverse = 1 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)[128X[104X
+    [4X[25Xgap>[125X [27XPrint(new_graph);[127X[104X
+    [4X[28XVertices = { 2, 3 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X	1 = ( origin = 2, terminus = 3, inverse = 2 )[128X[104X
+    [4X[28X	2 = ( origin = 3, terminus = 2, inverse = 1 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)[128X[104X
+  [4X[32X[104X
+  
+  [1X6.2-3 RSGraphFromGRAPE[101X
+  
+  [33X[1;0Y[29X[2XRSGraphFromGRAPE[102X( [3Xgraph[103X, [3Xreverse_map[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YAn RSGraph.[133X
+  
+  [33X[0;0YGiven  a  GRAPE  [3Xgraph[103X  and  a [3Xreverse_map[103X defined on the edges of the GRAPE
+  graph  this function returns an RSGraph with the same structure as the GRAPE
+  graph  and  with  the reverse map provided. This function works by using the
+  adjacency  listing  of  the  GRAPE graph given by [10XDirectedEdges([3Xgraph[103X[10X)[110X. This
+  means  that  the  reverse map must be compatible with the order of the edges
+  given by this adjacency listing.[133X
+  
+  [33X[0;0YAll  normal  checks  for an RSGraph construction are applied when using this
+  function.  In  particular, this means that the GRAPE graph must be connected
+  and must have a reverse arc for every arc in the GRAPE graph.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xadj_mat := [[0, 1], [1, 0]];[127X[104X
+    [4X[25Xgap>[125X [27Xgrape_graph := Graph(Group(()), [1, 2], OnPoints, \[127X[104X
+    [4X[25X>[125X [27X                        {x, y} -> adj_mat[x][y] = 1, true);;[127X[104X
+    [4X[25Xgap>[125X [27Xgraph := RSGraphFromGRAPE(grape_graph, (1, 2));;[127X[104X
+    [4X[25Xgap>[125X [27XPrint(graph);[127X[104X
+    [4X[28XVertices = { 1, 2 }[128X[104X
+    [4X[28XArcs = {[128X[104X
+    [4X[28X	1 = ( origin = 1, terminus = 2, inverse = 2 )[128X[104X
+    [4X[28X	2 = ( origin = 2, terminus = 1, inverse = 1 )[128X[104X
+    [4X[28X}[128X[104X
+    [4X[28XReverse Map = (1,2)[128X[104X
+  [4X[32X[104X
+  
+  
+  [1X6.3 [33X[0;0YUGALY[133X[101X
+  
+  [33X[0;0YThe  package  [5XUGALY[105X  implements Tornier's generalisation of the Burger-Mozes
+  universal  group  to  [22Xk[122X-closures. In the case when [22Xk = 1[122X this corresponds to
+  the  original  Burger-Mozes  universal  group. It represents these groups as
+  objects in the category [10XIsLocalAction[110X.[133X
+  
+  [33X[0;0YAs   objects  in  the  category  [10XIsLocalAction[110X  are  also  in  the  category
+  [10XIsPermGroup[110X       they       can       be       directly       used       in
+  [2XLocalActionDiagramFromBurgerMozesUniversalGroup[102X   ([14X2.1-4[114X).   We   provide  a
+  function to convert a local action diagram representing a Burger-Mozes group
+  to a local action object from [5XUGALY[105X.[133X
+  
+  [1X6.3-1 LocalActionDiagramToUGALY[101X
+  
+  [33X[1;0Y[29X[2XLocalActionDiagramToUGALY[102X( [3Xlad[103X ) [32X operation[133X
+  [6XReturns:[106X  [33X[0;10YA local action.[133X
+  
+  [33X[0;0YGiven  a local action diagram [3Xlad[103X corresponding to a Burger-Mozes group this
+  returns  the  corresponding group as an object of the category [10XIsLocalAction[110X
+  from  the  package  [5XUGALY[105X.  The  local action diagram [3Xlad[103X must have a single
+  vertex  and  have  only  self-reverse edges, and must also have at least one
+  edge (see [2XLocalActionDiagramIsBurgerMozesUniversalGroup[102X ([14X2.2-21[114X).[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xlad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1, 2), \ [127X[104X
+    [4X[28X                                                                  (3,4)));[128X[104X
+    [4X[28X<U(Group( [ (1,2), (3,4) ] )) (as a Local Action Diagram)>[128X[104X
+    [4X[25Xgap>[125X [27Xgroup := LocalActionDiagramToUGALY(lad);[127X[104X
+    [4X[28XGroup([ (1,2), (3,4) ])[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDegree(group);[127X[104X
+    [4X[28X4[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionRadius(group);[127X[104X
+    [4X[28X1[128X[104X
+    [4X[25Xgap>[125X [27XLocalActionDiagramFromBurgerMozesUniversalGroup(group);[127X[104X
+    [4X[28X<U(Group( [ (1,2), (3,4) ] )) (as a Local Action Diagram)>[128X[104X
+  [4X[32X[104X
+  

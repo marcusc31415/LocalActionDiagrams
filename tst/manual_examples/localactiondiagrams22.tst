@@ -10,18 +10,15 @@
 #
 gap> START_TEST("localactiondiagrams22.tst");
 
-# doc/_Chapter_Iso.xml:132-144
-gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
-gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
-gap> for iso in RSGraphsIsomorphismsIterator(graph_1, graph_2) do 
->    	Print(iso, "\n"); 
->    od;
-[ (), () ]
-[ (), (2,3) ]
-[ (), (1,3,2) ]
-[ (), (1,3) ]
-[ (), (1,2,3) ]
-[ (), (1,2) ]
+# doc/_Chapter_Iso.xml:105-114
+gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
+gap> graph_2 := RSGraphByAdjacencyList([[2, 2], [2, 2], [2, 2]], (1,2), [2]);;
+gap> arc_iso := IsomorphismRSGraphs(graph_1, graph_2);
+(1,3,2)
+gap> vert_iso := RSGraphsVertexIsomorphism(graph_1, graph_2, arc_iso);
+<general mapping: Domain([ 1 ]) -> Domain([ 2 ]) >
+gap> 1^vert_iso;
+2
 
 #
 gap> STOP_TEST("localactiondiagrams22.tst", 1);

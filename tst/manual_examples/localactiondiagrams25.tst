@@ -10,14 +10,13 @@
 #
 gap> START_TEST("localactiondiagrams25.tst");
 
-# doc/_Chapter_Enumeration.xml:74-82
-gap> lad_list := LocalActionDiagramFromLibrary(3, 2);;
-gap> lad := lad_list[4];
-<LocalActionDiagram with 2 vertices and 4 arcs>
-gap> lad_2 := LocalActionDiagramFromLibrary(3, 2, 4);;
-gap> IsomorphismLocalActionDiagrams(lad, lad_2);
-[ (), (), rec( 1 := <mapping: Domain([ 1, 2, 3 ]) -> Domain([ 1, 2, 3 ]) >, 
-      2 := <mapping: Domain([ 4, 5, 6 ]) -> Domain([ 4, 5, 6 ]) > ) ]
+# doc/_Chapter_Enumeration.xml:43-50
+gap> graph_list := RSGraphFromLibrary(3, 2);;
+gap> graph := graph_list[4];
+<RSGraph with 2 vertices and 3 arcs>
+gap> graph_2 := RSGraphFromLibrary(3, 2, 4);;
+gap> IsomorphismRSGraphs(graph, graph_2);
+()
 
 #
 gap> STOP_TEST("localactiondiagrams25.tst", 1);

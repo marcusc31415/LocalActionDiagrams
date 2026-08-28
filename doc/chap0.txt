@@ -66,9 +66,10 @@
   2 [33X[0;0YLocal Action Diagrams[133X
     2.1 [33X[0;0YCreating Local Action Diagrams[133X
       2.1-1 IsLocalActionDiagram
-      2.1-2 LocalActionDiagramFromData
-      2.1-3 LocalActionDiagramFromBurgerMozesUniversalGroup
-      2.1-4 LocalActionDiagramConstructBipartitionPreserving
+      2.1-2 PermGroupDomain
+      2.1-3 LocalActionDiagramFromData
+      2.1-4 LocalActionDiagramFromBurgerMozesUniversalGroup
+      2.1-5 LocalActionDiagramConstructBipartitionPreserving
     2.2 [33X[0;0YLocal Action Diagram Attributes and Properties[133X
       2.2-1 LocalActionDiagramRSGraph
       2.2-2 LocalActionDiagramVertexLabels
@@ -125,6 +126,12 @@
       6.1-1 RSGraphToDigraph
       6.1-2 RSGraphFromDigraph
       6.1-3 RSGraphFromDigraph
+    6.2 [33X[0;0YGRAPE Conversion[133X
+      6.2-1 RSGraphToGRAPE
+      6.2-2 RSGraphFromGRAPE
+      6.2-3 RSGraphFromGRAPE
+    6.3 [33X[0;0YUGALY[133X
+      6.3-1 LocalActionDiagramToUGALY
   
   
   [32X

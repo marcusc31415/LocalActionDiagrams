@@ -29,6 +29,18 @@
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6.html#X7F3D31CC84ECB33D">6.1-2 RSGraphFromDigraph</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6.html#X7F3D31CC84ECB33D">6.1-3 RSGraphFromDigraph</a></span>
 </div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap6.html#X7CF051347C3ED244">6.2 <span class="Heading">GRAPE Conversion</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6.html#X7FA8CECE78FBA730">6.2-1 RSGraphToGRAPE</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6.html#X82CC3F807E620740">6.2-2 RSGraphFromGRAPE</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6.html#X82CC3F807E620740">6.2-3 RSGraphFromGRAPE</a></span>
+</div></div>
+<div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap6.html#X842152AC7BAA6D52">6.3 <span class="Heading">UGALY</span></a>
+</span>
+<div class="ContSSBlock">
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap6.html#X83409D2E8151BA33">6.3-1 LocalActionDiagramToUGALY</a></span>
+</div></div>
 </div>
 
 <h3>6 <span class="Heading">Extensions</span></h3>
@@ -128,6 +140,120 @@ Arcs = {
 	3 = ( origin = 2, terminus = 1, inverse = 2 )
 }
 Reverse Map = (2,3)
+</pre></div>
+
+<p><a id="X7CF051347C3ED244" name="X7CF051347C3ED244"></a></p>
+
+<h4>6.2 <span class="Heading">GRAPE Conversion</span></h4>
+
+<p>For the sake of clarity, if an object in the following section is a graph from the <strong class="pkg">GRAPE</strong> package then it is referred to as a GRAPE graph.</p>
+
+<p><a id="X7FA8CECE78FBA730" name="X7FA8CECE78FBA730"></a></p>
+
+<h5>6.2-1 RSGraphToGRAPE</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphToGRAPE</code>( <var class="Arg">rsgraph</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A record containing the GRAPE graph and all data needed to reconstruct the RSGraph.</p>
+
+<p>Given an RSGraph this function converts is to a GRAPE graph. A record is returned containing both the GRAPE graph and all data needed to reconstruct the original RSGraph. The record returned contains the elements: - <code class="code">graph</code>: a GRAPE graph representing the graph structure (an object for which <code class="code">IsGraph</code> returns true.) - <code class="code">reverse_map</code>: the reverse map of the original RSGraph. - <code class="code">vertex_id_map</code>: a bijective map from the vertices of the original RSGraph to the vertices of the GRAPE graph which determines the vertex correspondence between the RSGraph and GRAPE graph. - <code class="code">arc_id_map</code>: a bijective map from the arcs of the original RSGraph to the edges of the GRAPE graph which determines the arc correspondence between the RSGraph and GRAPE graph.</p>
+
+<p>As an example, if <code class="code">2</code> is a vertex in the RSGraph then <code class="code">2^vertex_id_map</code> is the corresponding vertex in the GRAPE graph. All GRAPE graph returned by this function have vertices labelled from <span class="SimpleMath">1</span> to <span class="SimpleMath">n</span> where <span class="SimpleMath">n</span> is the number of vertices in the RSGraph. Arc <code class="code">i</code> in the digraph is the arc in the <code class="code">i</code>th position of <code class="code">DirectedEdges(graph)</code> --- i.e. <code class="code">DirectedEdges(graph)[i]</code>.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_rec := RSGraphToGRAPE(graph);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_rec.graph;;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">2^graph_rec.vertex_id_map;</span>
+1
+</pre></div>
+
+<p><a id="X82CC3F807E620740" name="X82CC3F807E620740"></a></p>
+
+<h5>6.2-2 RSGraphFromGRAPE</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphFromGRAPE</code>( <var class="Arg">graph_rec</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: An RSGraph corresponding to the data in <var class="Arg">graph_rec</var>.</p>
+
+<p>Given the output from the function <code class="func">RSGraphToGRAPE</code> (<a href="chap6.html#X7FA8CECE78FBA730"><span class="RefLink">6.2-1</span></a>) (<var class="Arg">graph_rec</var>) this function returns the corresponding RSGraph. This returns an RSGraph that is exactly the same as the original RSGraph. If the data input to this function is not fro the <code class="code">RSGraphToGRAPE</code> function then there is no guarantee that this function will run correctly.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph_rec := RSGraphToGRAPE(graph);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">new_graph := RSGraphFromGRAPE(graph_rec);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(graph);</span>
+Vertices = { 2, 3 }
+Arcs = {
+	1 = ( origin = 2, terminus = 3, inverse = 2 )
+	2 = ( origin = 3, terminus = 2, inverse = 1 )
+}
+Reverse Map = (1,2)
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(new_graph);</span>
+Vertices = { 2, 3 }
+Arcs = {
+	1 = ( origin = 2, terminus = 3, inverse = 2 )
+	2 = ( origin = 3, terminus = 2, inverse = 1 )
+}
+Reverse Map = (1,2)
+</pre></div>
+
+<p><a id="X82CC3F807E620740" name="X82CC3F807E620740"></a></p>
+
+<h5>6.2-3 RSGraphFromGRAPE</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RSGraphFromGRAPE</code>( <var class="Arg">graph</var>, <var class="Arg">reverse_map</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: An RSGraph.</p>
+
+<p>Given a GRAPE <var class="Arg">graph</var> and a <var class="Arg">reverse_map</var> defined on the edges of the GRAPE graph this function returns an RSGraph with the same structure as the GRAPE graph and with the reverse map provided. This function works by using the adjacency listing of the GRAPE graph given by <code class="code">DirectedEdges(<var class="Arg">graph</var>)</code>. This means that the reverse map must be compatible with the order of the edges given by this adjacency listing.</p>
+
+<p>All normal checks for an RSGraph construction are applied when using this function. In particular, this means that the GRAPE graph must be connected and must have a reverse arc for every arc in the GRAPE graph.</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">adj_mat := [[0, 1], [1, 0]];</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">grape_graph := Graph(Group(()), [1, 2], OnPoints, \</span>
+<span class="GAPprompt">&gt;</span> <span class="GAPinput">                        {x, y} -&gt; adj_mat[x][y] = 1, true);;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">graph := RSGraphFromGRAPE(grape_graph, (1, 2));;</span>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">Print(graph);</span>
+Vertices = { 1, 2 }
+Arcs = {
+	1 = ( origin = 1, terminus = 2, inverse = 2 )
+	2 = ( origin = 2, terminus = 1, inverse = 1 )
+}
+Reverse Map = (1,2)
+</pre></div>
+
+<p><a id="X842152AC7BAA6D52" name="X842152AC7BAA6D52"></a></p>
+
+<h4>6.3 <span class="Heading">UGALY</span></h4>
+
+<p>The package <strong class="pkg">UGALY</strong> implements Tornier's generalisation of the Burger-Mozes universal group to <span class="SimpleMath">k</span>-closures. In the case when <span class="SimpleMath">k = 1</span> this corresponds to the original Burger-Mozes universal group. It represents these groups as objects in the category <code class="code">IsLocalAction</code>.</p>
+
+<p>As objects in the category <code class="code">IsLocalAction</code> are also in the category <code class="code">IsPermGroup</code> they can be directly used in <code class="func">LocalActionDiagramFromBurgerMozesUniversalGroup</code> (<a href="chap2.html#X785DF9A07E409955"><span class="RefLink">2.1-4</span></a>). We provide a function to convert a local action diagram representing a Burger-Mozes group to a local action object from <strong class="pkg">UGALY</strong>.</p>
+
+<p><a id="X83409D2E8151BA33" name="X83409D2E8151BA33"></a></p>
+
+<h5>6.3-1 LocalActionDiagramToUGALY</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; LocalActionDiagramToUGALY</code>( <var class="Arg">lad</var> )</td><td class="tdright">(&nbsp;operation&nbsp;)</td></tr></table></div>
+<p>Returns: A local action.</p>
+
+<p>Given a local action diagram <var class="Arg">lad</var> corresponding to a Burger-Mozes group this returns the corresponding group as an object of the category <code class="code">IsLocalAction</code> from the package <strong class="pkg">UGALY</strong>. The local action diagram <var class="Arg">lad</var> must have a single vertex and have only self-reverse edges, and must also have at least one edge (see <code class="func">LocalActionDiagramIsBurgerMozesUniversalGroup</code> (<a href="chap2.html#X87E1AE8587DA1FB1"><span class="RefLink">2.2-21</span></a>).</p>
+
+
+<div class="example"><pre>
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">lad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1, 2), \ </span>
+                                                                  (3,4)));
+&lt;U(Group( [ (1,2), (3,4) ] )) (as a Local Action Diagram)&gt;
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">group := LocalActionDiagramToUGALY(lad);</span>
+Group([ (1,2), (3,4) ])
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDegree(group);</span>
+4
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionRadius(group);</span>
+1
+<span class="GAPprompt">gap&gt;</span> <span class="GAPinput">LocalActionDiagramFromBurgerMozesUniversalGroup(group);</span>
+&lt;U(Group( [ (1,2), (3,4) ] )) (as a Local Action Diagram)&gt;
 </pre></div>
 
 

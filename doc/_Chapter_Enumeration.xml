@@ -140,7 +140,7 @@ gap> NumberLocalActionDiagrams(3, 3);
          If no arguments are provided then a complete list of RSGraphs or local action diagrams is returned.
          Furthermore, every degree two RSGraph and local action diagram can be quickly manually constructed. By
          default, this function only includes those with up to ten vertices. This can be changed with the <Ref
-         Func="SetLocalActionDiagramDegreeTwoVertexBound" Label=""/> function. 
+         Func="SetLocalActionDiagramDegreeTwoVertexBound"/> function. 
      </Description>
  </ManSection>
 <P/>
@@ -204,7 +204,7 @@ Arc Labels = {
      </Description>
  </ManSection>
  <ManSection>
-     <Oper Name="SetLocalActionDiagramDegreeTwoVertexBound" Arg="bound" Label=""/>
+     <Oper Name="SetLocalActionDiagramDegreeTwoVertexBound" Arg="bound"/>
      <Description>
          Since any RSGraph and Local action diagram of degree two can be quickly manually constructed there needs to
          be a bound on the amount to use for the search functions (<Ref Oper="AllRSGraphs" Label=""/>, <Ref
@@ -213,7 +213,7 @@ Arc Labels = {
      </Description>
  </ManSection>
  <ManSection>
-     <Oper Name="LocalActionDiagramDebugSearch" Arg="debug" Label=""/>
+     <Oper Name="LocalActionDiagramDebugSearch" Arg="debug"/>
      <Description>
          If <A>debug</A> is <K>true</K> then if there is an error in the search functions (<Ref Oper="AllRSGraphs"
          Label=""/>, <Ref Oper="AllLocalActionDiagrams" Label=""/>) this will cause the error message to say which

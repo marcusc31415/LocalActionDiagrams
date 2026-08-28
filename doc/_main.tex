@@ -860,10 +860,48 @@ object. }
 
  
 
+\subsection{\textcolor{Chapter }{PermGroupDomain (for a Permutation Group)}}
+\logpage{[ 2, 1, 2 ]}\nobreak
+\hyperdef{L}{X7F691FC1849A717A}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{PermGroupDomain({\mdseries\slshape perm{\textunderscore}group})\index{PermGroupDomain@\texttt{PermGroupDomain}!for a Permutation Group}
+\label{PermGroupDomain:for a Permutation Group}
+}\hfill{\scriptsize (attribute)}}\\
+\textbf{\indent Returns:\ }
+The domain the permutation group acts on.
+
+
+
+ By default, a permutation group \mbox{\texttt{\mdseries\slshape perm{\textunderscore}group}} in GAP is treated as acting on \texttt{MovedPoints(\mbox{\texttt{\mdseries\slshape perm{\textunderscore}group}})}. Often when working with local action diagrams we need to consider groups
+with an action that has fixed points. To do this we provided the \texttt{PermGroupDomain} attribute form permutation groups. 
+
+ This is a mutable attribute that is treated as the set the permutation group
+acts on for all functions implemented in this package. By default it is equal
+to \texttt{MovedPoints(\mbox{\texttt{\mdseries\slshape perm{\textunderscore}group}})}. 
+
+ Note that this attribute does not affect any functions not implemented in this
+package. For example, the default acting set for the \texttt{Orbits} function is still \texttt{MovedPoints(\mbox{\texttt{\mdseries\slshape perm{\textunderscore}group}})}. }
+
+ 
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@group := Group((2, 3));;|
+  !gapprompt@gap>| !gapinput@Orbits(group);|
+  [ [ 2, 3 ] ]
+  !gapprompt@gap>| !gapinput@PermGroupDomain(group);|
+  [ 2, 3 ]
+  !gapprompt@gap>| !gapinput@SetPermGroupDomain(group, [1, 2, 3]);;|
+  !gapprompt@gap>| !gapinput@Orbits(group);|
+  [ [ 2, 3 ] ]
+  !gapprompt@gap>| !gapinput@Orbits(group, PermGroupDomain(group));|
+  [ [ 1 ], [ 2, 3 ] ]
+\end{Verbatim}
+ 
+
  
 
 \subsection{\textcolor{Chapter }{LocalActionDiagramFromData (for an RSGraph, list or record of vertex labels, and list or record of arc labels)}}
-\logpage{[ 2, 1, 2 ]}\nobreak
+\logpage{[ 2, 1, 3 ]}\nobreak
 \label{LADFromData}
 \hyperdef{L}{X7EB208B47BAB2BC1}{}
 {\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramFromData({\mdseries\slshape graph, vertex{\textunderscore}labels, arc{\textunderscore}labels})\index{LocalActionDiagramFromData@\texttt{LocalActionDiagramFromData}!for an RSGraph, list or record of vertex labels, and list or record of arc labels}
@@ -886,7 +924,7 @@ the same order as \texttt{RSGraphVertices(\mbox{\texttt{\mdseries\slshape graph}
 vertex and arc ids respectively and the components are their labels. 
 
  The vertex labels are permutation groups. The domain each label acts on is
-stored in the mutable attribute \texttt{PermGroupDomain} (see \texttt{PermGroupDomain} (\ref{PermGroupDomain})). By default, this is equal to the \texttt{MovedPoints} of the group but can be changed to allow for the group to have fixed points. 
+stored in the mutable attribute \texttt{PermGroupDomain} (see \texttt{PermGroupDomain} (\ref{PermGroupDomain:for a Permutation Group})). By default, this is equal to the \texttt{MovedPoints} of the group but can be changed to allow for the group to have fixed points. 
 
  The arc labels are lists of integers. Each arc must be labelled by by an orbit
 of the vertex label at the vertex that arc originates at. Furthermore, every
@@ -933,7 +971,7 @@ with the arc labels. }
  
 
 \subsection{\textcolor{Chapter }{LocalActionDiagramFromBurgerMozesUniversalGroup}}
-\logpage{[ 2, 1, 3 ]}\nobreak
+\logpage{[ 2, 1, 4 ]}\nobreak
 \hyperdef{L}{X785DF9A07E409955}{}
 {\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramFromBurgerMozesUniversalGroup({\mdseries\slshape perm{\textunderscore}group})\index{LocalActionDiagramFromBurgerMozesUniversalGroup@\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{From}\-\texttt{Burger}\-\texttt{Mozes}\-\texttt{Universal}\-\texttt{Group}}
 \label{LocalActionDiagramFromBurgerMozesUniversalGroup}
@@ -955,7 +993,7 @@ construction?]). This is a local action diagram with one vertex labelled by $F$ 
  
 
 \subsection{\textcolor{Chapter }{LocalActionDiagramConstructBipartitionPreserving}}
-\logpage{[ 2, 1, 4 ]}\nobreak
+\logpage{[ 2, 1, 5 ]}\nobreak
 \hyperdef{L}{X81C137048009714A}{}
 {\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramConstructBipartitionPreserving({\mdseries\slshape lad})\index{LocalActionDiagramConstructBipartitionPreserving@\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{Construct}\-\texttt{Bipartition}\-\texttt{Preserving}}
 \label{LocalActionDiagramConstructBipartitionPreserving}
@@ -2229,7 +2267,7 @@ need to read the library files.
  If no arguments are provided then a complete list of RSGraphs or local action
 diagrams is returned. Furthermore, every degree two RSGraph and local action
 diagram can be quickly manually constructed. By default, this function only
-includes those with up to ten vertices. This can be changed with the \texttt{SetLocalActionDiagramDegreeTwoVertexBound} (\ref{SetLocalActionDiagramDegreeTwoVertexBound:}) function. }
+includes those with up to ten vertices. This can be changed with the \texttt{SetLocalActionDiagramDegreeTwoVertexBound} (\ref{SetLocalActionDiagramDegreeTwoVertexBound}) function. }
 
  
 
@@ -2299,11 +2337,11 @@ arguments or \texttt{fail} if there are none satisfying them.
 
  
 
-\subsection{\textcolor{Chapter }{SetLocalActionDiagramDegreeTwoVertexBound ()}}
+\subsection{\textcolor{Chapter }{SetLocalActionDiagramDegreeTwoVertexBound}}
 \logpage{[ 5, 2, 3 ]}\nobreak
 \hyperdef{L}{X82DA1445782FFD9C}{}
-{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{SetLocalActionDiagramDegreeTwoVertexBound({\mdseries\slshape bound})\index{SetLocalActionDiagramDegreeTwoVertexBound@\texttt{Set}\-\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{Degree}\-\texttt{Two}\-\texttt{Vertex}\-\texttt{Bound}!}
-\label{SetLocalActionDiagramDegreeTwoVertexBound:}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{SetLocalActionDiagramDegreeTwoVertexBound({\mdseries\slshape bound})\index{SetLocalActionDiagramDegreeTwoVertexBound@\texttt{Set}\-\texttt{Local}\-\texttt{Action}\-\texttt{Diagram}\-\texttt{Degree}\-\texttt{Two}\-\texttt{Vertex}\-\texttt{Bound}}
+\label{SetLocalActionDiagramDegreeTwoVertexBound}
 }\hfill{\scriptsize (operation)}}\\
 
 
@@ -2313,11 +2351,11 @@ search functions (\texttt{AllRSGraphs} (\ref{AllRSGraphs:}), \texttt{AllLocalAct
 
  
 
-\subsection{\textcolor{Chapter }{LocalActionDiagramDebugSearch ()}}
+\subsection{\textcolor{Chapter }{LocalActionDiagramDebugSearch}}
 \logpage{[ 5, 2, 4 ]}\nobreak
 \hyperdef{L}{X82F92FF07B9BEA8A}{}
-{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramDebugSearch({\mdseries\slshape debug})\index{LocalActionDiagramDebugSearch@\texttt{LocalActionDiagramDebugSearch}!}
-\label{LocalActionDiagramDebugSearch:}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramDebugSearch({\mdseries\slshape debug})\index{LocalActionDiagramDebugSearch@\texttt{LocalActionDiagramDebugSearch}}
+\label{LocalActionDiagramDebugSearch}
 }\hfill{\scriptsize (operation)}}\\
 
 
@@ -2453,6 +2491,174 @@ must have a reverse arc for every arc in the digraph. }
   	3 = ( origin = 2, terminus = 1, inverse = 2 )
   }
   Reverse Map = (2,3)
+\end{Verbatim}
+ }
+
+ 
+\section{\textcolor{Chapter }{GRAPE Conversion}}\label{Chapter_Extensions_Section_GRAPE_Conversion}
+\logpage{[ 6, 2, 0 ]}
+\hyperdef{L}{X7CF051347C3ED244}{}
+{
+  
+
+ For the sake of clarity, if an object in the following section is a graph from
+the \textsf{GRAPE} package then it is referred to as a GRAPE graph. 
+
+\subsection{\textcolor{Chapter }{RSGraphToGRAPE}}
+\logpage{[ 6, 2, 1 ]}\nobreak
+\hyperdef{L}{X7FA8CECE78FBA730}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphToGRAPE({\mdseries\slshape rsgraph})\index{RSGraphToGRAPE@\texttt{RSGraphToGRAPE}}
+\label{RSGraphToGRAPE}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A record containing the GRAPE graph and all data needed to reconstruct the
+RSGraph.
+
+
+
+ Given an RSGraph this function converts is to a GRAPE graph. A record is
+returned containing both the GRAPE graph and all data needed to reconstruct
+the original RSGraph. The record returned contains the elements:
+\texttt{\symbol{45}} \texttt{graph}: a GRAPE graph representing the graph structure (an object for which \texttt{IsGraph} returns true.) \texttt{\symbol{45}} \texttt{reverse{\textunderscore}map}: the reverse map of the original RSGraph. \texttt{\symbol{45}} \texttt{vertex{\textunderscore}id{\textunderscore}map}: a bijective map from the vertices of the original RSGraph to the vertices of
+the GRAPE graph which determines the vertex correspondence between the RSGraph
+and GRAPE graph. \texttt{\symbol{45}} \texttt{arc{\textunderscore}id{\textunderscore}map}: a bijective map from the arcs of the original RSGraph to the edges of the
+GRAPE graph which determines the arc correspondence between the RSGraph and
+GRAPE graph. 
+
+ As an example, if \texttt{2} is a vertex in the RSGraph then \texttt{2\texttt{\symbol{94}}vertex{\textunderscore}id{\textunderscore}map} is the corresponding vertex in the GRAPE graph. All GRAPE graph returned by
+this function have vertices labelled from $1$ to $n$ where $n$ is the number of vertices in the RSGraph. Arc \texttt{i} in the digraph is the arc in the \texttt{i}th position of \texttt{DirectedEdges(graph)} \texttt{\symbol{45}}\texttt{\symbol{45}}\texttt{\symbol{45}} i.e. \texttt{DirectedEdges(graph)[i]}. }
+
+ 
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;|
+  !gapprompt@gap>| !gapinput@graph_rec := RSGraphToGRAPE(graph);;|
+  !gapprompt@gap>| !gapinput@graph_rec.graph;;|
+  !gapprompt@gap>| !gapinput@2^graph_rec.vertex_id_map;|
+  1
+\end{Verbatim}
+ 
+
+\subsection{\textcolor{Chapter }{RSGraphFromGRAPE}}
+\logpage{[ 6, 2, 2 ]}\nobreak
+\hyperdef{L}{X82CC3F807E620740}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphFromGRAPE({\mdseries\slshape graph{\textunderscore}rec})\index{RSGraphFromGRAPE@\texttt{RSGraphFromGRAPE}}
+\label{RSGraphFromGRAPE}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+An RSGraph corresponding to the data in \mbox{\texttt{\mdseries\slshape graph{\textunderscore}rec}}.
+
+
+
+ Given the output from the function \texttt{RSGraphToGRAPE} (\ref{RSGraphToGRAPE}) (\mbox{\texttt{\mdseries\slshape graph{\textunderscore}rec}}) this function returns the corresponding RSGraph. This returns an RSGraph
+that is exactly the same as the original RSGraph. If the data input to this
+function is not fro the \texttt{RSGraphToGRAPE} function then there is no guarantee that this function will run correctly. }
+
+ 
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@graph := RSGraphByAdjacencyList([[2, 3], [3, 2]], (1,2), [2, 3]);;|
+  !gapprompt@gap>| !gapinput@graph_rec := RSGraphToGRAPE(graph);;|
+  !gapprompt@gap>| !gapinput@new_graph := RSGraphFromGRAPE(graph_rec);;|
+  !gapprompt@gap>| !gapinput@Print(graph);|
+  Vertices = { 2, 3 }
+  Arcs = {
+  	1 = ( origin = 2, terminus = 3, inverse = 2 )
+  	2 = ( origin = 3, terminus = 2, inverse = 1 )
+  }
+  Reverse Map = (1,2)
+  !gapprompt@gap>| !gapinput@Print(new_graph);|
+  Vertices = { 2, 3 }
+  Arcs = {
+  	1 = ( origin = 2, terminus = 3, inverse = 2 )
+  	2 = ( origin = 3, terminus = 2, inverse = 1 )
+  }
+  Reverse Map = (1,2)
+\end{Verbatim}
+ 
+
+ 
+
+\subsection{\textcolor{Chapter }{RSGraphFromGRAPE}}
+\logpage{[ 6, 2, 3 ]}\nobreak
+\hyperdef{L}{X82CC3F807E620740}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{RSGraphFromGRAPE({\mdseries\slshape graph, reverse{\textunderscore}map})\index{RSGraphFromGRAPE@\texttt{RSGraphFromGRAPE}}
+\label{RSGraphFromGRAPE}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+An RSGraph.
+
+
+
+ Given a GRAPE \mbox{\texttt{\mdseries\slshape graph}} and a \mbox{\texttt{\mdseries\slshape reverse{\textunderscore}map}} defined on the edges of the GRAPE graph this function returns an RSGraph with
+the same structure as the GRAPE graph and with the reverse map provided. This
+function works by using the adjacency listing of the GRAPE graph given by \texttt{DirectedEdges(\mbox{\texttt{\mdseries\slshape graph}})}. This means that the reverse map must be compatible with the order of the
+edges given by this adjacency listing. 
+
+ All normal checks for an RSGraph construction are applied when using this
+function. In particular, this means that the GRAPE graph must be connected and
+must have a reverse arc for every arc in the GRAPE graph. }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@adj_mat := [[0, 1], [1, 0]];|
+  !gapprompt@gap>| !gapinput@grape_graph := Graph(Group(()), [1, 2], OnPoints, \|
+  !gapprompt@>| !gapinput@                        {x, y} -> adj_mat[x][y] = 1, true);;|
+  !gapprompt@gap>| !gapinput@graph := RSGraphFromGRAPE(grape_graph, (1, 2));;|
+  !gapprompt@gap>| !gapinput@Print(graph);|
+  Vertices = { 1, 2 }
+  Arcs = {
+  	1 = ( origin = 1, terminus = 2, inverse = 2 )
+  	2 = ( origin = 2, terminus = 1, inverse = 1 )
+  }
+  Reverse Map = (1,2)
+\end{Verbatim}
+ }
+
+ 
+\section{\textcolor{Chapter }{UGALY}}\label{Chapter_Extensions_Section_UGALY}
+\logpage{[ 6, 3, 0 ]}
+\hyperdef{L}{X842152AC7BAA6D52}{}
+{
+  
+
+ The package \textsf{UGALY} implements Tornier's generalisation of the Burger\texttt{\symbol{45}}Mozes
+universal group to $k$\texttt{\symbol{45}}closures. In the case when $k = 1$ this corresponds to the original Burger\texttt{\symbol{45}}Mozes universal
+group. It represents these groups as objects in the category \texttt{IsLocalAction}. 
+
+ As objects in the category \texttt{IsLocalAction} are also in the category \texttt{IsPermGroup} they can be directly used in \texttt{LocalActionDiagramFromBurgerMozesUniversalGroup} (\ref{LocalActionDiagramFromBurgerMozesUniversalGroup}). We provide a function to convert a local action diagram representing a
+Burger\texttt{\symbol{45}}Mozes group to a local action object from \textsf{UGALY}. 
+
+\subsection{\textcolor{Chapter }{LocalActionDiagramToUGALY}}
+\logpage{[ 6, 3, 1 ]}\nobreak
+\hyperdef{L}{X83409D2E8151BA33}{}
+{\noindent\textcolor{FuncColor}{$\triangleright$\enspace\texttt{LocalActionDiagramToUGALY({\mdseries\slshape lad})\index{LocalActionDiagramToUGALY@\texttt{LocalActionDiagramToUGALY}}
+\label{LocalActionDiagramToUGALY}
+}\hfill{\scriptsize (operation)}}\\
+\textbf{\indent Returns:\ }
+A local action. 
+
+
+
+ Given a local action diagram \mbox{\texttt{\mdseries\slshape lad}} corresponding to a Burger\texttt{\symbol{45}}Mozes group this returns the
+corresponding group as an object of the category \texttt{IsLocalAction} from the package \textsf{UGALY}. The local action diagram \mbox{\texttt{\mdseries\slshape lad}} must have a single vertex and have only self\texttt{\symbol{45}}reverse edges,
+and must also have at least one edge (see \texttt{LocalActionDiagramIsBurgerMozesUniversalGroup} (\ref{LocalActionDiagramIsBurgerMozesUniversalGroup}). }
+
+ 
+\begin{Verbatim}[commandchars=!@|,fontsize=\small,frame=single,label=Example]
+  !gapprompt@gap>| !gapinput@lad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1, 2), \ |
+                                                                    (3,4)));
+  <U(Group( [ (1,2), (3,4) ] )) (as a Local Action Diagram)>
+  !gapprompt@gap>| !gapinput@group := LocalActionDiagramToUGALY(lad);|
+  Group([ (1,2), (3,4) ])
+  !gapprompt@gap>| !gapinput@LocalActionDegree(group);|
+  4
+  !gapprompt@gap>| !gapinput@LocalActionRadius(group);|
+  1
+  !gapprompt@gap>| !gapinput@LocalActionDiagramFromBurgerMozesUniversalGroup(group);|
+  <U(Group( [ (1,2), (3,4) ] )) (as a Local Action Diagram)>
 \end{Verbatim}
  }
 
