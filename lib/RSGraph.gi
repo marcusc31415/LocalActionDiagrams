@@ -188,7 +188,7 @@ function(arc_list, rev_map, vertex_ids)
 	return RSGraphConsNC(IsRSGraph, graph_data);
 end);
 
-InstallMethod(RSGraphByAdjacencyMatrix, [IsMatrix, IsPerm],
+InstallMethod(RSGraphByAdjacencyMatrix, [IsRectangularTable, IsPerm],
 function(adj_mat, rev_map)
 	local adj_list, vertex_ids, graph;
 
@@ -201,7 +201,7 @@ function(adj_mat, rev_map)
 	return graph;
 end);
 
-InstallMethod(RSGraphByAdjacencyMatrix, [IsMatrix, IsPerm, IsList],
+InstallMethod(RSGraphByAdjacencyMatrix, [IsRectangularTable, IsPerm, IsList],
 function(adj_mat, rev_map, vertex_ids)
 	local adj_list, graph;
 
@@ -212,7 +212,7 @@ function(adj_mat, rev_map, vertex_ids)
 	return graph;
 end);
 
-InstallMethod(RSGraphByAdjacencyMatrixNC, [IsMatrix, IsPerm],
+InstallMethod(RSGraphByAdjacencyMatrixNC, [IsRectangularTable, IsPerm],
 function(adj_mat, rev_map)
 	local adj_list, vertex_ids, graph;
 
@@ -225,7 +225,7 @@ function(adj_mat, rev_map)
 	return graph;
 end);
 
-InstallMethod(RSGraphByAdjacencyMatrixNC, [IsMatrix, IsPerm, IsList],
+InstallMethod(RSGraphByAdjacencyMatrixNC, [IsRectangularTable, IsPerm, IsList],
 function(adj_mat, rev_map, vertex_ids)
 	local adj_list, graph;
 
