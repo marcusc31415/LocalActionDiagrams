@@ -249,6 +249,8 @@ function(graph)
 	print_string := "Vertices = { ";
 	if Size(vertex_ids) = 1 then
 		print_string := Concatenation(print_string, String(vertex_ids[1]));
+	elif Size(vertex_ids) = 0 then
+		;
 	else
 		for vert in vertex_ids do
 			print_string := Concatenation(print_string, StringFormatted("{1}, ", vert));
@@ -395,6 +397,9 @@ function(graph)
 
 		# Find the next arc id. Skip over any holes from subgraphs. 
 		count := iter!.counter;
+		if count > Maximum(RSGraphArcIDs(iter!.graph)) then
+			ErrorNoReturn("Iterator is exhausted.");
+		fi;
 		while not IsBound(RSGraphArcs(iter!.graph).(count)) do
 			count := count + 1;
 		od;
@@ -563,6 +568,11 @@ graph -> RSGraphSpanningTree(graph, "bfs"));
 InstallMethod(RSGraphSpanningTree, "for and RSGraph", [IsRSGraph, IsString],
 function(graph, type)
 	local arc_ids, vertex_ids, arc_records, id, subgraph_data;
+
+	# Deal with the zero vertex case separately.
+	if RSGraphNumberVertices(graph) = 0 then
+		return graph; # Empty graph is its own spanning tree. 
+	fi;
 
 	# Deal with the one vertex case separately. 
 	if RSGraphNumberVertices(graph) = 1 then

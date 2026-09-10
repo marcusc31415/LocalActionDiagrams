@@ -1,4 +1,4 @@
-# Tests the adjacency matrix construction. 
+# Tests the neighbours functions. 
 gap> START_TEST("neighbours.tst");
 
 # 
