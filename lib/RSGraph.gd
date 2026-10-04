@@ -101,8 +101,8 @@ DeclareOperation("RSGraphByAdjacencyListNC", [IsList, IsPerm, IsList]);
 #! Note that the first argument must be a list of lists with each sublist containing
 #! integers. In particular, it can not be an object in the category <K>IsMatrixObj</K>
 #! constructed by the function <C>Matrix</C>. 
-DeclareOperation("RSGraphByAdjacencyMatrix", [IsMatrix, IsPerm]);
-DeclareOperation("RSGraphByAdjacencyMatrix", [IsMatrix, IsPerm, IsList]);
+DeclareOperation("RSGraphByAdjacencyMatrix", [IsRectangularTable, IsPerm]);
+DeclareOperation("RSGraphByAdjacencyMatrix", [IsRectangularTable, IsPerm, IsList]);
 
 #! @Returns An RSGraph. 
 #! @Arguments adjacency_matrix, reverse_map[, vertex_ids]
@@ -111,8 +111,8 @@ DeclareOperation("RSGraphByAdjacencyMatrix", [IsMatrix, IsPerm, IsList]);
 #!
 #! The NC variant of the function does not check that the graph is connected,
 #! the reverse map is valid, and that each arc has an associated reverse arc. 
-DeclareOperation("RSGraphByAdjacencyMatrixNC", [IsMatrix, IsPerm]);
-DeclareOperation("RSGraphByAdjacencyMatrixNC", [IsMatrix, IsPerm, IsList]);
+DeclareOperation("RSGraphByAdjacencyMatrixNC", [IsRectangularTable, IsPerm]);
+DeclareOperation("RSGraphByAdjacencyMatrixNC", [IsRectangularTable, IsPerm, IsList]);
 
 
 #! @BeginExampleSession

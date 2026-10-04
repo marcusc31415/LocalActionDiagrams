@@ -17,6 +17,31 @@ DeclareConstructor("LocalActionDiagramConsNC", [IsLocalActionDiagram, IsRecord])
 
 # User Level Construction Operations
 
+#! <ManSection>
+#!     <Attr Name="PermGroupDomain" Arg="perm_group" Label="for a Permutation Group"/>
+#!     <Returns>The domain the permutation group acts on.</Returns>
+#!     <Description>
+#!         By default, a permutation group <A>perm_group</A> in GAP is treated as acting on <C>MovedPoints(<A>perm_group</A>)</C>. Often when working with local action diagrams we need to consider groups with an action that has fixed points. To do this we provided the <C>PermGroupDomain</C> attribute form permutation groups. 
+#!
+#!         This is a mutable attribute that is treated as the set the permutation group acts on for all functions implemented in this package. By default it is equal to <C>MovedPoints(<A>perm_group</A>)</C>. 
+#!
+#!         Note that this attribute does not affect any functions not implemented in this package. For example, the default acting set for the <C>Orbits</C> function is still <C>MovedPoints(<A>perm_group</A>)</C>. 
+#!     </Description>
+#! </ManSection>
+#!
+#! @BeginExampleSession
+#! gap> group := Group((2, 3));;
+#! gap> Orbits(group);
+#! [ [ 2, 3 ] ]
+#! gap> PermGroupDomain(group);
+#! [ 2, 3 ]
+#! gap> SetPermGroupDomain(group, [1, 2, 3]);;
+#! gap> Orbits(group);
+#! [ [ 2, 3 ] ]
+#! gap> Orbits(group, PermGroupDomain(group));
+#! [ [ 1 ], [ 2, 3 ] ]
+#! @EndExampleSession
+
 #! @BeginGroup LADFromData
 #!
 #! @Returns A local action diagram object. 
@@ -33,7 +58,7 @@ DeclareConstructor("LocalActionDiagramConsNC", [IsLocalActionDiagram, IsRecord])
 #! vertex and arc ids respectively and the components are their labels. 
 #!
 #! The vertex labels are permutation groups. The domain each label acts on is stored in the mutable attribute
-#! <C>PermGroupDomain</C> (see <Ref Func="PermGroupDomain"/>). By default, this is equal to the <C>MovedPoints</C> of the
+#! <C>PermGroupDomain</C> (see <Ref Func="PermGroupDomain" Label="for a Permutation Group"/>). By default, this is equal to the <C>MovedPoints</C> of the
 #! group but can be changed to allow for the group to have fixed points. 
 #!
 #! The arc labels are lists of integers. Each arc must be labelled by by an orbit of the vertex label at the vertex that

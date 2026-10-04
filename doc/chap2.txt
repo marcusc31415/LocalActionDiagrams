@@ -33,7 +33,38 @@
   Furthermore,  every  local  action diagram is an immutable attribute storing
   object.[133X
   
-  [1X2.1-2 LocalActionDiagramFromData[101X
+  [1X2.1-2 PermGroupDomain[101X
+  
+  [33X[1;0Y[29X[2XPermGroupDomain[102X( [3Xperm_group[103X ) [32X attribute[133X
+  [6XReturns:[106X  [33X[0;10YThe domain the permutation group acts on.[133X
+  
+  [33X[0;0YBy  default,  a  permutation group [3Xperm_group[103X in GAP is treated as acting on
+  [10XMovedPoints([3Xperm_group[103X[10X)[110X.  Often  when  working with local action diagrams we
+  need  to consider groups with an action that has fixed points. To do this we
+  provided the [10XPermGroupDomain[110X attribute form permutation groups.[133X
+  
+  [33X[0;0YThis is a mutable attribute that is treated as the set the permutation group
+  acts  on  for  all  functions  implemented in this package. By default it is
+  equal to [10XMovedPoints([3Xperm_group[103X[10X)[110X.[133X
+  
+  [33X[0;0YNote  that  this  attribute does not affect any functions not implemented in
+  this package. For example, the default acting set for the [10XOrbits[110X function is
+  still [10XMovedPoints([3Xperm_group[103X[10X)[110X.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xgroup := Group((2, 3));;[127X[104X
+    [4X[25Xgap>[125X [27XOrbits(group);[127X[104X
+    [4X[28X[ [ 2, 3 ] ][128X[104X
+    [4X[25Xgap>[125X [27XPermGroupDomain(group);[127X[104X
+    [4X[28X[ 2, 3 ][128X[104X
+    [4X[25Xgap>[125X [27XSetPermGroupDomain(group, [1, 2, 3]);;[127X[104X
+    [4X[25Xgap>[125X [27XOrbits(group);[127X[104X
+    [4X[28X[ [ 2, 3 ] ][128X[104X
+    [4X[25Xgap>[125X [27XOrbits(group, PermGroupDomain(group));[127X[104X
+    [4X[28X[ [ 1 ], [ 2, 3 ] ][128X[104X
+  [4X[32X[104X
+  
+  [1X2.1-3 LocalActionDiagramFromData[101X
   
   [33X[1;0Y[29X[2XLocalActionDiagramFromData[102X( [3Xgraph[103X, [3Xvertex_labels[103X, [3Xarc_labels[103X ) [32X operation[133X
   [33X[1;0Y[29X[2XLocalActionDiagramFromDataNC[102X( [3Xgraph[103X, [3Xvertex_labels[103X, [3Xarc_labels[103X ) [32X operation[133X
@@ -53,8 +84,8 @@
   
   [33X[0;0YThe  vertex  labels are permutation groups. The domain each label acts on is
   stored   in  the  mutable  attribute  [10XPermGroupDomain[110X  (see  [2XPermGroupDomain[102X
-  ([14X???PermGroupDomain???[114X)).  By  default,  this is equal to the [10XMovedPoints[110X of
-  the group but can be changed to allow for the group to have fixed points.[133X
+  ([14X2.1-2[114X)).  By default, this is equal to the [10XMovedPoints[110X of the group but can
+  be changed to allow for the group to have fixed points.[133X
   
   [33X[0;0YThe  arc  labels  are  lists of integers. Each arc must be labelled by by an
   orbit of the vertex label at the vertex that arc originates at. Furthermore,
@@ -100,7 +131,7 @@
     [4X[28X}[128X[104X
   [4X[32X[104X
   
-  [1X2.1-3 LocalActionDiagramFromBurgerMozesUniversalGroup[101X
+  [1X2.1-4 LocalActionDiagramFromBurgerMozesUniversalGroup[101X
   
   [33X[1;0Y[29X[2XLocalActionDiagramFromBurgerMozesUniversalGroup[102X( [3Xperm_group[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA local action diagram object.[133X
@@ -116,7 +147,7 @@
     [4X[28X<U(Group( [ (1,2)(3,4) ] )) (as a Local Action Diagram)>[128X[104X
   [4X[32X[104X
   
-  [1X2.1-4 LocalActionDiagramConstructBipartitionPreserving[101X
+  [1X2.1-5 LocalActionDiagramConstructBipartitionPreserving[101X
   
   [33X[1;0Y[29X[2XLocalActionDiagramConstructBipartitionPreserving[102X( [3Xlad[103X ) [32X operation[133X
   [6XReturns:[106X  [33X[0;10YA local action diagram object.[133X

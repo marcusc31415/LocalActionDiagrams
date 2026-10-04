@@ -10,15 +10,15 @@
 #
 gap> START_TEST("localactiondiagrams14.tst");
 
-# doc/_Chapter_Local_Action_Diagrams.xml:398-407
+# doc/_Chapter_Local_Action_Diagrams.xml:399-408
 gap> graph := RSGraphByAdjacencyList ([[1, 2], [2, 1]], (1,2));;
 gap> group := Group(());;
 gap> SetPermGroupDomain(group, [1]);;
 gap> vertex_labels := [group, group];;
 gap> arc_labels := [[1], [1]];;
 gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
-gap> LocalActionDiagramIsDiscrete(lad);
-true
+gap> LocalActionDiagramGroupType(lad);
+"General"
 
 #
 gap> STOP_TEST("localactiondiagrams14.tst", 1);

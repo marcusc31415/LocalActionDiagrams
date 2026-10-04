@@ -82,11 +82,11 @@ Dependencies := rec(
 Extensions := [
 	rec (
 		needed := [ ["ugaly", "4.1.3"] ],
-		filename := "lib/UgalyExtension.gd",
+		filename := "lib/UGALYExtension.gd",
 	),
 	rec (
 		needed := [ ["ugaly", "4.1.3"] ],
-		filename := "lib/UgalyExtension.gi",
+		filename := "lib/UGALYExtension.gi",
 	),
 	rec (
 		needed := [ ["digraphs", "1.9.0"] ],

@@ -10,9 +10,32 @@
 #
 gap> START_TEST("localactiondiagrams10.tst");
 
-# doc/_Chapter_Local_Action_Diagrams.xml:119-122
-gap> lad := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1,2)(3,4)));
-<U(Group( [ (1,2)(3,4) ] )) (as a Local Action Diagram)>
+# doc/_Chapter_Local_Action_Diagrams.xml:104-130
+gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 2], [2, 1]], (2,3));;
+gap> label_1 := Group((1,2));;
+gap> SetPermGroupDomain(label_1, [1, 2, 3]);;
+gap> label_2 := Group((1,2,3));;
+gap> vertex_labels := [label_1, label_2];;
+gap> arc_labels := [[1, 2], [3], [1,2,3]];;
+gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);
+<LocalActionDiagram with 2 vertices and 3 arcs>
+gap> Print(lad);
+Vertices = { 1, 2 }
+Arcs = {
+	1 = ( origin = 1, terminus = 1, inverse = 1 )
+	2 = ( origin = 1, terminus = 2, inverse = 3 )
+	3 = ( origin = 2, terminus = 1, inverse = 2 )
+}
+Reverse Map = (2,3)
+Vertex Labels = {
+	1 = Group( [ (1,2) ] )
+	2 = Group( [ (1,2,3) ] )
+}
+Arc Labels = {
+	1 = [ 1, 2 ]
+	2 = [ 3 ]
+	3 = [ 1, 2, 3 ]
+}
 
 #
 gap> STOP_TEST("localactiondiagrams10.tst", 1);
