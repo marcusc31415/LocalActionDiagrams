@@ -50,7 +50,7 @@ function(degree, no_verts)
 	seen_data := [];
 
 	for graph in rs_graph_list do
-		graph_data := RSGraphAdjacencyMatrix(graph);
+		graph_data := RSGraphCanonicalLabelling(graph);
 
 		if graph_data in seen_data then
 			continue;
