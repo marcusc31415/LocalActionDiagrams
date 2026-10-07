@@ -350,20 +350,13 @@ function(val)
 	fi;
 end);
 
+# Does the search in the "All" and "One" functions. 
+# First argument is the list of graphs to search. 
+BindGlobal("LAD_SearchRSGraphs@",
+function(graph_list, args)
+	local candidate_graphs, idx, new_graphs, easy_args, hard_args, funcs, new_args_order, Func, val, graph, ret, read_from_disc;
 
-BindGlobal("AllRSGraphs", 
-function(args...)
-	local candidate_graphs, idx, new_graphs, Func, val, graph, new_args_order, easy_args, hard_args, ret, degree, no_verts, rec_string, read_from_disc, positions, unique_certs, canon_certs;
-
-	if Length(args) mod 2 <> 0 then
-		ErrorNoReturn("Arugments must be of the form [function1, output1, ...].");
-	fi;
-
-	for idx in [1..Length(args)/2] do
-		if not IsFunction(args[2*idx-1]) then
-			ErrorNoReturn(StringFormatted("Argument {1} must be a function.", idx));
-		fi;
-	od;
+	candidate_graphs := graph_list;
 
 	# Order the easy (pre-computed) functions first.
 	easy_args := [];
@@ -382,8 +375,59 @@ function(args...)
 	od;
 
 	new_args_order := Concatenation(easy_args, hard_args);
-	
-	
+
+	new_graphs := [];
+
+	for idx in [1..Length(new_args_order)/2] do
+		Func := new_args_order[2*idx-1];
+		val := new_args_order[2*idx];
+
+		for graph in candidate_graphs do
+			if LAD_DebugSearch@ = true then
+				BreakOnError := false;
+				SilentNonInteractiveErrors := true;
+
+				ret := CALL_WITH_CATCH(Func, [graph]);
+
+				BreakOnError := true;
+				SilentNonInteractiveErrors := false;
+			else
+				ret := [true, Func(graph)];
+			fi; 
+
+			if ret[1] = false then
+				ErrorNoReturn(StringFormatted("Error in function \"{1}\" (argument {2}).", NameFunction(Func), 2*idx-1));
+			fi;
+
+			if ret[2] = val then
+				Add(new_graphs, graph);
+			fi;
+		od;
+
+
+		candidate_graphs := new_graphs;
+		new_graphs := [];
+	od;
+
+	return candidate_graphs;
+
+end);
+
+
+BindGlobal("AllRSGraphs", 
+function(args...)
+	local candidate_graphs, idx, new_graphs, Func, val, graph, new_args_order, easy_args, hard_args, ret, degree, no_verts, rec_string, read_from_disc, positions, unique_certs, canon_certs;
+
+	if Length(args) mod 2 <> 0 then
+		ErrorNoReturn("Arugments must be of the form [function1, output1, ...].");
+	fi;
+
+	for idx in [1..Length(args)/2] do
+		if not IsFunction(args[2*idx-1]) then
+			ErrorNoReturn(StringFormatted("Argument {1} must be a function.", idx));
+		fi;
+	od;
+
 	candidate_graphs := [];
 	for idx in [1..Length(LAD_CheckOrder@)] do
 		degree := LAD_CheckOrder@[idx][1];
@@ -417,67 +461,56 @@ function(args...)
 		candidate_graphs := Concatenation(candidate_graphs, RSGraphFromLibrary(2, no_verts));
 	od;
 
-	new_graphs := [];
 
-	for idx in [1..Length(new_args_order)/2] do
-		Func := new_args_order[2*idx-1];
-		val := new_args_order[2*idx];
-
-		for graph in candidate_graphs do
-			if LAD_DebugSearch@ = true then
-				BreakOnError := false;
-				SilentNonInteractiveErrors := true;
-
-				ret := CALL_WITH_CATCH(Func, [graph]);
-
-				BreakOnError := true;
-				SilentNonInteractiveErrors := false;
-			else
-				ret := [true, Func(graph)];
-			fi; 
-
-			if ret[1] = false then
-				ErrorNoReturn(StringFormatted("Error in function \"{1}\" (argument {2}).", NameFunction(Func), 2*idx-1));
-			fi;
-
-			if ret[2] = val then
-				Add(new_graphs, graph);
-			fi;
-		od;
-
-		candidate_graphs := new_graphs;
-		new_graphs := [];
-	od;
-
-	return candidate_graphs;
+	return LAD_SearchRSGraphs@(candidate_graphs, args);
 end);
 
 BindGlobal("OneRSGraph", 
 function(args...)
-	local all_graphs;
+	local candidate_graphs, found_graphs, read_from_disc, idx, degree, no_verts, rec_string;
 
-	all_graphs := CallFuncList(AllRSGraphs, args);
-
-	if Size(all_graphs) = 0 then
-		return fail;
-	else
-		return all_graphs[1];
-	fi;
-end);
-
-BindGlobal("AllLocalActionDiagrams", 
-function(args...)
-	local candidate_lads, idx, new_lads, Func, val, lad, new_args_order, easy_args, hard_args, ret, degree, no_verts, rec_string, read_from_disc;
-
-	if Length(args) mod 2 <> 0 then
-		ErrorNoReturn("Arugments must be of the form [function1, output1, ...].");
-	fi;
-
-	for idx in [1..Length(args)/2] do
-		if not IsFunction(args[2*idx-1]) then
-			ErrorNoReturn(StringFormatted("Argument {1} must be a function.", idx));
+	# Search these first to avoid disk reads if possible? 
+	for no_verts in [6..LAD_Degree2MaxSearch@] do
+		candidate_graphs := RSGraphFromLibrary(2, no_verts);
+		found_graphs := LAD_SearchRSGraphs@(candidate_graphs, args);
+		if Size(found_graphs) <> 0 then
+			return found_graphs[1];
 		fi;
 	od;
+
+	for idx in [1..Length(LAD_CheckOrder@)] do
+		degree := LAD_CheckOrder@[idx][1];
+		no_verts := LAD_CheckOrder@[idx][2];
+		rec_string := StringFormatted("{1},{2}", degree, no_verts);
+
+		read_from_disc := false;
+
+		if not rec_string in RecNames(LAD_RSGraphsRecord@) then
+			Info(InfoPerformance, 1, StringFormatted("Reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+			read_from_disc := true;
+		fi;
+		candidate_graphs := RSGraphFromLibrary(LAD_CheckOrder@[idx][1], LAD_CheckOrder@[idx][2]);
+		if read_from_disc then
+			Info(InfoPerformance, 1, StringFormatted("Finished reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+		fi;
+
+		found_graphs := LAD_SearchRSGraphs@(candidate_graphs, args);
+
+		if Size(found_graphs) <> 0 then
+			return found_graphs[1];
+		fi;
+	od;
+
+	return fail;
+end);
+
+# Does the search in the "All" and "One" functions. 
+# First argument is the list of lads to search. 
+BindGlobal("LAD_SearchLocalActionDiagrams@",
+function(lad_list, args)
+	local candidate_lads, idx, new_lads, Func, val, lad, new_args_order, easy_args, hard_args, ret, degree, no_verts, rec_string, read_from_disc;
+
+	candidate_lads := lad_list;
 
 	# Order the easy (pre-computed) functions first.
 	easy_args := [];
@@ -499,29 +532,6 @@ function(args...)
 	od;
 
 	new_args_order := Concatenation(easy_args, hard_args);
-	
-	candidate_lads := [];
-	for idx in [1..Length(LAD_CheckOrder@)] do
-		degree := LAD_CheckOrder@[idx][1];
-		no_verts := LAD_CheckOrder@[idx][2];
-		rec_string := StringFormatted("{1},{2}", degree, no_verts);
-
-		read_from_disc := false;
-
-		if not rec_string in RecNames(LAD_RSGraphsRecord@) then
-			Info(InfoPerformance, 1, StringFormatted("Reading library data for degree={1}, number vertices={2}.", degree, no_verts));
-			read_from_disc := true;
-		fi;
-		candidate_lads := Concatenation(candidate_lads, LocalActionDiagramFromLibrary(LAD_CheckOrder@[idx][1], LAD_CheckOrder@[idx][2]));
-		if read_from_disc then
-			Info(InfoPerformance, 1, StringFormatted("Finished reading library data for degree={1}, number vertices={2}.", degree, no_verts));
-		fi;
-	od;
-
-	for no_verts in [1..LAD_Degree2MaxSearch@] do
-		candidate_lads := Concatenation(candidate_lads, LocalActionDiagramFromLibrary(2, no_verts));
-	od;
-
 
 	new_lads := [];
 
@@ -558,17 +568,83 @@ function(args...)
 	return candidate_lads;
 end);
 
+
+BindGlobal("AllLocalActionDiagrams", 
+function(args...)
+	local candidate_lads, idx, new_lads, Func, val, lad, new_args_order, easy_args, hard_args, ret, degree, no_verts, rec_string, read_from_disc;
+
+	if Length(args) mod 2 <> 0 then
+		ErrorNoReturn("Arugments must be of the form [function1, output1, ...].");
+	fi;
+
+	for idx in [1..Length(args)/2] do
+		if not IsFunction(args[2*idx-1]) then
+			ErrorNoReturn(StringFormatted("Argument {1} must be a function.", idx));
+		fi;
+	od;
+
+	
+	candidate_lads := [];
+	for idx in [1..Length(LAD_CheckOrder@)] do
+		degree := LAD_CheckOrder@[idx][1];
+		no_verts := LAD_CheckOrder@[idx][2];
+		rec_string := StringFormatted("{1},{2}", degree, no_verts);
+
+		read_from_disc := false;
+
+		if not rec_string in RecNames(LAD_RSGraphsRecord@) then
+			Info(InfoPerformance, 1, StringFormatted("Reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+			read_from_disc := true;
+		fi;
+		candidate_lads := Concatenation(candidate_lads, LocalActionDiagramFromLibrary(LAD_CheckOrder@[idx][1], LAD_CheckOrder@[idx][2]));
+		if read_from_disc then
+			Info(InfoPerformance, 1, StringFormatted("Finished reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+		fi;
+	od;
+
+	for no_verts in [1..LAD_Degree2MaxSearch@] do
+		candidate_lads := Concatenation(candidate_lads, LocalActionDiagramFromLibrary(2, no_verts));
+	od;
+
+	return LAD_SearchLocalActionDiagrams@(candidate_lads, args);
+end);
+
 BindGlobal("OneLocalActionDiagram", 
 function(args...)
-	local all_lads;
+	local idx, degree, no_verts, rec_string, read_from_disc, candidate_lads, found_lads;
 
-	all_lads := CallFuncList(AllLocalActionDiagrams, args);
+	# Search this first to avoid disc reads? 
+	for no_verts in [1..LAD_Degree2MaxSearch@] do
+		candidate_lads := LocalActionDiagramFromLibrary(2, no_verts);
+		found_lads := LAD_SearchLocalActionDiagrams@(candidate_lads, args);
+		if Size(found_lads) <> 0 then
+			return found_lads[1];
+		fi;
+	od;
 
-	if Size(all_lads) = 0 then
-		return fail;
-	else
-		return all_lads[1];
-	fi;
+	for idx in [1..Length(LAD_CheckOrder@)] do
+		degree := LAD_CheckOrder@[idx][1];
+		no_verts := LAD_CheckOrder@[idx][2];
+		rec_string := StringFormatted("{1},{2}", degree, no_verts);
+
+		read_from_disc := false;
+
+		if not rec_string in RecNames(LAD_RSGraphsRecord@) then
+			Info(InfoPerformance, 1, StringFormatted("Reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+			read_from_disc := true;
+		fi;
+		candidate_lads := Concatenation(candidate_lads, LocalActionDiagramFromLibrary(LAD_CheckOrder@[idx][1], LAD_CheckOrder@[idx][2]));
+		if read_from_disc then
+			Info(InfoPerformance, 1, StringFormatted("Finished reading library data for degree={1}, number vertices={2}.", degree, no_verts));
+		fi;
+
+		found_lads := LAD_SearchLocalActionDiagrams@(candidate_lads, args);
+		if Size(found_lads) <> 0 then
+			return found_lads[1];
+		fi;
+	od;
+
+	return fail;
 end);
 
 # Add special "domain" and "degree" functions? 

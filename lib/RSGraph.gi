@@ -778,8 +778,8 @@ InstallMethod(RSGraphBipartition, "Find a bipartition of the graph (if it exists
 function(graph)
 	local vertex_queue, colours, current_vert, vert_id, neighbour_vert, vert_sets;
 
-	# Single vertex with no arcs or empty graph edge cases. 
-	if RSGraphNumberArcs(graph) = 0 then
+	# Single vertex or empty graph edge cases. 
+	if RSGraphNumberVertices(graph) = 1 then
 		return fail;
 	fi;
 
@@ -831,7 +831,7 @@ function(graph)
 
 end);
 
-InstallMethod(RSGraphIsBipartite, "Check if the graph is a bipartite graph.", [IsRSGraph], graph -> RSGraphBipartition <> fail);
+InstallMethod(RSGraphIsBipartite, "Check if the graph is a bipartite graph.", [IsRSGraph], graph -> RSGraphBipartition(graph) <> fail);
 
 InstallMethod(RSGraphDegree, "Maximum degree of any vertex.", [IsRSGraph], 
 function(graph)
