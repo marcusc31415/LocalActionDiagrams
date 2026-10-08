@@ -45,7 +45,7 @@
   [4X[32X  Example  [32X[104X
     [4X[25Xgap>[125X [27Xgraph_list := RSGraphFromLibrary(3, 2);;[127X[104X
     [4X[25Xgap>[125X [27Xgraph := graph_list[4];[127X[104X
-    [4X[28X<RSGraph with 2 vertices and 3 arcs>[128X[104X
+    [4X[28X<RSGraph with 2 vertices and 5 arcs>[128X[104X
     [4X[25Xgap>[125X [27Xgraph_2 := RSGraphFromLibrary(3, 2, 4);;[127X[104X
     [4X[25Xgap>[125X [27XIsomorphismRSGraphs(graph, graph_2);[127X[104X
     [4X[28X()[128X[104X

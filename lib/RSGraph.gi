@@ -779,7 +779,7 @@ function(graph)
 	local vertex_queue, colours, current_vert, vert_id, neighbour_vert, vert_sets;
 
 	# Single vertex or empty graph edge cases. 
-	if RSGraphNumberVertices(graph) = 1 then
+	if RSGraphNumberVertices(graph) = 1 or RSGraphNumberVertices(graph) = 0 then
 		return fail;
 	fi;
 

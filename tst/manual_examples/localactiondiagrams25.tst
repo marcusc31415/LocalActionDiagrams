@@ -13,7 +13,7 @@ gap> START_TEST("localactiondiagrams25.tst");
 # doc/_Chapter_Enumeration.xml:43-50
 gap> graph_list := RSGraphFromLibrary(3, 2);;
 gap> graph := graph_list[4];
-<RSGraph with 2 vertices and 3 arcs>
+<RSGraph with 2 vertices and 5 arcs>
 gap> graph_2 := RSGraphFromLibrary(3, 2, 4);;
 gap> IsomorphismRSGraphs(graph, graph_2);
 ()
