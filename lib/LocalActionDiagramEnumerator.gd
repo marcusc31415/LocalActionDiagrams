@@ -50,14 +50,14 @@ DeclareOperation("RSGraphFromLibrary", [IsInt, IsInt]);
 DeclareOperation("RSGraphFromLibrary", [IsInt, IsInt, IsInt]);
 #! @EndGroup
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph_list := RSGraphFromLibrary(3, 2);;
 #! gap> graph := graph_list[4];
 #! <RSGraph with 2 vertices and 5 arcs>
 #! gap> graph_2 := RSGraphFromLibrary(3, 2, 4);;
 #! gap> IsomorphismRSGraphs(graph, graph_2);
 #! ()
-#! @EndExampleSession
+#! @EndLogSession
 
 #! @BeginGroup
 #! @Returns A list of local action diagrams or a specific element from this list.
@@ -81,7 +81,7 @@ DeclareOperation("LocalActionDiagramFromLibrary", [IsInt, IsInt]);
 DeclareOperation("LocalActionDiagramFromLibrary", [IsInt, IsInt, IsInt]);
 #! @EndGroup
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> lad_list := LocalActionDiagramFromLibrary(3, 2);;
 #! gap> lad := lad_list[4];
 #! <LocalActionDiagram with 2 vertices and 4 arcs>
@@ -89,7 +89,7 @@ DeclareOperation("LocalActionDiagramFromLibrary", [IsInt, IsInt, IsInt]);
 #! gap> IsomorphismLocalActionDiagrams(lad, lad_2);
 #! [ (), (), rec( 1 := <mapping: Domain([ 1, 2, 3 ]) -> Domain([ 1, 2, 3 ]) >, 
 #!       2 := <mapping: Domain([ 4, 5, 6 ]) -> Domain([ 4, 5, 6 ]) > ) ]
-#! @EndExampleSession
+#! @EndLogSession
 
 
 #! @BeginGroup

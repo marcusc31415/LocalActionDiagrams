@@ -40,14 +40,14 @@ This function returns a list of RSGraphs such that each vertex has degree less t
  </Description>
 </ManSection>
 
-<Example><![CDATA[
+<Log><![CDATA[
 gap> graph_list := RSGraphFromLibrary(3, 2);;
 gap> graph := graph_list[4];
 <RSGraph with 2 vertices and 5 arcs>
 gap> graph_2 := RSGraphFromLibrary(3, 2, 4);;
 gap> IsomorphismRSGraphs(graph, graph_2);
 ()
-]]></Example>
+]]></Log>
 
 <ManSection Label="AutoDoc_generated_group4">
   <Oper Arg="degree, no_verts[, idx]" Name="LocalActionDiagramFromLibrary" />
@@ -71,7 +71,7 @@ This function returns a list of local action diagrams such that each vertex labe
  </Description>
 </ManSection>
 
-<Example><![CDATA[
+<Log><![CDATA[
 gap> lad_list := LocalActionDiagramFromLibrary(3, 2);;
 gap> lad := lad_list[4];
 <LocalActionDiagram with 2 vertices and 4 arcs>
@@ -79,7 +79,7 @@ gap> lad_2 := LocalActionDiagramFromLibrary(3, 2, 4);;
 gap> IsomorphismLocalActionDiagrams(lad, lad_2);
 [ (), (), rec( 1 := <mapping: Domain([ 1, 2, 3 ]) -> Domain([ 1, 2, 3 ]) >, 
       2 := <mapping: Domain([ 4, 5, 6 ]) -> Domain([ 4, 5, 6 ]) > ) ]
-]]></Example>
+]]></Log>
 
 <ManSection Label="AutoDoc_generated_group5">
 <Heading>Number of RSGraphs/Local Action Diagrams</Heading>

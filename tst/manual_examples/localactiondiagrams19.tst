@@ -10,13 +10,12 @@
 #
 gap> START_TEST("localactiondiagrams19.tst");
 
-# doc/_Chapter_Enumeration.xml:43-50
-gap> graph_list := RSGraphFromLibrary(3, 2);;
-gap> graph := graph_list[4];
-<RSGraph with 2 vertices and 5 arcs>
-gap> graph_2 := RSGraphFromLibrary(3, 2, 4);;
-gap> IsomorphismRSGraphs(graph, graph_2);
-()
+# doc/_Chapter_Enumeration.xml:99-105
+gap> lad_list := LocalActionDiagramFromLibrary(3, 3);;
+gap> Size(lad_list);
+78
+gap> NumberLocalActionDiagrams(3, 3);
+78
 
 #
 gap> STOP_TEST("localactiondiagrams19.tst", 1);
