@@ -14,11 +14,11 @@
 #!     </Description>
 #! </ManSection>
 #!
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
 #! gap> AutomorphismGroup(graph);
 #! Group([ (2,3) ])
-#! @EndExampleSession
+#! @EndLogSession
 
 DeclareAttribute("LAD_RSGraphNonReverseAutomorphisms@", IsRSGraph);
 
@@ -39,12 +39,12 @@ DeclareAttribute("LAD_RSGraphNonReverseAutomorphisms@", IsRSGraph);
 #! graphs have constant time complexity. 
 DeclareOperation("IsomorphismRSGraphs", [IsRSGraph, IsRSGraph]);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
 #! gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;
 #! gap> IsomorphismRSGraphs(graph_1, graph_2);
 #! (1,3,2)
-#! @EndExampleSession
+#! @EndLogSession
 
 
 #! @Returns A permutation. 
@@ -55,14 +55,14 @@ DeclareOperation("IsomorphismRSGraphs", [IsRSGraph, IsRSGraph]);
 #! <A>arc_aut</A> is not an automorphism of the graph's arcs then the behaviour of this function is undefined. 
 DeclareOperation("RSGraphVertexAutomorphism", [IsRSGraph, IsPerm]);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 2], [2, 1], [2, 2], [2, 2]], (3,4));;
 #! gap> aut_group := AutomorphismGroup(graph);;
 #! gap> arc_aut := Elements(aut_group)[5];
 #! (1,5)(2,6)(3,4)
 #! gap> vert_aut := RSGraphVertexAutomorphism(graph, arc_aut);
 #! (1,2)
-#! @EndExampleSession
+#! @EndLogSession
 
 
 #! @Returns A permutation or general mapping.
@@ -76,7 +76,7 @@ DeclareOperation("RSGraphVertexAutomorphism", [IsRSGraph, IsPerm]);
 DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsPerm]);
 DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsGeneralMapping]);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
 #! gap> graph_2 := RSGraphByAdjacencyList([[2, 2], [2, 2], [2, 2]], (1,2), [2]);;
 #! gap> arc_iso := IsomorphismRSGraphs(graph_1, graph_2);
@@ -85,7 +85,7 @@ DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsGeneralMa
 #! <general mapping: Domain([ 1 ]) -> Domain([ 2 ]) >
 #! gap> 1^vert_iso;
 #! 2
-#! @EndExampleSession
+#! @EndLogSession
 
 
 
@@ -102,7 +102,7 @@ DeclareOperation("RSGraphsVertexIsomorphism", [IsRSGraph, IsRSGraph, IsGeneralMa
 #! graphs.
 DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
 #! gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], ());;
 #! gap> for iso in RSGraphsIsomorphismsIterator(graph_1, graph_2) do 
@@ -114,7 +114,7 @@ DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 #! [ (), (1,3) ]
 #! [ (), (1,2,3) ]
 #! [ (), (1,2) ]
-#! @EndExampleSession
+#! @EndLogSession
 
 
 #DeclareAttribute("RSGraphCanonicalLabelling", IsRSGraph); # Declared in another file.
@@ -190,7 +190,7 @@ DeclareOperation("RSGraphsIsomorphismsIterator", [IsRSGraph, IsRSGraph]);
 #! vertex <C>i</C> in <A>lad_1</A> to the domain of the group labelling <C>i^vert_iso</C> in <A>lad_2</A>. 
 DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLocalActionDiagram]);
 
-#! @BeginExampleSession
+#! @BeginLogSession
 #! gap> graph := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;
 #! gap> lad_1 := LocalActionDiagramFromData(graph, [Group((1,2)), Group((3,4))], \
 #! >                                        [[1, 2], [3, 4]]);;
@@ -203,6 +203,6 @@ DeclareOperation("IsomorphismLocalActionDiagrams", [IsLocalActionDiagram, IsLoca
 #! rec(
 #!   1 := <mapping: Domain([ 1, 2 ]) -> Domain([ 3, 4 ]) >,
 #!   2 := <mapping: Domain([ 3, 4 ]) -> Domain([ 1, 2 ]) > )
-#! @EndExampleSession
+#! @EndLogSession
 
 

@@ -10,13 +10,12 @@
 #
 gap> START_TEST("localactiondiagrams21.tst");
 
-# doc/_Chapter_Iso.xml:83-90
-gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 2], [2, 1], [2, 2], [2, 2]], (3,4));;
-gap> aut_group := AutomorphismGroup(graph);;
-gap> arc_aut := Elements(aut_group)[5];
-(1,5)(2,6)(3,4)
-gap> vert_aut := RSGraphVertexAutomorphism(graph, arc_aut);
-(1,2)
+# doc/_Chapter_Enumeration.xml:99-105
+gap> lad_list := LocalActionDiagramFromLibrary(3, 3);;
+gap> Size(lad_list);
+78
+gap> NumberLocalActionDiagrams(3, 3);
+78
 
 #
 gap> STOP_TEST("localactiondiagrams21.tst", 1);

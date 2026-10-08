@@ -10,11 +10,14 @@
 #
 gap> START_TEST("localactiondiagrams20.tst");
 
-# doc/_Chapter_Iso.xml:65-70
-gap> graph_1 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (2,3));;
-gap> graph_2 := RSGraphByAdjacencyList([[1, 1], [1, 1], [1, 1]], (1,2));;
-gap> IsomorphismRSGraphs(graph_1, graph_2);
-(1,3,2)
+# doc/_Chapter_Enumeration.xml:74-82
+gap> lad_list := LocalActionDiagramFromLibrary(3, 2);;
+gap> lad := lad_list[4];
+<LocalActionDiagram with 2 vertices and 4 arcs>
+gap> lad_2 := LocalActionDiagramFromLibrary(3, 2, 4);;
+gap> IsomorphismLocalActionDiagrams(lad, lad_2);
+[ (), (), rec( 1 := <mapping: Domain([ 1, 2, 3 ]) -> Domain([ 1, 2, 3 ]) >, 
+      2 := <mapping: Domain([ 4, 5, 6 ]) -> Domain([ 4, 5, 6 ]) > ) ]
 
 #
 gap> STOP_TEST("localactiondiagrams20.tst", 1);
