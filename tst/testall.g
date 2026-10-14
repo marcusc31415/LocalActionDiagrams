@@ -4,7 +4,7 @@
 # This file runs package tests. It is also referenced in the package
 # metadata in PackageInfo.g.
 #
-LoadPackage( "LocalActionDiagrams" );
+# LoadPackage( "LocalActionDiagrams" ); # Testing not having this in here. 
 
 TestDirectory(DirectoriesPackageLibrary( "LocalActionDiagrams", "tst" ),
   rec(exitGAP := true));
