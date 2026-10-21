@@ -18,7 +18,7 @@ gap> vertex_labels := [group, group];;
 gap> arc_labels := [[1], [1]];;
 gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
 gap> LocalActionDiagramGroupType(lad);
-"General"
+"Fixed Vertex"
 
 #
 gap> STOP_TEST("localactiondiagrams14.tst", 1);

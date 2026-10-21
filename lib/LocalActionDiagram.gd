@@ -315,7 +315,7 @@ DeclareAttribute("LocalActionDiagramGroupType", IsLocalActionDiagram);
 #! gap> arc_labels := [[1], [1]];;
 #! gap> lad := LocalActionDiagramFromData(graph, vertex_labels, arc_labels);;
 #! gap> LocalActionDiagramGroupType(lad);
-#! "General"
+#! "Fixed Vertex"
 #! @EndExampleSession
 
 #! @Returns <K>true</K> if the corresponding universal group is discrete and false otherwise.  

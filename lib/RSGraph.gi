@@ -467,6 +467,51 @@ function(graph, arc_ids)
 	return subgraph_data;
 end);
 
+BindGlobal("LAD_Induced_Subgraph_Cons@", 
+function(graph, vert_ids)
+	local arc_ids, arc_records, subgraph_data, id, has_parallel, arc_directions, arc_dir, arc, arc_id, arc_rec;
+
+	arc_records := rec();
+
+	has_parallel := false;
+
+	arc_directions := [];
+
+	arc_ids := [];
+
+	for arc in RSGraphArcIterator(graph) do
+		arc_id := arc[1];
+		arc_rec := arc[2];
+		
+		if arc_rec.origin in vert_ids and arc_rec.terminus in vert_ids then
+			arc_records.(arc_id) := arc_rec;
+			Add(arc_ids, arc_id);
+		fi;
+	od;
+
+	for id in arc_ids do
+		arc_dir := [arc_records.(id).origin, arc_records.(id).terminus];
+		if not has_parallel and arc_dir in arc_directions then
+			has_parallel := true;
+		else
+			Add(arc_directions, arc_dir);
+		fi;
+	od;
+
+	subgraph_data := rec();
+
+	subgraph_data.vertices := vert_ids;
+	subgraph_data.arc_ids := arc_ids;
+
+	subgraph_data.arcs := arc_records;
+	subgraph_data.reverse_map := RSGraphReverseMap(graph);
+	subgraph_data.has_parallel := has_parallel;
+
+	return subgraph_data;
+end);
+
+
+
 InstallMethod(RSGraphSubgraph, "for RSGraphs", [IsRSGraph, IsList],
 function(graph, arc_ids)
 	local subgraph_data, id;
@@ -496,6 +541,32 @@ function(graph, arc_ids)
 
 	return RSGraphConsNC(IsRSGraph, subgraph_data);
 end);
+
+
+InstallMethod(RSGraphInducedSubgraph, "Subgraph induced by vertex subset.", [IsRSGraph, IsList],
+function(graph, vert_ids)
+	local subgraph_data, id;
+
+	if not IsSubset(RSGraphVertices(graph), vert_ids) then
+		ErrorNoReturn("Vertex IDs must be a subset of the graphs vertex IDs.");
+	fi;
+
+	subgraph_data := LAD_Induced_Subgraph_Cons@(graph, vert_ids);
+
+	LAD_RSGraphConsCheck@(subgraph_data.arcs, subgraph_data.reverse_map, subgraph_data.vertices, subgraph_data.arc_ids);
+
+	return RSGraphConsNC(IsRSGraph, subgraph_data);
+end);
+
+InstallMethod(RSGraphInducedSubgraphNC, "Subgraph induced by vertex subset.", [IsRSGraph, IsList],
+function(graph, vert_ids)
+	local subgraph_data, id;
+
+	subgraph_data := LAD_Induced_Subgraph_Cons@(graph, vert_ids);
+
+	return RSGraphConsNC(IsRSGraph, subgraph_data);
+end);
+
 
 
 BindGlobal("LAD_BFS_Tree@", 

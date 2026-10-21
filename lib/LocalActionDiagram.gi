@@ -342,9 +342,16 @@ function(lad)
 	local scopos, CotreeFromScopo, cotrees, cotree, labels, start_vertex, orientation, rev_orientation, current_vertex, out_arc_ids, arc_id, idx;
 
 	CotreeFromScopo := function(scopo)
-		local exclude_edges;
-		exclude_edges := Concatenation(scopo, List(scopo, x -> x^LocalActionDiagramReverseMap(lad)));
-		return RSGraphSubgraph(LocalActionDiagramRSGraph(lad), Difference(LocalActionDiagramArcIDs(lad), exclude_edges));
+		local excluded_verts, arc_id;
+		excluded_verts := [];
+
+		for arc_id in scopo do
+			Add(excluded_verts, LocalActionDiagramArcs(lad).(arc_id).origin);
+		od;
+
+		excluded_verts := Set(excluded_verts);
+
+		return RSGraphInducedSubgraph(LocalActionDiagramRSGraph(lad), Difference(LocalActionDiagramVertices(lad), excluded_verts));
 	end;
 
 	scopos := LocalActionDiagramScopos(lad);

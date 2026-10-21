@@ -360,6 +360,9 @@ DeclareOperation("RSGraphSubgraph", [IsRSGraph, IsList]);
 #! or for the inclusion of arc reversals. 
 DeclareOperation("RSGraphSubgraphNC", [IsRSGraph, IsList]);
 
+DeclareOperation("RSGraphInducedSubgraph", [IsRSGraph, IsList]);
+DeclareOperation("RSGraphInducedSubgraphNC", [IsRSGraph, IsList]);
+
 #! @BeginExampleSession
 #! gap> adj_list := [[1, 2], [2, 1], [1, 2], [2, 1], [2, 2]];;
 #! gap> rev_map := (1,2)(3,4);;
