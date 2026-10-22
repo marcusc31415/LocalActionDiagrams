@@ -587,7 +587,7 @@ function(lad)
 		# The added arc is a loop. 
 		if start_vertex = current_vertex then
 			if added_arc_id^rev_map <> added_arc_id then
-				return [added_arc_id, added_arc_id^rev_map];
+				return [added_arc_id];
 			else
 				return fail;
 			fi;
@@ -644,7 +644,6 @@ function(lad)
 
 
 	is_unimodular := true;
-
 
 	for cycle in cycle_basis do
 		i := 1;
