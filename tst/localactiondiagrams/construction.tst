@@ -50,6 +50,15 @@ gap> vert_labels := [Group((1,2)), Group((1,2,3)), Group((1, 2, 7))];;
 gap> LocalActionDiagramFromData(graph, vert_labels, arc_labels);
 Error, Must have a vertex label for each vertex in the graph.
 
+# 
+# Error if number of vertices or arcs is 0.
+gap> graph := RSGraphByAdjacencyList([], ());;
+gap> LocalActionDiagramFromData(graph, [], []);
+Error, Local action diagrams must have at least one vertex and one arc.
+gap> graph := RSGraphByAdjacencyList([], (), [1]);;
+gap> LocalActionDiagramFromData(graph, [Group(())], []);
+Error, Local action diagrams must have at least one vertex and one arc.
+
 #
 # Check that the construction works. 
 gap> graph := RSGraphByAdjacencyList([[1, 1], [1, 2], [2, 1]], (2,3));;

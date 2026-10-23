@@ -22,6 +22,10 @@ function(graph, vert_labels, arc_labels)
 	local orbits, arc, arc_label_combined, idx, name;
 	# Check vertex label orbit condition. 
 	
+	if RSGraphNumberVertices(graph) = 0 or RSGraphNumberArcs(graph) = 0 then
+		ErrorNoReturn("Local action diagrams must have at least one vertex and one arc.");
+	fi;
+	
 	orbits := rec();
 
 	for idx in Set(RecNames(vert_labels)) do
@@ -84,11 +88,11 @@ end);
 
 InstallMethod(LocalActionDiagramFromData, "Constructing Local Action Diagram (With Checks)", [IsRSGraph, IsRecord, IsRecord],
 function(graph, vert_labels, arc_labels)
-	if Length(RecNames(vert_labels)) <> RSGraphNumberVertices(graph) then
+	if Set(List(RecNames(vert_labels), Int)) <> Set(RSGraphVertices(graph)) then
 		ErrorNoReturn("Must have a vertex label for each vertex in the graph.");
 	fi;
 
-	if Length(RecNames(arc_labels)) <> Length(RSGraphArcIDs(graph)) then
+	if Set(List(RecNames(arc_labels), Int)) <> Set(RSGraphArcIDs(graph)) then
 		ErrorNoReturn("Must have an arc label for each arc in the graph.");
 	fi;
 
@@ -693,7 +697,7 @@ function(lad)
 	fi;
 end);
 
-InstallMethod(LocalActionDiagramRegularTree, "Returns of the Local Action Diagram acts on a d-regular tree.", [IsLocalActionDiagram], 
+InstallMethod(LocalActionDiagramRegularTree, "Returns if the Local Action Diagram acts on a d-regular tree.", [IsLocalActionDiagram], 
 function(lad)
 	local size_list, v_id;
 

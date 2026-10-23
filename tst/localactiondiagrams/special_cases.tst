@@ -73,4 +73,37 @@ Arc Labels = {
 }
 
 #
+# Regular tree. 
+gap> graph_4 := RSGraphByAdjacencyList([[1, 2], [2, 1], [2, 2]], (1,2));;
+gap> lad_4 := LocalActionDiagramFromData(graph_4, [Group((1,2,3,4)), Group((1,2)(3,4))], [[1,2,3,4], [1,2], [3,4]]);;
+gap> LocalActionDiagramRegularTree(lad_4);
+4
+gap> lad_4 := LocalActionDiagramFromData(graph_4, [Group((1,2,3,4,5)), Group((1,2)(3,4))], [[1,2,3,4,5], [1,2], [3,4]]);;
+gap> LocalActionDiagramRegularTree(lad_4);
+fail
+
+#
+# End Stabiliser
+gap> graph_5 := RSGraphByAdjacencyMatrix([[2]], (1,2));;
+gap> g := SymmetricGroup(10);;
+gap> SetPermGroupDomain(g, [1..11]);;
+gap> lad_5 := LocalActionDiagramFromData(graph_5, [g], [[1..10], [11]]);;
+gap> LocalActionDiagramIsEndStabiliser(lad_5);
+true
+gap> graph_5 := RSGraphByAdjacencyMatrix([[2]], ());;
+gap> lad_5 := LocalActionDiagramFromData(graph_5, [g], [[1..10], [11]]);;
+gap> LocalActionDiagramIsEndStabiliser(lad_5);
+false
+gap> lad_5 := LocalActionDiagramFromBurgerMozesUniversalGroup(g);;
+gap> LocalActionDiagramIsEndStabiliser(lad_5);
+false
+gap> lad_5 := LocalActionDiagramFromBurgerMozesUniversalGroup(Group((1,2)(3,4), (5,6)));;
+gap> LocalActionDiagramIsEndStabiliser(lad_5);
+false
+gap> graph_5 := RSGraphByAdjacencyList([[1, 2], [2, 1]], (1,2));;
+gap> lad_5 := LocalActionDiagramFromData(graph_5, [Group((1,2)), Group((1,2,3))], [[1,2], [1,2,3]]);;
+gap> LocalActionDiagramIsEndStabiliser(lad_5);
+false
+
+#
 gap> STOP_TEST("special_cases.tst");
