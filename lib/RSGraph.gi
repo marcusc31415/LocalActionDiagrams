@@ -395,9 +395,10 @@ function(graph)
 	NextIterator := function(iter)
 		local count;
 
+
 		# Find the next arc id. Skip over any holes from subgraphs. 
 		count := iter!.counter;
-		if count > Maximum(RSGraphArcIDs(iter!.graph)) then
+		if Length(RSGraphArcIDs(iter!.graph)) = 0 or count > Maximum(RSGraphArcIDs(iter!.graph)) then
 			ErrorNoReturn("Iterator is exhausted.");
 		fi;
 		while not IsBound(RSGraphArcs(iter!.graph).(count)) do
@@ -412,6 +413,10 @@ function(graph)
 	end;
 
 	IsDoneIterator := function(iter)
+		if Length(RSGraphArcIDs(iter!.graph)) = 0 then
+			return true;
+		fi;
+
 		return iter!.counter > Maximum(RSGraphArcIDs(iter!.graph));
 	end;
 

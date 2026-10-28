@@ -71,7 +71,9 @@ function(graph)
 	ret_string_list := List(RSGraphVertices(graph), x -> StringFormatted("{1},", String(x)));
 
 	# Remove the last comma, add the separator. 
-	Remove(Last(ret_string_list));
+	if Size(ret_string_list) <> 0 then # If not zero vertices. 
+		Remove(Last(ret_string_list)); # Remove the comma in the "last {1}," in the list. 
+	fi;
 	Add(ret_string_list, "|");
 
 	# Add arc information in the form id,origin,terminus. 
@@ -80,7 +82,9 @@ function(graph)
 	od;
 
 	# Remove the last comma. 
-	Remove(ret_string_list);
+	if Last(Last(ret_string_list)) = ',' then # If not zero arcs. 
+		Remove(Last(ret_string_list));
+	fi;
 	Add(ret_string_list, "|");
 
 
