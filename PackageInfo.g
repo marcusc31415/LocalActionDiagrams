@@ -1,102 +1,132 @@
-#############################################################################
-##  
-##  Demo PackageInfo.g for the GitHubPagesForGAP
-##
+#
+# LocalActionDiagrams: Super awesome package for local action diagrams.
+#
+# This file contains package meta data. For additional information on
+# the meaning and correct usage of these fields, please consult the
+# manual of the "Example" package as well as the comments in its
+# PackageInfo.g file.
+#
 
 SetPackageInfo( rec(
 
-PackageName := "GitHubPagesForGAP",
-
-Subtitle := "A GitHub Pages generator for GAP packages",
-Version := "0.4",
-Date := "10/04/2025", # dd/mm/yyyy format
-License := "0BSD",
+#! @Title Local Action Diagrams
+PackageName := "LocalActionDiagrams",
+Subtitle := "Super awesome package for local action diagrams.",
+Version := "0.1",
+Date := "29/01/2023", # dd/mm/yyyy format
+License := "GPL-2.0-or-later",
 
 Persons := [
   rec(
-    LastName      := "Horn",
-    FirstNames    := "Max",
-    IsAuthor      := true,
-    IsMaintainer  := true,
-    Email         := "mhorn@rptu.de",
-    WWWHome       := "https://www.quendi.de/math",
-    GitHubUsername:= "fingolfin",
-    PostalAddress := Concatenation(
-                       "Fachbereich Mathematik\n",
-                       "RPTU Kaiserslautern-Landau\n",
-                       "Gottlieb-Daimler-Straße 48\n",
-                       "67663 Kaiserslautern\n",
-                       "Germany" ),
-    Place         := "Kaiserslautern, Germany",
-    Institution   := "RPTU Kaiserslautern-Landau"
+    FirstNames := "Marcus",
+    LastName := "Chijoff",
+    WWWHome := "https://newcastle.edu.au",
+    Email := "marcus.chijoff@uon.edu.au",
+    IsAuthor := true,
+    IsMaintainer := true,
+    PostalAddress := "No",
+    Place := "Newcastle",
+    Institution := "The University of Newcastle, Australia",
   ),
-
   rec(
-    LastName      := "Thor",
-    FirstNames    := "A. U.",
-    IsAuthor      := true,
-    IsMaintainer  := false,
-    #Email         := "author@example.com",
-  ),
-
-  rec(
-    LastName      := "Itor",
-    FirstNames    := "Jan",
-    IsAuthor      := false,
-    IsMaintainer  := true,
-    #Email         := "janitor@example.com",
+    FirstNames := "Stephan",
+    LastName := "Tornier",
+    WWWHome := "https://newcastle.edu.au",
+    Email := "stephan.tornier@newcastle.edu.au",
+    IsAuthor := true,
+    IsMaintainer := false,
+    PostalAddress := "No",
+    Place := "Newcastle",
+    Institution := "The University of Newcastle, Australia",
   ),
 ],
 
-Status := "other",
-
-# The following are not strictly necessary in your own PackageInfo.g
-# (in the sense that update.g only looks at the usual fields
-# like PackageWWWHome, ArchiveURL etc.). But they are convenient
-# if you use exactly the scheme for your package website that we propose.
-GithubUser := "gap-system",
-GithubRepository := ~.PackageName,
-GithubWWW := Concatenation("https://github.com/", ~.GithubUser, "/", ~.GithubRepository),
-
-PackageWWWHome := Concatenation("https://", ~.GithubUser, ".github.io/", ~.GithubRepository, "/"),
-README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
+#SourceRepository := rec( Type := "TODO", URL := "URL" ),
+#IssueTrackerURL := "TODO",
+PackageWWWHome := "https://newcastle.edu.au/",
 PackageInfoURL := Concatenation( ~.PackageWWWHome, "PackageInfo.g" ),
-# The following assumes you are using the Github releases system. If not, adjust
-# it accordingly.
-ArchiveURL     := Concatenation(~.GithubWWW,
-                    "/releases/download/v", ~.Version, "/",
-                    ~.GithubRepository, "-", ~.Version),
+README_URL     := Concatenation( ~.PackageWWWHome, "README.md" ),
+ArchiveURL     := Concatenation( ~.PackageWWWHome,
+                                 "/", ~.PackageName, "-", ~.Version ),
 
-ArchiveFormats := ".tar.gz .tar.bz2",
+ArchiveFormats := ".tar.gz",
 
-AbstractHTML := 
-  "This is a pseudo package that contains no actual\
-  <span class=\"pkgname\">GAP</span> code. Instead, it is a template for other\
-  GAP packages that allows to quickly setup GitHub Pages.",
+##  Status information. Currently the following cases are recognized:
+##    "accepted"      for successfully refereed packages
+##    "submitted"     for packages submitted for the refereeing
+##    "deposited"     for packages for which the GAP developers agreed
+##                    to distribute them with the core GAP system
+##    "dev"           for development versions of packages
+##    "other"         for all other packages
+##
+Status := "dev",
+
+AbstractHTML   :=  "",
 
 PackageDoc := rec(
-  BookName  := "GitHubPagesForGAP",
+  BookName  := "LocalActionDiagrams",
   ArchiveURLSubset := ["doc"],
   HTMLStart := "doc/chap0.html",
   PDFFile   := "doc/manual.pdf",
   SixFile   := "doc/manual.six",
-  LongTitle := "A GitHub Pages generator for GAP packages",
+  LongTitle := "Super awesome package for local action diagrams.",
 ),
 
-# The following dependencies are fake and for testing / demo purposes
 Dependencies := rec(
-  GAP := ">=4.8.1",
-  NeededOtherPackages := [
-    ["GAPDoc", ">= 1.2"],
-    ["IO", ">= 4.1"],
-  ],
-  SuggestedOtherPackages := [["orb", ">= 4.2"]],
-  ExternalConditions := []
+  GAP := ">= 4.16",
+  NeededOtherPackages := [ ["IO", "4.9.3"] ],
+  SuggestedOtherPackages := [ ["Digraphs", "1.5.3"] ],
+  ExternalConditions := [ ],
 ),
+
+Extensions := [
+	rec (
+		needed := [ ["ugaly", "4.1.3"] ],
+		filename := "lib/UGALYExtension.gd",
+	),
+	rec (
+		needed := [ ["ugaly", "4.1.3"] ],
+		filename := "lib/UGALYExtension.gi",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/DigraphsConversion.gd",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/DigraphsConversion.gi",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/Isomorphism.gd",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/Isomorphism.gi",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/IsomorphismRequiredFunctions.gd",
+	),
+	rec (
+		needed := [ ["digraphs", "1.9.0"] ],
+		filename := "lib/IsomorphismRequiredFunctions.gi",
+	),
+	rec (
+		needed := [ ["grape", "4.9.3"] ],
+		filename := "lib/GRAPEConversion.gd",
+	),
+	rec (
+		needed := [ ["grape", "4.9.3"] ],
+		filename := "lib/GRAPEConversion.gi",
+	),
+],
 
 AvailabilityTest := ReturnTrue,
 
-Keywords := ["GitHub Pages", "GAP"]
+TestFile := "tst/testall.g",
+
+#Keywords := [ "TODO" ],
 
 ));
 
