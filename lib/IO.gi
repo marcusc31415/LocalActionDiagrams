@@ -441,7 +441,7 @@ function(string, graph_ret)
 					LocalActionDiagramArcLabels, arc_labels];
 
 	# Go through the rest of the properties. 
-	for idx in [4..Length(split_string)] do
+	for idx in [3..Length(split_string)] do
 		property_split := SplitString(split_string[idx], "!");
 
 		property := property_split[1];
@@ -638,7 +638,7 @@ function(file, lad)
 
 	for attr in [LocalActionDiagramScopos, LocalActionDiagramGroupType, LocalActionDiagramIsDiscrete,
 		         LocalActionDiagramIsUniscalar, LocalActionDiagramIsUnimodular] do
-		if NameFunction(attr) in KnownAttributesOfObject(lad) then
+		if NameFunction(attr) in KnownAttributesOfObject(lad) or NameFunction(attr) in KnownPropertiesOfObject(lad) then
 			optional_attr.(NameFunction(attr)) := attr(lad);
 		fi;
 	od;
